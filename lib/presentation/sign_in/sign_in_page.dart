@@ -1,3 +1,5 @@
+import 'package:e_menu_app/widgets/change_screen.dart';
+import 'package:e_menu_app/widgets/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,11 +15,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  TextEditingController emailController = TextEditingController(text: '');
-  TextEditingController passwordController = TextEditingController(text: '');
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   // bool isLoading = false;
 
-  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   bool _isHiddenPassword = true;
 
@@ -46,49 +48,6 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ],
           ));
-    }
-
-    Widget emailInput() {
-      return Container(
-        margin: const EdgeInsets.only(top: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 12,
-            ),
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_email.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                        child: TextFormField(
-                            controller: emailController,
-                            style: primaryTextStyle,
-                            decoration: InputDecoration.collapsed(
-                                hintText: "Email",
-                                hintStyle: subtitleTextStyle)))
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
     }
 
     Widget passwordInput() {
@@ -151,12 +110,11 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget signInButton() {
       return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-        // TODO: implement listener
         if (state is AuthSuccess) {
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Login Berhasil'),
+            content: const Text('Login Berhasil'),
             backgroundColor: priceColor,
           ));
         } else if (state is AuthFailed) {
@@ -175,29 +133,6 @@ class _SignInPageState extends State<SignInPage> {
               : _buttonLogin(context),
         );
       });
-    }
-
-    Widget footer() {
-      return Container(
-        margin: const EdgeInsets.only(bottom: 30),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Don't have an account?",
-                style: subtitleTextStyle.copyWith(fontSize: 12)),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/sign-up');
-              },
-              child: Text(
-                " Sign Up",
-                style:
-                    priceTextStyle.copyWith(fontSize: 12, fontWeight: medium),
-              ),
-            )
-          ],
-        ),
-      );
     }
 
     return Scaffold(
@@ -233,12 +168,21 @@ class _SignInPageState extends State<SignInPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(child: header()),
-                  emailInput(),
+                  CustomTextField(
+                      image: 'assets/icon/icon_email.png',
+                      controller: emailController,
+                      hintText: 'Email'),
                   passwordInput(),
                   // isLoading ? LoadingButton() : signInButton(),
                   signInButton(),
                   const Spacer(),
-                  footer(),
+                  ChangeScreen(
+                    teks: "Don't have an account?",
+                    onTapp: () {
+                      Navigator.pushNamed(context, '/sign-up');
+                    },
+                    screenTeks: " Sign Up",
+                  ),
                 ],
               ),
             ),

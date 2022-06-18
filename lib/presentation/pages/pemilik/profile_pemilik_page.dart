@@ -119,7 +119,7 @@ class ProfileAdPage extends StatelessWidget {
       );
     }
 
-    Widget menuItemPesanan(gambar, text) {
+    Widget menuItemPesanan(_gambar, text) {
       return Container(
         decoration: BoxDecoration(
           color: secondaryColor,
@@ -129,7 +129,7 @@ class ProfileAdPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
-              gambar,
+              _gambar,
               width: 24,
             ),
             Text(

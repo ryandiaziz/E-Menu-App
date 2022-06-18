@@ -1,27 +1,37 @@
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 
-class CusAppBar extends StatelessWidget {
-  final String? title;
-  final Color? backgroundColor;
-
-  const CusAppBar({
-    Key? key,
-    this.title,
-    this.backgroundColor,
-  }) : super(key: key);
+class CusAPp extends StatefulWidget {
+  const CusAPp({Key? key}) : super(key: key);
 
   @override
-  Size get PreferredSize => Size.fromHeight(60.0);
+  State<CusAPp> createState() => _CusAPpState();
+}
 
+class _CusAPpState extends State<CusAPp> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('$title'),
-        backgroundColor: backgroundColor,
+  AppBar build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: secondsubtitleColor,
+        ),
+        onPressed: () {},
       ),
+      title: Text(
+        "Tambah Menu",
+        style: primaryTextStyle.copyWith(fontWeight: semiBold),
+        // fontWeight: semiBold,
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.percent),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }

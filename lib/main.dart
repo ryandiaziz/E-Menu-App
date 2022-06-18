@@ -14,17 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
-import 'package:e_menu_app/presentation/pages/home/keranjang_page.dart';
-import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/presentation/pages/home/list_retoran_page.dart';
 import 'package:e_menu_app/presentation/pages/home/main_page.dart';
 import 'package:e_menu_app/presentation/pages/home/scan_page.dart';
-import 'package:e_menu_app/presentation/pages/home/test_home.dart';
 import 'package:e_menu_app/presentation/pages/product/detail_product_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile.dart';
 import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
-import 'package:e_menu_app/presentation/splash_page/get_started.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 
 void main() async {

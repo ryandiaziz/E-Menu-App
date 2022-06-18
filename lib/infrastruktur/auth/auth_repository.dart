@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_menu_app/domain/auth/user_model.dart';
 import 'package:e_menu_app/infrastruktur/auth/user_repository.dart';
 
 class AuthRepository {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<UserModel> signIn({
     required String email,

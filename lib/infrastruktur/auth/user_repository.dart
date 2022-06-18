@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import '../../domain/auth/user_model.dart';
 
 class UserRepository {
-  CollectionReference _userReference =
+  final CollectionReference _userReference =
       FirebaseFirestore.instance.collection('users');
 
 //menampilkan data dinamis

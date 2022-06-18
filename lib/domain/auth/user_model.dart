@@ -7,7 +7,7 @@ class UserModel extends Equatable {
   final String email;
   final String password;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.fullname,
     required this.username,
@@ -16,6 +16,5 @@ class UserModel extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id, fullname, username, email, password];
 }

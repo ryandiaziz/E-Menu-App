@@ -1,4 +1,5 @@
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:e_menu_app/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class TambahMenuPage extends StatefulWidget {
@@ -9,184 +10,20 @@ class TambahMenuPage extends StatefulWidget {
 }
 
 class _TambahMenuPageState extends State<TambahMenuPage> {
+  final TextEditingController _namaProdukC = TextEditingController();
+  final TextEditingController _hargaProdukC = TextEditingController();
+  final TextEditingController _jenisProdukC = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _namaProdukC.dispose();
+    _hargaProdukC.dispose();
+    _jenisProdukC.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget namamenu() {
-      return Container(
-        margin: const EdgeInsets.only(top: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_profile_select.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        // controller: fullnameController,
-                        style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Nama Menu",
-                            hintStyle: subtitleTextStyle),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget harga() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_profile_select.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        // controller: fullnameController,
-                        style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Harga", hintStyle: subtitleTextStyle),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget jenismenu() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_profile_select.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        // controller: fullnameController,
-                        style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Jenis", hintStyle: subtitleTextStyle),
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 30,
-                      color: priceColor,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget fotomenu() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_profile_select.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        // controller: fullnameController,
-                        style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Pilih Foto",
-                            hintStyle: subtitleTextStyle),
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 30,
-                      color: priceColor,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
     Widget submitMenu() {
       return Container(
         width: double.infinity,
@@ -240,11 +77,20 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         ),
         child: Column(
           children: [
-            // Center(child: header()),
-            namamenu(),
-            harga(),
-            jenismenu(),
-            fotomenu(),
+            CustomTextField(
+                image: "assets/icon/icon_profile_select.png",
+                controller: _namaProdukC,
+                hintText: 'Nama Menu'),
+            CustomTextField(
+              image: "assets/icon/icon_profile_select.png",
+              controller: _hargaProdukC,
+              hintText: "Harga",
+            ),
+            CustomTextField(
+              image: "assets/icon/icon_profile_select.png",
+              controller: _jenisProdukC,
+              hintText: "Jenis Produk",
+            ),
             submitMenu()
           ],
         ),
