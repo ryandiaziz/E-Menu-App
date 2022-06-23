@@ -12,9 +12,14 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
+String p =
+    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+RegExp regExp = new RegExp(p);
+
 class _SignUpPageState extends State<SignUpPage> {
   TextEditingController fullnameController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController noHPController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
@@ -25,6 +30,62 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       _isHiddenPassword = !_isHiddenPassword;
     });
+  }
+
+  void vaildation() async {
+    if (fullnameController.text.isEmpty &&
+        noHPController.text.isEmpty &&
+        emailController.text.isEmpty &&
+        passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("All Field Are Empty"),
+        ),
+      );
+    } else if (fullnameController.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Name Must Be 6 "),
+        ),
+      );
+    } else if (emailController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(emailController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else if (noHPController.text.length < 12 ||
+        noHPController.text.length > 12) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Phone Number Must Be 12"),
+        ),
+      );
+    } else {
+      context.read<AuthCubit>().signUp(
+          fullname: fullnameController.text,
+          username: noHPController.text,
+          email: emailController.text,
+          password: passwordController.text);
+    }
   }
 
   @override
@@ -153,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 CustomTextField(
                   image: 'assets/icon/icon_phone.png',
-                  controller: usernameController,
+                  controller: noHPController,
                   hintText: "No HP",
                 ),
                 CustomTextField(
@@ -182,11 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextButton(
         // onPressed: hendleSignIn,
         onPressed: () {
-          context.read<AuthCubit>().signUp(
-              fullname: fullnameController.text,
-              username: usernameController.text,
-              email: emailController.text,
-              password: passwordController.text);
+          vaildation();
         },
         style: TextButton.styleFrom(
             backgroundColor: priceColor,
@@ -203,7 +260,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextButton(
         onPressed: null,
         style: TextButton.styleFrom(
-            backgroundColor: priceColor,
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12))),
         child: const CircularProgressIndicator());

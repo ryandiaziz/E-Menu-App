@@ -1,12 +1,19 @@
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../../../../aplication/auth/cubit/auth_cubit.dart';
 
-class ProfileCusPage extends StatelessWidget {
+class ProfileCusPage extends StatefulWidget {
   const ProfileCusPage({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileCusPage> createState() => _ProfileCusPageState();
+}
+
+class _ProfileCusPageState extends State<ProfileCusPage> {
   @override
   Widget build(BuildContext context) {
     // AuthProvider authProvider = Provider.of<AuthProvider>(context);

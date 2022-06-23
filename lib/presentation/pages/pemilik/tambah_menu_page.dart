@@ -1,5 +1,6 @@
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:e_menu_app/widgets/custom_textfield.dart';
+import 'package:e_menu_app/widgets/mytextformfield.dart';
 import 'package:flutter/material.dart';
 
 class TambahMenuPage extends StatefulWidget {
@@ -47,6 +48,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         // centerTitle: true,
         backgroundColor: Colors.white,
@@ -78,16 +80,16 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         child: Column(
           children: [
             CustomTextField(
-                image: "assets/icon/icon_profile_select.png",
+                image: "assets/icon/icon_nama_menu.png",
                 controller: _namaProdukC,
                 hintText: 'Nama Menu'),
             CustomTextField(
-              image: "assets/icon/icon_profile_select.png",
+              image: "assets/icon/icon_price.png",
               controller: _hargaProdukC,
               hintText: "Harga",
             ),
             CustomTextField(
-              image: "assets/icon/icon_profile_select.png",
+              image: "assets/icon/icon_jenis.png",
               controller: _jenisProdukC,
               hintText: "Jenis Produk",
             ),

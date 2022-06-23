@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:unicons/unicons.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -13,6 +12,11 @@ class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
+
+String p =
+    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+RegExp regExp = new RegExp(p);
 
 class _SignInPageState extends State<SignInPage> {
   TextEditingController emailController = TextEditingController();
@@ -27,6 +31,43 @@ class _SignInPageState extends State<SignInPage> {
     setState(() {
       _isHiddenPassword = !_isHiddenPassword;
     });
+  }
+
+  void vaildation() async {
+    if (emailController.text.isEmpty && passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Both Flied Are Empty"),
+        ),
+      );
+    } else if (emailController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(emailController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else {
+      context.read<AuthCubit>().signIn(
+          email: emailController.text, password: passwordController.text);
+    }
   }
 
   @override
@@ -194,8 +235,7 @@ class _SignInPageState extends State<SignInPage> {
     return TextButton(
         // onPressed: hendleSignIn,
         onPressed: () {
-          context.read<AuthCubit>().signIn(
-              email: emailController.text, password: passwordController.text);
+          vaildation();
         },
         style: TextButton.styleFrom(
             backgroundColor: priceColor,

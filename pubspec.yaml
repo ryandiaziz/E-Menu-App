@@ -41,15 +41,15 @@ dependencies:
     sdk: flutter
   flutter_bloc: null
   flutter_lints: null
+  get:
   google_fonts: null
   image_picker: null
-  path_provider: ^2.0.11
+  path_provider:
   qr_code_scanner: null
   staggered_grid_view_flutter: null
-  unicons: ^2.1.0
 
 dev_dependencies:
-  flutter_launcher_icons:
+  flutter_launcher_icons: null
   flutter_test:
     sdk: flutter
 

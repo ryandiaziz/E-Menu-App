@@ -77,7 +77,13 @@ class DetailRestoran extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            product(context, controller),
+            product(
+              context,
+              controller,
+              "Nasi Goreng",
+              12000,
+              "assets/img/image_burger.png",
+            ),
           ],
         ));
   }
