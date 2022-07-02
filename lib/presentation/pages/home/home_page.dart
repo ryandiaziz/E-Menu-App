@@ -133,62 +133,66 @@ class HomePagee extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor3,
-      body: Container(
-        margin: const EdgeInsets.only(
-          top: 10,
-          bottom: 10,
-        ),
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-        ),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            location(),
-            search(),
-            titleCatagories(),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+      body: FutureBuilder(
+          future: null,
+          builder: (context, snapshot) {
+            return Container(
+              margin: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+              ),
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              child: ListView(
+                shrinkWrap: true,
                 children: [
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
+                  location(),
+                  search(),
+                  titleCatagories(),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        scrollCategories(
+                          "assets/img/image_burger.png",
+                          "Burger",
+                        ),
+                        scrollCategories(
+                          "assets/icon/icon_sandwich.png",
+                          "Sandwich",
+                        ),
+                        scrollCategories(
+                          "assets/img/image_burger.png",
+                          "Burger",
+                        ),
+                        scrollCategories(
+                          "assets/img/image_burger.png",
+                          "Burger",
+                        ),
+                      ],
+                    ),
                   ),
-                  scrollCategories(
-                    "assets/icon/icon_sandwich.png",
-                    "Sandwich",
+                  const SizedBox(
+                    height: 10,
                   ),
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
-                  ),
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
-                  ),
+                  GestureDetector(
+                    onTap: () {
+                      mySheet(context);
+                    },
+                    child: product(
+                      context,
+                      controller,
+                      "Nasi Goreng",
+                      12000,
+                      "assets/img/image_nasgor.jpg",
+                    ),
+                  )
                 ],
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                mySheet(context);
-              },
-              child: product(
-                context,
-                controller,
-                "Nasi Goreng",
-                12000,
-                "assets/img/image_nasgor.jpg",
-              ),
-            )
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }

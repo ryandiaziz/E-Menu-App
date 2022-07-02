@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:e_menu_app/widgets/change_screen.dart';
 import 'package:e_menu_app/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -88,8 +92,127 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  File? image;
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      ('Failed to pick image: $e');
+    }
+  }
+  // Future<File> saveFilePermanently(String imagePath) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final name = basename(imagePath);
+  //   final image = File('${directory.path}/$name');
+
+  //   return File(imagePath).copy(image.path);
+  // }
+
   @override
   Widget build(BuildContext context) {
+    Widget modalsheet() {
+      return Container(
+        height: 100,
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Column(
+          children: [
+            const Text("Pilih Foto"),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        await pickImage(ImageSource.camera);
+                      },
+                      child: const Icon(Icons.camera),
+                    ),
+                    const Text('Kamera')
+                  ],
+                ),
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        await pickImage(ImageSource.gallery);
+                      },
+                      child: const Icon(Icons.image),
+                    ),
+                    const Text('Galeri')
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget fotoProfile() {
+      return Center(
+        child: Stack(
+          children: [
+            image != null
+                ? SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: ClipOval(
+                      child: Image.file(
+                        image!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: ClipOval(
+                        child: Image.asset(
+                      "assets/img/image_profile_user.png",
+                      width: 64,
+                    )),
+                  ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (builder) => modalsheet(),
+                  );
+                },
+                child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: backgroundColor3,
+                  ),
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: secondsubtitleColor,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget passwordInput() {
       return Container(
         margin: const EdgeInsets.only(top: 20),
@@ -207,6 +330,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                fotoProfile(),
                 CustomTextField(
                   image: 'assets/icon/icon_profile_select.png',
                   controller: fullnameController,

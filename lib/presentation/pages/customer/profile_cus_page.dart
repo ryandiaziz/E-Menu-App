@@ -32,7 +32,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
                 context, '/scan-page', (route) => false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("Berhasil Keluar"),
+                content: const Text("Berhasil Keluar"),
                 backgroundColor: priceColor,
               ),
             );
@@ -40,7 +40,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is AuthSuccess) {
             return AppBar(
               backgroundColor: Colors.white,
@@ -74,7 +74,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
                                   fontSize: 20, fontWeight: bold),
                             ),
                             Text(
-                              "@${state.user.username}",
+                              state.user.email,
                               style: secondSubtitleTextStyle.copyWith(
                                 fontSize: 14,
                               ),
@@ -89,7 +89,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
                         child: Container(
                           decoration: BoxDecoration(
                             // border: Border.all(color: priceColor, width: 0.5),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(15),
                                 bottomLeft: Radius.circular(15)),
                             color: priceColor,

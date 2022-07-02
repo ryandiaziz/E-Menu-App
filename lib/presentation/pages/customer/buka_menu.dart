@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 
 class BukaMenuPage extends StatefulWidget {
   const BukaMenuPage({Key? key}) : super(key: key);
@@ -13,23 +16,41 @@ class BukaMenuPage extends StatefulWidget {
 }
 
 class _BukaMenuPageState extends State<BukaMenuPage> {
+  TextEditingController namarestoranC = TextEditingController();
+  TextEditingController alamatrestoranC = TextEditingController();
+  FirebaseStorage storage = FirebaseStorage.instance;
+
   File? image;
+  String? imageUrl;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked = await _picker.pickImage(source: source);
-    image = File(imagePicked!.path);
-    setState(() {
-      // this.image;
-    });
+    final imagePicked = await _picker.pickImage(source: source);
+    final imageCrop = await ImageCropper().cropImage(
+        sourcePath: '${imagePicked?.path}',
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+    if (imageCrop == null) {
+      return;
+    }
+    image = File(imageCrop.path);
+    setState(() {});
   }
 
-  Future<File> saveFilePermanently(String imagePath) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final name = basename(imagePath);
-    final image = File('${directory.path}/$name');
-
-    return File(imagePath).copy(image.path);
+  Future<void> _upload(String pathh) async {
+    try {
+      // Uploading the selected image
+      final ref =
+          storage.ref().child('restaurantImages').child(path.basename(pathh));
+      final result = await ref.putFile(File(pathh));
+      final fileUrl = await result.ref.getDownloadURL();
+      setState(() {
+        imageUrl = fileUrl;
+      });
+    } on FirebaseException catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
   }
 
   @override
@@ -54,7 +75,9 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        await getImage(ImageSource.camera);
+                        Navigator.of(context).pop;
+                        getImage(ImageSource.camera);
+                        _upload('${image?.path}');
                       },
                       child: const Icon(Icons.camera),
                     ),
@@ -65,7 +88,9 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                   children: [
                     TextButton(
                       onPressed: () async {
+                        Navigator.of(context).pop();
                         await getImage(ImageSource.gallery);
+                        _upload('${image?.path}');
                       },
                       child: const Icon(Icons.image),
                     ),
@@ -83,13 +108,13 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
       return Center(
         child: Stack(
           children: [
-            image != null
+            imageUrl != null
                 ? SizedBox(
                     height: 120,
                     width: 120,
                     child: ClipOval(
-                      child: Image.file(
-                        image!,
+                      child: Image.network(
+                        imageUrl!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -159,7 +184,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        // controller: fullnameController,
+                        controller: namarestoranC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                             hintText: "Nama Restoran",
@@ -201,60 +226,13 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        // controller: fullnameController,
+                        controller: alamatrestoranC,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                             hintText: "Alamat Restoran",
                             hintStyle: subtitleTextStyle),
                       ),
                     )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget fotorestoran() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon/icon_profile_select.png',
-                      width: 17,
-                      color: secondsubtitleColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        // controller: fullnameController,
-                        style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Pilih Foto",
-                            hintStyle: subtitleTextStyle),
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 30,
-                      color: priceColor,
-                    ),
                   ],
                 ),
               ),
@@ -276,6 +254,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                   borderRadius: BorderRadius.circular(10),
                 )),
             onPressed: () {
+              // _upload(image!, '$fileName');
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -318,11 +297,9 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
         ),
         child: Column(
           children: [
-            // Center(child: header()),
             fotoResto(),
             namarestoran(),
             alamatrestoran(),
-            fotorestoran(),
             submitMenu()
           ],
         ),

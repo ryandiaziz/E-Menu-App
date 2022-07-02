@@ -14,6 +14,7 @@ class UserRepository {
         'fullname': user.fullname,
         'username': user.username,
         'password': user.password,
+        'id': user.id
       });
     } catch (e) {
       throw Exception(e);

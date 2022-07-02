@@ -116,7 +116,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     Widget nameInput() {
       return Container(
-        margin: EdgeInsets.only(top: 30),
+        margin: const EdgeInsets.only(top: 30),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             "Nama",
@@ -137,7 +137,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     Widget usernameInput() {
       return Container(
-        margin: EdgeInsets.only(top: 30),
+        margin: const EdgeInsets.only(top: 30),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             "Username",
@@ -158,7 +158,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     Widget emailInput() {
       return Container(
-        margin: EdgeInsets.only(top: 30),
+        margin: const EdgeInsets.only(top: 30),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             "Email Address",
@@ -230,7 +230,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final XFile? imagePicked = await _picker.pickImage(source: source);
     image = File(imagePicked!.path);
     setState(() {
-      // this.image;
+      image;
     });
   }
 

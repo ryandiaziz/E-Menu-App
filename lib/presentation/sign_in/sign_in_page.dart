@@ -199,32 +199,39 @@ class _SignInPageState extends State<SignInPage> {
             // fontWeight: semiBold,
           ),
         ),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 30),
             child: Form(
               key: _formkey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(child: header()),
-                  CustomTextField(
-                      image: 'assets/icon/icon_email.png',
-                      controller: emailController,
-                      hintText: 'Email'),
-                  passwordInput(),
-                  // isLoading ? LoadingButton() : signInButton(),
-                  signInButton(),
-                  const Spacer(),
-                  ChangeScreen(
-                    teks: "Don't have an account?",
-                    onTapp: () {
-                      Navigator.pushNamed(context, '/sign-up');
-                    },
-                    screenTeks: " Sign Up",
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(0),
+                  height: MediaQuery.of(context).size.height - 250,
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(child: header()),
+                      CustomTextField(
+                          image: 'assets/icon/icon_email.png',
+                          controller: emailController,
+                          hintText: 'Email'),
+                      passwordInput(),
+                      // isLoading ? LoadingButton() : signInButton(),
+                      signInButton(),
+                      const Spacer(),
+                      ChangeScreen(
+                        teks: "Don't have an account?",
+                        onTapp: () {
+                          Navigator.pushNamed(context, '/sign-up');
+                        },
+                        screenTeks: " Sign Up",
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
