@@ -41,8 +41,9 @@ dependencies:
     sdk: flutter
   flutter_bloc: null
   flutter_lints: null
+  flutter_svg: null
   google_fonts: null
-  image_cropper:
+  image_cropper: null
   image_picker: null
   path_provider: null
   provider: null

@@ -1,147 +1,195 @@
-import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
-import 'package:e_menu_app/presentation/pages/home/scan_page.dart';
-import 'package:e_menu_app/widgets/cus_appbar.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/pages/home/keranjang_page.dart';
-import 'package:e_menu_app/presentation/pages/home/home_page.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:e_menu_app/presentation/pages/home/riwayat_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+import '../../../widgets/drawer.dart';
+
+class ScanPage extends StatefulWidget {
+  const ScanPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  _ScanPageState createState() => _ScanPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  int index = 0;
-
-  final screens = [
-    HomePagee(),
-    BagPage(),
-    RiwayatPage(),
-    const ProfileCusPage()
-  ];
-
-  Widget indicator() {
-    return Container(
-      width: 32,
-      height: 4,
-      decoration: BoxDecoration(
-          color: priceColor,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(28),
-            bottomRight: Radius.circular(28),
-          )),
-    );
-  }
-
-  Widget customBottomNav() {
-    return BottomNavigationBar(
-      backgroundColor: secondaryColor,
-      currentIndex: index,
-      onTap: (value) {
-        setState(() {
-          index = value;
-        });
-      },
-      type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: false,
-      showSelectedLabels: false,
-      unselectedItemColor: Colors.grey,
-      selectedItemColor: priceColor,
-      selectedLabelStyle: GoogleFonts.roboto(fontSize: 12, fontWeight: regular),
-      unselectedLabelStyle:
-          GoogleFonts.roboto(fontSize: 12, fontWeight: regular),
-      selectedFontSize: 14,
-      unselectedFontSize: 14,
-      elevation: 0,
-      items: [
-        BottomNavigationBarItem(
-          label: "Menu",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.book,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          label: "Keranjang",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.shopping_cart,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          label: "Pesanan",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.square_list,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          label: "Profile",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.person,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget body() {
-    switch (index) {
-      case 0:
-        return HomePagee();
-      case 1:
-        return BagPage();
-      case 2:
-        return RiwayatPage();
-      case 3:
-        return const ProfileCusPage();
-      default:
-        return HomePagee();
-    }
-  }
+class _ScanPageState extends State<ScanPage> {
+  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    Widget header() {
+      return Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(
+              // right: 24,
+              top: 22,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/list-restoran');
+                  },
+                  child: Image.asset(
+                    "assets/icon/icon_restoran.png",
+                    width: 30,
+                    color: secondsubtitleColor,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/profile-cus');
+                  },
+                  child: Image.asset(
+                    'assets/icon/icon_profile_select.png',
+                    width: 30,
+                    color: secondsubtitleColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget qrCodeAttribute() {
+      return Container(
+          margin: const EdgeInsets.only(top: 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  // height: 300,
+                  // width: double.infinity,
+                  padding: const EdgeInsets.only(top: 40, bottom: 40),
+                  decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                      // border: Border.all(color: priceColor, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          blurRadius: 4,
+                          spreadRadius: 2,
+                          // offset: const Offset(3, 3),
+                        ),
+                      ]),
+                  child: Center(
+                    child: Center(
+                      child: Image.asset(
+                        'assets/icon/icon_qrCode.png',
+                        width: 200,
+                        color: secondsubtitleColor,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ));
+    }
+
+    Widget scanButton() {
+      return Container(
+        width: double.infinity,
+        height: 50,
+        margin: const EdgeInsets.only(top: 30),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: priceColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )),
+            onPressed: () {
+              Navigator.pushNamed(context, '/scanning-page');
+            },
+            child: Text(
+              "Scan QR Code",
+              style: secondaryTextStyle.copyWith(
+                  fontSize: 18, fontWeight: semiBold),
+            )),
+      );
+    }
+
+    Widget loginButton() {
+      return Container(
+        width: double.infinity,
+        height: 50,
+        margin: const EdgeInsets.only(top: 20),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: priceColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )),
+            onPressed: () {
+              Navigator.pushNamed(context, '/sign-in');
+            },
+            child: Text(
+              "Login",
+              style: secondaryTextStyle.copyWith(
+                  fontSize: 18, fontWeight: semiBold),
+            )),
+      );
+    }
+
+    Widget footer() {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Don't have an account? ",
+                style: subtitleTextStyle.copyWith(fontSize: 12)),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/sign-up');
+              },
+              child: Text(
+                "Sign Up",
+                style:
+                    priceTextStyle.copyWith(fontSize: 12, fontWeight: medium),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: Colors.amber,
-      bottomNavigationBar: customBottomNav(),
-      body: screens[index],
-      // appBar: CusAppBar(),
+      backgroundColor: secondaryColor,
+      resizeToAvoidBottomInset: false,
+      drawer: const NavigationDrawer(),
+      body: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                header(),
+                qrCodeAttribute(),
+                Center(
+                  child: scanButton(),
+                ),
+                Center(
+                  child: loginButton(),
+                ),
+                const Spacer(),
+                footer(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -14,7 +14,6 @@ class ProfileCusPage extends StatefulWidget {
 }
 
 class _ProfileCusPageState extends State<ProfileCusPage> {
-  String? idUser;
   @override
   Widget build(BuildContext context) {
     // AuthProvider authProvider = Provider.of<AuthProvider>(context);
