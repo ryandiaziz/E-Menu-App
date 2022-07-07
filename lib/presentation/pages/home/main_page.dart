@@ -49,8 +49,8 @@ class _MainPageState extends State<MainPage> {
         });
       },
       type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: true,
-      // showSelectedLabels: false,
+      showUnselectedLabels: false,
+      showSelectedLabels: false,
       unselectedItemColor: Colors.grey,
       selectedItemColor: priceColor,
       selectedLabelStyle: GoogleFonts.roboto(fontSize: 12, fontWeight: regular),

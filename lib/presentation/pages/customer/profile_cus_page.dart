@@ -14,6 +14,7 @@ class ProfileCusPage extends StatefulWidget {
 }
 
 class _ProfileCusPageState extends State<ProfileCusPage> {
+  String? idUser;
   @override
   Widget build(BuildContext context) {
     // AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -42,6 +43,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
           if (state is AuthLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is AuthSuccess) {
+            String iduser = state.user.id;
             return AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
@@ -73,12 +75,6 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
                               style: titleTextStyle.copyWith(
                                   fontSize: 20, fontWeight: bold),
                             ),
-                            Text(
-                              state.user.email,
-                              style: secondSubtitleTextStyle.copyWith(
-                                fontSize: 14,
-                              ),
-                            )
                           ],
                         ),
                       ),

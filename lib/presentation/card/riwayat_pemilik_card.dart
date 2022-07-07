@@ -18,6 +18,7 @@ class RiwayatCardPe extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //Baris 1
           Row(
@@ -56,6 +57,11 @@ class RiwayatCardPe extends StatelessWidget {
                   const SizedBox(
                     height: 3,
                   ),
+                  Text(
+                    "Makanan",
+                    style: secondSubtitleTextStyle.copyWith(
+                        fontWeight: regular, fontSize: 14),
+                  ),
                   Row(
                     children: [
                       Text(
@@ -75,20 +81,6 @@ class RiwayatCardPe extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 3,
-                  ),
-                  Container(
-                    // width: double.maxFinite,
-                    // height: 30,
-                    // padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffEFF0F6),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      "Sudah Bayar",
-                      style: priceTextStyle.copyWith(
-                          fontSize: 14, fontWeight: semiBold),
-                    ),
                   ),
                 ],
               ),
@@ -126,9 +118,24 @@ class RiwayatCardPe extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 5,
+          Container(
+            width: 100,
+            decoration: BoxDecoration(
+              color: const Color(0xffEFF0F6),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Center(
+              child: Text(
+                "Sudah Bayar",
+                style:
+                    priceTextStyle.copyWith(fontSize: 14, fontWeight: semiBold),
+              ),
+            ),
           ),
+          const SizedBox(
+            height: 8,
+          ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

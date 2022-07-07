@@ -65,10 +65,21 @@ class _BagCardState extends State<BagCard> {
                     ),
                     Text(
                       "Nasi Goreng",
-                      style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                      style: primaryTextStyle.copyWith(
+                        fontWeight: semiBold,
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 3,
+                    ),
+                    Text(
+                      "Makanan",
+                      style: secondSubtitleTextStyle.copyWith(
+                          fontWeight: regular, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      height: 3,
                     ),
                     Text(
                       "Rp $price",

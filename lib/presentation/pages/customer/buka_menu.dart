@@ -1,12 +1,20 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/models/restaurant_model.dart';
+import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../aplication/auth/cubit/auth_cubit.dart';
 
 class BukaMenuPage extends StatefulWidget {
   const BukaMenuPage({Key? key}) : super(key: key);
@@ -22,6 +30,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
 
   File? image;
   String? imageUrl;
+  String iduser = '';
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -51,6 +60,17 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
         print(error);
       }
     }
+  }
+
+  void getUID() async {
+    User? user = await FirebaseAuth.instance.currentUser;
+    var vari = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
+    setState(() {
+      iduser = vari.data()!['id'];
+    });
   }
 
   @override
@@ -242,68 +262,133 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
       );
     }
 
+    Widget header() {
+      return BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is AuthSuccess) {
+            return Container(
+              width: double.infinity,
+              height: 50,
+              margin: const EdgeInsets.only(top: 40),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: priceColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    )),
+                onPressed: () {
+                  final dataresto = Restaurant(
+                    name: namarestoranC.text,
+                    alamat: alamatrestoranC.text,
+                    imageUrl: '$imageUrl',
+                    idUser: state.user.id,
+                  );
+                  createRestaurant(dataresto);
+                },
+                child: Text(
+                  'Buka E-Menu',
+                  style: secondaryTextStyle.copyWith(
+                      fontSize: 18, fontWeight: semiBold),
+                ),
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
+      );
+    }
+
     Widget submitMenu() {
       return Container(
         width: double.infinity,
         height: 50,
         margin: const EdgeInsets.only(top: 40),
         child: TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: priceColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                )),
-            onPressed: () {
-              // _upload(image!, '$fileName');
-              // Navigator.pushNamed(context, '/scanning-page');
-            },
-            child: Text(
-              "Buka E-Menu",
-              style: secondaryTextStyle.copyWith(
-                  fontSize: 18, fontWeight: semiBold),
-            )),
+          style: TextButton.styleFrom(
+              backgroundColor: priceColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              )),
+          onPressed: () {
+            // getUID();
+            // final dataresto = Restaurant(
+            //   name: namarestoranC.text,
+            //   alamat: alamatrestoranC.text,
+            //   imageUrl: '$imageUrl',
+
+            // );
+
+            // createRestaurant(dataresto);
+          },
+          child: Text(
+            'Buka E-Menu',
+            style:
+                secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+          ),
+        ),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        // centerTitle: true,
         backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: secondsubtitleColor,
+        appBar: AppBar(
+          // centerTitle: true,
+          backgroundColor: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: secondsubtitleColor,
+            ),
+          ),
+          automaticallyImplyLeading: true,
+          titleSpacing: -5,
+          elevation: 0,
+          title: Text(
+            "Buka E-Menu",
+            style: primaryTextStyle.copyWith(fontWeight: semiBold),
+            // fontWeight: semiBold,
           ),
         ),
-        automaticallyImplyLeading: true,
-        titleSpacing: -5,
-        elevation: 0,
-        title: Text(
-          "Buka E-Menu",
-          style: primaryTextStyle.copyWith(fontWeight: semiBold),
-          // fontWeight: semiBold,
-        ),
-      ),
-      body: Container(
-        margin: const EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-          bottom: 10,
-        ),
-        child: Column(
-          children: [
-            fotoResto(),
-            namarestoran(),
-            alamatrestoran(),
-            submitMenu()
-          ],
-        ),
-      ),
-    );
+        body: Container(
+          margin: const EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: 10,
+          ),
+          child: Column(
+            children: [
+              fotoResto(),
+              namarestoran(),
+              alamatrestoran(),
+              header(),
+              // showdata(context),
+            ],
+          ),
+        ));
+  }
+
+  Future createRestaurant(Restaurant dataresto) async {
+    final docResto = FirebaseFirestore.instance.collection('restaurant').doc();
+    dataresto.id = docResto.id;
+
+    final json = dataresto.toJson();
+    await docResto.set(json);
+
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(builder: (context) => const ProfileCusPage()),
+        (route) => false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('Daftar Berhasil'),
+      backgroundColor: priceColor,
+    ));
   }
 }

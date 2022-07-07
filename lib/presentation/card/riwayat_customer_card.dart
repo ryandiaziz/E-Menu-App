@@ -45,7 +45,7 @@ class RiwayatCardCus extends StatelessWidget {
                     style: primaryTextStyle.copyWith(fontWeight: semiBold),
                   ),
                   const SizedBox(
-                    height: 5,
+                    height: 3,
                   ),
                   Text(
                     "05 Mei 2022, 08:00",
@@ -54,6 +54,11 @@ class RiwayatCardCus extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 5,
+                  ),
+                  Text(
+                    "Makanan",
+                    style: secondSubtitleTextStyle.copyWith(
+                        fontWeight: regular, fontSize: 14),
                   ),
                   Row(
                     children: [
@@ -75,9 +80,6 @@ class RiwayatCardCus extends StatelessWidget {
               ),
             ],
           ),
-          // const SizedBox(
-          //   height: 12,
-          // ),
           Divider(
             thickness: 1,
             color: AppColor.placeholder.withOpacity(0.25),

@@ -8,83 +8,38 @@ class HomePagee extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget location() {
-      return Row(
-        children: [
-          Image.asset(
-            "assets/icon/icon_location.png",
-            width: 20,
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-          Text(
-            "Meja No 1",
-            style: primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-        ],
-      );
-    }
-
-    Widget search() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(
-                    12.5,
-                  ),
-                  height: 48,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: subtitleColor,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/icon/icon_search.png",
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                    ],
-                  )),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Image.asset(
-              "assets/icon/Icon_filter.png",
-              width: 48,
-            )
-          ],
-        ),
-      );
-    }
-
     Widget titleCatagories() {
-      return Container(
-        margin: const EdgeInsets.only(top: 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Categories",
-              style: primaryTextStyle.copyWith(
-                fontSize: 18,
-                fontWeight: medium,
+      return Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+            color: secondaryColor,
+            border: Border(
+              top: BorderSide(
+                width: 1,
+                color: secondsubtitleColor,
               ),
             ),
-          ],
+          ),
+          padding: const EdgeInsets.only(left: 10),
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Categories",
+                style: primaryTextStyle.copyWith(
+                  fontSize: 18,
+                  fontWeight: medium,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -133,26 +88,67 @@ class HomePagee extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor3,
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: secondaryColor,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        leading: Stack(
+          alignment: AlignmentDirectional.centerStart,
+          children: [
+            Icon(
+              Icons.bookmark,
+              color: secondsubtitleColor,
+              size: 50,
+            ),
+            Positioned(
+              bottom: 19,
+              right: 19,
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: Center(
+                  child: Text(
+                    "9",
+                    style: subtitleTextStyle.copyWith(
+                      color: Colors.white,
+                      fontWeight: bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+        title: Text(
+          "Menu",
+          style: primaryTextStyle.copyWith(fontWeight: semiBold),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.search_rounded,
+                color: secondsubtitleColor,
+                size: 35,
+              )),
+          const SizedBox(
+            width: 5,
+          )
+        ],
+      ),
       body: FutureBuilder(
           future: null,
           builder: (context, snapshot) {
-            return Container(
-              margin: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-              ),
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  location(),
-                  search(),
-                  titleCatagories(),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+            return ListView(
+              shrinkWrap: true,
+              children: [
+                titleCatagories(),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10),
                     child: Row(
                       children: [
                         scrollCategories(
@@ -174,13 +170,16 @@ class HomePagee extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      mySheet(context);
-                    },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    mySheet(context);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10),
                     child: product(
                       context,
                       controller,
@@ -188,9 +187,9 @@ class HomePagee extends StatelessWidget {
                       12000,
                       "assets/img/image_nasgor.jpg",
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             );
           }),
     );

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/shared/theme.dart';
+import '../../models/restaurant_model.dart';
+import '../../shared/theme.dart';
 
-class RestoranCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+Widget buildRestaurant(Restaurant restaurant) => Container(
       margin: const EdgeInsets.only(bottom: 10),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'assets/img/img_restoran.jpg',
+          Image.network(
+            restaurant.imageUrl,
             width: double.infinity,
             height: 150,
             fit: BoxFit.cover,
@@ -24,17 +22,18 @@ class RestoranCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Fridays Restaurant",
+                  restaurant.name,
                   style:
                       titleTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
-                Text("Jln. Medan-Banda Aceh",
+                Text(restaurant.alamat,
                     style: secondSubtitleTextStyle.copyWith(
                         fontSize: 14, fontWeight: bold)),
-                const SizedBox(
+                SizedBox(
+                  // child: Text(restaurant.idUser),
                   height: 5,
                 ),
               ],
@@ -43,5 +42,3 @@ class RestoranCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}

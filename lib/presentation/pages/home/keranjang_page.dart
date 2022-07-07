@@ -145,7 +145,7 @@ class BagPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Text(
-          "Pesanan",
+          "Keranjang",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
         ),
       ),

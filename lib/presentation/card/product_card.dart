@@ -121,11 +121,6 @@ mySheet(BuildContext context) {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Nasi Goreng",
-                      style: titleTextStyle.copyWith(
-                          fontSize: 24, fontWeight: bold),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -151,6 +146,7 @@ mySheet(BuildContext context) {
                         ),
                       ],
                     ),
+                    const SizedBox(),
                   ],
                 ),
                 //Baris 2
@@ -162,10 +158,22 @@ mySheet(BuildContext context) {
                       "assets/img/image_nasgor.jpg",
                       width: 100,
                     ),
-                    Text(
-                      "Rp22.00",
-                      style: priceTextStyle.copyWith(
-                          fontSize: 24, fontWeight: bold),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Nasi Goreng",
+                          style: titleTextStyle.copyWith(
+                              fontSize: 24, fontWeight: bold),
+                        ),
+                        Text("Makanan",
+                            style: subtitleTextStyle.copyWith(fontSize: 18)),
+                        Text(
+                          "Rp22.00",
+                          style: priceTextStyle.copyWith(
+                              fontSize: 24, fontWeight: bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),

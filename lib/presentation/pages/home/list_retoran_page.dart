@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/presentation/card/list_restoran_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
+
+import '../../../models/restaurant_model.dart';
 
 class ListRestoran extends StatelessWidget {
   @override
@@ -28,13 +31,6 @@ class ListRestoran extends StatelessWidget {
                     ],
                   )),
             ),
-            // const SizedBox(
-            //   width: 16,
-            // ),
-            // Image.asset(
-            //   "assets/icon/Icon_filter.png",
-            //   width: 48,
-            // )
           ],
         ),
       );
@@ -63,24 +59,47 @@ class ListRestoran extends StatelessWidget {
             // fontWeight: semiBold,
           ),
         ),
-        body: ListView(
-          children: [
-            search(),
-            const SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/detail-restoran');
-              },
-              child: RestoranCard(),
-            ),
-            RestoranCard(),
-            RestoranCard(),
-            RestoranCard(),
-          ],
-        )
+        body: StreamBuilder<List<Restaurant>>(
+            stream: readRestaurant(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                // return Text('${snapshot.error}');
+                return Text("Something went wrong! ${snapshot.error}");
+              } else if (snapshot.hasData) {
+                final restaurants = snapshot.data!;
+                return ListView(
+                  children: restaurants.map(buildRestaurant).toList(),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              // return ListView(
+              //   children: [
+              //     search(),
+              //     const SizedBox(
+              //       height: 20,
+              //     ),
+              //     GestureDetector(
+              //       onTap: () {
+              //         Navigator.pushNamed(context, '/detail-restoran');
+              //       },
+              //       child: RestoranCard(),
+              //     ),
+              //     RestoranCard(),
+              //     RestoranCard(),
+              //     RestoranCard(),
+              //   ],
+              // );
+            })
         // bottomNavigationBar: costumBottomNav(),
         );
   }
+
+  Stream<List<Restaurant>> readRestaurant() => FirebaseFirestore.instance
+      .collection('restaurant')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Restaurant.fromJson(doc.data())).toList());
 }
