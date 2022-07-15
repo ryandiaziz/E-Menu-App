@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/pages/home/botton_navigation.dart';
+import 'package:e_menu_app/presentation/pages/home/navigation.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:e_menu_app/presentation/card/product_card.dart';
 
-class HomePagee extends StatelessWidget {
+class MenuPage extends StatelessWidget {
   ScrollController controller = ScrollController();
 
   @override
@@ -87,7 +87,7 @@ class HomePagee extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor3,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: secondaryColor,
@@ -109,7 +109,7 @@ class HomePagee extends StatelessWidget {
                 height: 25,
                 child: Center(
                   child: Text(
-                    "9",
+                    "99",
                     style: subtitleTextStyle.copyWith(
                       color: Colors.white,
                       fontWeight: bold,
@@ -138,60 +138,56 @@ class HomePagee extends StatelessWidget {
           )
         ],
       ),
-      body: FutureBuilder(
-          future: null,
-          builder: (context, snapshot) {
-            return ListView(
-              shrinkWrap: true,
-              children: [
-                titleCatagories(),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      children: [
-                        scrollCategories(
-                          "assets/img/image_burger.png",
-                          "Burger",
-                        ),
-                        scrollCategories(
-                          "assets/icon/icon_sandwich.png",
-                          "Sandwich",
-                        ),
-                        scrollCategories(
-                          "assets/img/image_burger.png",
-                          "Burger",
-                        ),
-                        scrollCategories(
-                          "assets/img/image_burger.png",
-                          "Burger",
-                        ),
-                      ],
-                    ),
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          titleCatagories(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              margin: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  scrollCategories(
+                    "assets/img/image_burger.png",
+                    "Burger",
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    mySheet(context);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    child: product(
-                      context,
-                      controller,
-                      "Nasi Goreng",
-                      12000,
-                      "assets/img/image_nasgor.jpg",
-                    ),
+                  scrollCategories(
+                    "assets/icon/icon_sandwich.png",
+                    "Sandwich",
                   ),
-                )
-              ],
-            );
-          }),
+                  scrollCategories(
+                    "assets/img/image_burger.png",
+                    "Burger",
+                  ),
+                  scrollCategories(
+                    "assets/img/image_burger.png",
+                    "Burger",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              mySheet(context);
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              child: product(
+                context,
+                controller,
+                "Nasi Goreng",
+                12000,
+                "assets/img/image_nasgor.jpg",
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

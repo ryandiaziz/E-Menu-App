@@ -42,7 +42,9 @@ dependencies:
   flutter_bloc: null
   flutter_lints: null
   flutter_svg: null
+  font_awesome_flutter: ^10.1.0
   google_fonts: null
+  google_sign_in: null
   image_cropper: null
   image_picker: null
   path_provider: null
@@ -73,6 +75,7 @@ flutter:
   assets:
     - assets/img/
     - assets/icon/
+    - assets/svg/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

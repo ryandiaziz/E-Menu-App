@@ -59,7 +59,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/main-page');
+                    Navigator.pushNamed(context, '/home-page');
                   },
                   child: Image.asset(
                     "assets/icon/button_back.png",

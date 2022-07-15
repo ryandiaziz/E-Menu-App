@@ -153,7 +153,7 @@ class _SignInPageState extends State<SignInPage> {
       return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthSuccess) {
           Navigator.pushNamedAndRemoveUntil(
-              context, '/main-page', (route) => false);
+              context, '/home-page', (route) => false);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: const Text('Login Berhasil'),
             backgroundColor: priceColor,

@@ -24,11 +24,11 @@ class _SplashPageState extends State<SplashPage> {
     Timer(const Duration(seconds: 3), () {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        print(user.email);
+        (user.email);
         context.read<AuthCubit>().getCurrentUser(user.uid);
-        Navigator.pushReplacementNamed(context, '/main-page');
+        Navigator.pushReplacementNamed(context, '/home-page');
       } else {
-        Navigator.pushReplacementNamed(context, '/scan-page');
+        Navigator.pushReplacementNamed(context, '/onboarding-page');
       }
     });
   }

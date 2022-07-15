@@ -15,13 +15,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/presentation/pages/home/list_retoran_page.dart';
-import 'package:e_menu_app/presentation/pages/home/botton_navigation.dart';
-import 'package:e_menu_app/presentation/pages/home/main_page.dart';
 import 'package:e_menu_app/presentation/pages/product/detail_product_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile.dart';
 import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
+
+import 'presentation/pages/home/home_page.dart';
+import 'presentation/pages/home/navigation.dart';
+import 'presentation/pages/home/onboarding_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,10 +51,11 @@ class MyApp extends StatelessWidget {
         routes: {
           // '/': (context) => const ScanPage(),
           '/': (context) => const SplashPage(),
-          '/scan-page': (context) => const ScanPage(),
-          '/scanning-page': (context) => QRScanPage(),
-          '/list-restoran': (context) => ListRestoran(),
-          '/main-page': (context) => const MainPage(),
+          '/onboarding-page': (context) => const Onboarding(),
+          '/home-page': (context) => const HomePage(),
+          '/scan-page': (context) => QRScanPage(),
+          '/restaurant-page': (context) => ListRestoran(),
+          '/navigation-page': (context) => const NavigationPage(),
           '/sign-in': (context) => const SignInPage(),
           '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),

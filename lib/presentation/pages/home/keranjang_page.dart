@@ -138,7 +138,7 @@ class BagPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColor.placeholderBg,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: secondaryColor,

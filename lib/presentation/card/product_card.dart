@@ -27,6 +27,20 @@ Widget product(
           // border: Border.all(color: priceColor, width: 0.5),
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 3.0,
+              offset: Offset(0, 2),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              offset: Offset(-2, 0),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

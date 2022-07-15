@@ -36,10 +36,10 @@ class UserRepository {
   }
 
   // Future<void> updateUser(
-  //     String fullname, String email, String username) async {
+  //     String displayName, String email, String username) async {
   //   try {
   //     return await _userReference.doc().update({
-  //       'fullname': fullname,
+  //       'displayName': displayName,
   //       'email': email,
   //       'username': username,
   //     });

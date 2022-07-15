@@ -1,19 +1,20 @@
-import 'dart:io';
+import 'package:e_menu_app/providers/google_sign_in.dart';
 import 'package:e_menu_app/widgets/change_screen.dart';
 import 'package:e_menu_app/widgets/custom_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _SignInState createState() => _SignInState();
 }
 
 String p =
@@ -21,12 +22,12 @@ String p =
 
 RegExp regExp = new RegExp(p);
 
-class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController fullnameController = TextEditingController();
-  TextEditingController noHPController = TextEditingController();
+class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isLoading = false;
+  // bool isLoading = false;
+
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   bool _isHiddenPassword = true;
 
@@ -37,19 +38,10 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void vaildation() async {
-    if (fullnameController.text.isEmpty &&
-        noHPController.text.isEmpty &&
-        emailController.text.isEmpty &&
-        passwordController.text.isEmpty) {
+    if (emailController.text.isEmpty && passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("All Field Are Empty"),
-        ),
-      );
-    } else if (fullnameController.text.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Name Must Be 6 "),
+          content: Text("Both Flied Are Empty"),
         ),
       );
     } else if (emailController.text.isEmpty) {
@@ -76,42 +68,71 @@ class _SignUpPageState extends State<SignUpPage> {
           content: Text("Password  Is Too Short"),
         ),
       );
-    } else if (noHPController.text.length < 12 ||
-        noHPController.text.length > 12) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Phone Number Must Be 12"),
-        ),
-      );
     } else {
-      context.read<AuthCubit>().signUp(
-          fullname: fullnameController.text,
-          username: noHPController.text,
-          email: emailController.text,
-          password: passwordController.text);
+      context.read<AuthCubit>().signIn(
+          email: emailController.text, password: passwordController.text);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget header() {
+      return Container(
+          // margin: const EdgeInsets.only(
+          //   top: 30,
+          // ),
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(
+            'assets/icon/icon_emenu.png',
+            width: 200,
+          ),
+          const SizedBox(
+            height: 2,
+          ),
+        ],
+      ));
+    }
+
+    Widget googleSignIn() {
+      return ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: Colors.black,
+            minimumSize: Size(double.infinity, 50)),
+        onPressed: () {
+          final provider =
+              Provider.of<GoogleSignInProvider>(context, listen: false);
+          provider.googleLogin();
+        },
+        icon: FaIcon(
+          FontAwesomeIcons.google,
+          color: Colors.amber,
+        ),
+        label: Text("Login With Google"),
+      );
+    }
+
     Widget passwordInput() {
       return Container(
         margin: const EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // const SizedBox(height: 12),
             Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
               decoration: BoxDecoration(
                 color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: Row(
                   children: [
                     Image.asset(
-                      "assets/icon/icon_password.png",
+                      'assets/icon/icon_password.png',
                       width: 17,
                       color: secondsubtitleColor,
                     ),
@@ -151,40 +172,37 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
 
-    Widget signUpButton() {
-      return BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Text("Sign Up Success"),
-              duration: const Duration(seconds: 2),
-              backgroundColor: priceColor,
-            ));
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home-page', (route) => false);
-          } else if (state is AuthFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.errorMessage),
-              backgroundColor: Colors.red,
-            ));
-          }
-        },
-        builder: (context, state) {
-          return Container(
-            margin: const EdgeInsets.only(top: 40),
-            height: 50,
-            width: double.infinity,
-            child: (state is AuthLoading)
-                ? _loginLoadingButton()
-                : _loginButton(context),
-          );
-        },
-      );
+    Widget signInButton() {
+      return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+        if (state is AuthSuccess) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/home-page', (route) => false);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Login Berhasil'),
+            backgroundColor: priceColor,
+          ));
+        } else if (state is AuthFailed) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.errorMessage),
+            backgroundColor: Colors.red,
+          ));
+        }
+      }, builder: (context, state) {
+        return Container(
+          margin: const EdgeInsets.only(top: 20),
+          height: 50,
+          width: double.infinity,
+          child: (state is AuthLoading)
+              ? _loadingButtonLogin()
+              : _buttonLogin(context),
+        );
+      });
     }
 
     return Scaffold(
         backgroundColor: secondaryColor,
         appBar: AppBar(
+          // centerTitle: true,
           backgroundColor: Colors.white,
           leading: GestureDetector(
             onTap: () {
@@ -192,60 +210,70 @@ class _SignUpPageState extends State<SignUpPage> {
             },
             child: Icon(
               Icons.arrow_back_ios,
-              color: secondsubtitleColor,
+              color: primaryColor,
             ),
           ),
           automaticallyImplyLeading: true,
           titleSpacing: -5,
           elevation: 0,
           title: Text(
-            "Sign Up",
+            "Login",
             style: primaryTextStyle.copyWith(fontWeight: semiBold),
             // fontWeight: semiBold,
           ),
         ),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
-                  image: 'assets/icon/icon_profile_select.png',
-                  controller: fullnameController,
-                  hintText: "Full Name",
+            child: Form(
+              key: _formkey,
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(0),
+                  height: MediaQuery.of(context).size.height - 130,
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(child: header()),
+                      googleSignIn(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          "atau",
+                          style: secondSubtitleTextStyle,
+                        ),
+                      ),
+                      CustomTextField(
+                          image: 'assets/icon/icon_email.png',
+                          controller: emailController,
+                          hintText: 'Email'),
+                      passwordInput(),
+                      // isLoading ? LoadingButton() : signInButton(),
+                      signInButton(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ChangeScreen(
+                        teks: "Don't have an account?",
+                        onTapp: () {
+                          Navigator.pushNamed(context, '/sign-up');
+                        },
+                        screenTeks: " Sign Up",
+                      ),
+                    ],
+                  ),
                 ),
-                CustomTextField(
-                  image: 'assets/icon/icon_phone.png',
-                  controller: noHPController,
-                  hintText: "No HP",
-                ),
-                CustomTextField(
-                  image: 'assets/icon/icon_email.png',
-                  controller: emailController,
-                  hintText: 'Email',
-                ),
-                passwordInput(),
-                signUpButton(),
-                // isLoading ? LoadingButton() : signInButton(),
-                const SizedBox(
-                  height: 20,
-                ),
-                ChangeScreen(
-                  teks: "Already have an account?",
-                  onTapp: () {
-                    Navigator.pushNamed(context, '/sign-in');
-                  },
-                  screenTeks: " Sign In",
-                ),
-              ],
+              ),
             ),
           ),
         ));
   }
 
-  TextButton _loginButton(BuildContext context) {
+  TextButton _buttonLogin(BuildContext context) {
     return TextButton(
         // onPressed: hendleSignIn,
         onPressed: () {
@@ -253,22 +281,25 @@ class _SignUpPageState extends State<SignUpPage> {
         },
         style: TextButton.styleFrom(
             backgroundColor: priceColor,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10))),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
         child: Text(
-          "Submit",
+          "Login",
           style:
               secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
         ));
   }
 
-  TextButton _loginLoadingButton() {
+  TextButton _loadingButtonLogin() {
     return TextButton(
         onPressed: null,
+        // onPressed: hendleSignIn,
         style: TextButton.styleFrom(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12))),
+          backgroundColor: secondaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
         child: const CircularProgressIndicator());
   }
 }

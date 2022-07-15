@@ -63,7 +63,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   }
 
   void getUID() async {
-    User? user = await FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     var vari = await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
@@ -263,42 +263,32 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
     }
 
     Widget header() {
-      return BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is AuthSuccess) {
-            return Container(
-              width: double.infinity,
-              height: 50,
-              margin: const EdgeInsets.only(top: 40),
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: priceColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    )),
-                onPressed: () {
-                  final dataresto = Restaurant(
-                    name: namarestoranC.text,
-                    alamat: alamatrestoranC.text,
-                    imageUrl: '$imageUrl',
-                    idUser: state.user.id,
-                  );
-                  createRestaurant(dataresto);
-                },
-                child: Text(
-                  'Buka E-Menu',
-                  style: secondaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: semiBold),
-                ),
-              ),
+      User? user = FirebaseAuth.instance.currentUser;
+      return Container(
+        width: double.infinity,
+        height: 50,
+        margin: const EdgeInsets.only(top: 40),
+        child: TextButton(
+          style: TextButton.styleFrom(
+              backgroundColor: priceColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              )),
+          onPressed: () {
+            final dataresto = Restaurant(
+              name: namarestoranC.text,
+              alamat: alamatrestoranC.text,
+              imageUrl: '$imageUrl',
+              idUser: user!.uid,
             );
-          } else {
-            return const SizedBox();
-          }
-        },
+            createRestaurant(dataresto);
+          },
+          child: Text(
+            'Buka E-Menu',
+            style:
+                secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+          ),
+        ),
       );
     }
 

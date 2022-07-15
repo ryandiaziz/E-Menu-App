@@ -28,15 +28,26 @@ class _OnboardingState extends State<Onboarding> {
                 itemCount: contents.length,
                 itemBuilder: (_, i) {
                   return Padding(
-                    padding: const EdgeInsets.all(40),
+                    padding: EdgeInsets.only(
+                      top: 100 + MediaQuery.of(context).padding.top,
+                      left: 20 + MediaQuery.of(context).padding.left,
+                      right: 20 + MediaQuery.of(context).padding.right,
+                    ),
                     child: Column(
                       children: [
                         SvgPicture.asset(
                           contents[i].image,
-                          height: 300,
+                          height: 230,
                         ),
-                        Text(contents[i].title),
-                        Text(contents[i].discription),
+                        Text(
+                          contents[i].title,
+                          style: titleTextStyle.copyWith(
+                              fontSize: 28, fontWeight: bold),
+                        ),
+                        Text(
+                          contents[i].discription,
+                          style: secondPrimaryTextStyle,
+                        ),
                       ],
                     ),
                   );

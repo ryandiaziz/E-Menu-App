@@ -1,5 +1,5 @@
 import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
-import 'package:e_menu_app/presentation/pages/home/main_page.dart';
+import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/widgets/cus_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/presentation/pages/home/keranjang_page.dart';
@@ -9,21 +9,19 @@ import 'package:e_menu_app/presentation/pages/home/riwayat_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class NavigationPage extends StatefulWidget {
+  const NavigationPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
 
   final screens = [
-    HomePagee(),
+    MenuPage(),
     BagPage(),
-    RiwayatPage(),
-    const ProfileCusPage()
   ];
 
   Widget indicator() {
@@ -88,51 +86,8 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
         ),
-        BottomNavigationBarItem(
-          label: "Pesanan",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.square_list,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
-        BottomNavigationBarItem(
-          label: "Profile",
-          icon: Container(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: Column(
-              children: const [
-                Icon(
-                  CupertinoIcons.person,
-                  size: 25,
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
-  }
-
-  Widget body() {
-    switch (index) {
-      case 0:
-        return HomePagee();
-      case 1:
-        return BagPage();
-      case 2:
-        return RiwayatPage();
-      case 3:
-        return const ProfileCusPage();
-      default:
-        return HomePagee();
-    }
   }
 
   @override
