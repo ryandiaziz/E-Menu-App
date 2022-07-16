@@ -103,7 +103,7 @@ class _SignInPageState extends State<SignInPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
               decoration: BoxDecoration(
                 color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: Row(
@@ -194,7 +194,7 @@ class _SignInPageState extends State<SignInPage> {
           titleSpacing: -5,
           elevation: 0,
           title: Text(
-            "Login",
+            "Sign In",
             style: primaryTextStyle.copyWith(fontWeight: semiBold),
             // fontWeight: semiBold,
           ),
@@ -208,7 +208,7 @@ class _SignInPageState extends State<SignInPage> {
               child: SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.all(0),
-                  height: MediaQuery.of(context).size.height - 250,
+                  height: MediaQuery.of(context).size.height - 130,
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +221,9 @@ class _SignInPageState extends State<SignInPage> {
                       passwordInput(),
                       // isLoading ? LoadingButton() : signInButton(),
                       signInButton(),
-                      const Spacer(),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       ChangeScreen(
                         teks: "Don't have an account?",
                         onTapp: () {
@@ -246,10 +248,10 @@ class _SignInPageState extends State<SignInPage> {
         },
         style: TextButton.styleFrom(
             backgroundColor: priceColor,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10))),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
         child: Text(
-          "Login",
+          "Sign In",
           style:
               secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
         ));

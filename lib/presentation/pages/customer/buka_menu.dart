@@ -31,6 +31,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   File? image;
   String? imageUrl;
   String iduser = '';
+  bool resto = true;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -346,21 +347,25 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
             // fontWeight: semiBold,
           ),
         ),
-        body: Container(
-          margin: const EdgeInsets.only(
-            top: 20,
-            left: 20,
-            right: 20,
-            bottom: 10,
-          ),
-          child: Column(
-            children: [
-              fotoResto(),
-              namarestoran(),
-              alamatrestoran(),
-              header(),
-              // showdata(context),
-            ],
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height - 130,
+            width: double.infinity,
+            margin: const EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+              bottom: 10,
+            ),
+            child: Column(
+              children: [
+                fotoResto(),
+                namarestoran(),
+                alamatrestoran(),
+                header(),
+                // showdata(context),
+              ],
+            ),
           ),
         ));
   }
@@ -372,10 +377,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
     final json = dataresto.toJson();
     await docResto.set(json);
 
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => const ProfileCusPage()),
-        (route) => false);
+    Navigator.pushNamed(context, '/profile-ad', arguments: resto);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,

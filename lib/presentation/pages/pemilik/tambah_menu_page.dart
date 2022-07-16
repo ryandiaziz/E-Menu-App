@@ -70,31 +70,35 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
           // fontWeight: semiBold,
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-          bottom: 10,
-        ),
-        child: Column(
-          children: [
-            CustomTextField(
-                image: "assets/icon/icon_nama_menu.png",
-                controller: _namaProdukC,
-                hintText: 'Nama Menu'),
-            CustomTextField(
-              image: "assets/icon/icon_price.png",
-              controller: _hargaProdukC,
-              hintText: "Harga",
-            ),
-            CustomTextField(
-              image: "assets/icon/icon_jenis.png",
-              controller: _jenisProdukC,
-              hintText: "Jenis Produk",
-            ),
-            submitMenu()
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height - 130,
+          width: double.infinity,
+          margin: const EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: 10,
+          ),
+          child: Column(
+            children: [
+              CustomTextField(
+                  image: "assets/icon/icon_nama_menu.png",
+                  controller: _namaProdukC,
+                  hintText: 'Nama Menu'),
+              CustomTextField(
+                image: "assets/icon/icon_price.png",
+                controller: _hargaProdukC,
+                hintText: "Harga",
+              ),
+              CustomTextField(
+                image: "assets/icon/icon_jenis.png",
+                controller: _jenisProdukC,
+                hintText: "Jenis Produk",
+              ),
+              submitMenu()
+            ],
+          ),
         ),
       ),
     );

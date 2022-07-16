@@ -144,7 +144,7 @@ class BelumDibuat extends StatelessWidget {
                     backgroundColor: priceColor,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
+                        borderRadius: BorderRadius.circular(5))),
                 child: Text(
                   "Selesai",
                   style: secondaryTextStyle.copyWith(

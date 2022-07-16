@@ -105,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
               decoration: BoxDecoration(
                 color: const Color(0xffEFF0F6),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: Row(
@@ -253,8 +253,8 @@ class _SignUpPageState extends State<SignUpPage> {
         },
         style: TextButton.styleFrom(
             backgroundColor: priceColor,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10))),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
         child: Text(
           "Submit",
           style:

@@ -39,6 +39,9 @@ class _OnboardingState extends State<Onboarding> {
                           contents[i].image,
                           height: 230,
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Text(
                           contents[i].title,
                           style: titleTextStyle.copyWith(
@@ -54,7 +57,7 @@ class _OnboardingState extends State<Onboarding> {
                 },
               ),
             ),
-            Container(
+            SizedBox(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
@@ -84,6 +87,12 @@ class _OnboardingState extends State<Onboarding> {
       width: double.infinity,
       height: 50,
       margin: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            width: 2.0,
+            color: const Color(0xffEFF0F6),
+          )),
       child: TextButton(
           style: TextButton.styleFrom(
               backgroundColor: Colors.white,
@@ -94,7 +103,7 @@ class _OnboardingState extends State<Onboarding> {
             Navigator.pushNamed(context, '/sign-in');
           },
           child: Text(
-            "Masuk",
+            "Sign In",
             style: priceTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
           )),
     );
@@ -115,7 +124,7 @@ class _OnboardingState extends State<Onboarding> {
             Navigator.pushNamed(context, '/sign-up');
           },
           child: Text(
-            "Daftar",
+            "Create an Account",
             style:
                 secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
           )),
