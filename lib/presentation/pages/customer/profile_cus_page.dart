@@ -70,7 +70,7 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              state.user.fullname,
+                              state.user.displayName,
                               style: titleTextStyle.copyWith(
                                   fontSize: 20, fontWeight: bold),
                             ),

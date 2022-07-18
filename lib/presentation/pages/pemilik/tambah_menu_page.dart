@@ -14,6 +14,8 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   final TextEditingController _namaProdukC = TextEditingController();
   final TextEditingController _hargaProdukC = TextEditingController();
   final TextEditingController _jenisProdukC = TextEditingController();
+  List<String> items = ['Makanan', 'Minuman', 'Cemilan'];
+  String? selectedItem = 'Makanan';
 
   @override
   void dispose() {
@@ -25,6 +27,30 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget buildCategory() {
+      return Container(
+        color: const Color(0xffEFF0F6),
+        margin: const EdgeInsets.only(top: 20),
+        width: double.infinity,
+        height: 50,
+        child: DropdownButtonFormField<String>(
+          value: selectedItem,
+          items: items
+              .map((item) => DropdownMenuItem(
+                    child: Text(
+                      item,
+                      style: primaryTextStyle,
+                    ),
+                    value: item,
+                  ))
+              .toList(),
+          onChanged: (item) => setState(() {
+            selectedItem = item;
+          }),
+        ),
+      );
+    }
+
     Widget submitMenu() {
       return Container(
         width: double.infinity,
@@ -91,11 +117,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                 controller: _hargaProdukC,
                 hintText: "Harga",
               ),
-              CustomTextField(
-                image: "assets/icon/icon_jenis.png",
-                controller: _jenisProdukC,
-                hintText: "Jenis Produk",
-              ),
+              buildCategory(),
               submitMenu()
             ],
           ),

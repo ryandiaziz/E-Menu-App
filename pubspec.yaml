@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   bloc: null
+  camera: ^0.10.0
   carousel_slider: null
   cloud_firestore: null
   cupertino_icons: null
@@ -50,6 +51,7 @@ dependencies:
   path_provider: null
   provider: null
   qr_code_scanner: null
+  qr_flutter: null
   staggered_grid_view_flutter: null
 
 dev_dependencies:

@@ -36,7 +36,7 @@ class _QRScanPageState extends State<QRScanPage> {
             alignment: Alignment.center,
             children: [
               buildQrView(context),
-              Positioned(bottom: 10, child: buildResult()),
+              Positioned(bottom: 100, child: buildResult()),
             ],
           ),
         ),
@@ -44,6 +44,7 @@ class _QRScanPageState extends State<QRScanPage> {
 
   Widget buildResult() => Text(
         barcode != null ? 'Result: ${barcode!.code}' : 'Scan a Code!',
+        style: TextStyle(color: Colors.white),
         maxLines: 3,
       );
 

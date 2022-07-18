@@ -24,7 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signUp({
-    required String fullname,
+    required String displayName,
     required String username,
     required String email,
     required String password,
@@ -33,7 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthLoading());
 
       UserModel user = await AuthRepository().signUp(
-        fullname: fullname,
+        displayName: displayName,
         username: username,
         email: email,
         password: password,

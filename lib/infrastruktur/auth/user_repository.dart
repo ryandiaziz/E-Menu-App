@@ -11,7 +11,7 @@ class UserRepository {
     try {
       _userReference.doc(user.id).set({
         'email': user.email,
-        'fullname': user.fullname,
+        'displayName': user.displayName,
         'username': user.username,
         'password': user.password,
         'id': user.id
@@ -26,7 +26,7 @@ class UserRepository {
       DocumentSnapshot snapshot = await _userReference.doc(id).get();
       return UserModel(
           id: id,
-          fullname: snapshot['fullname'],
+          displayName: snapshot['displayName'],
           username: snapshot['username'],
           email: snapshot['email'],
           password: snapshot['password']);

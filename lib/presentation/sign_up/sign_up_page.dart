@@ -22,7 +22,7 @@ String p =
 RegExp regExp = new RegExp(p);
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController fullnameController = TextEditingController();
+  TextEditingController displayNameController = TextEditingController();
   TextEditingController noHPController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -37,7 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void vaildation() async {
-    if (fullnameController.text.isEmpty &&
+    if (displayNameController.text.isEmpty &&
         noHPController.text.isEmpty &&
         emailController.text.isEmpty &&
         passwordController.text.isEmpty) {
@@ -46,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
           content: Text("All Field Are Empty"),
         ),
       );
-    } else if (fullnameController.text.length < 6) {
+    } else if (displayNameController.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Name Must Be 6 "),
@@ -85,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     } else {
       context.read<AuthCubit>().signUp(
-          fullname: fullnameController.text,
+          displayName: displayNameController.text,
           username: noHPController.text,
           email: emailController.text,
           password: passwordController.text);
@@ -213,7 +213,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 CustomTextField(
                   image: 'assets/icon/icon_profile_select.png',
-                  controller: fullnameController,
+                  controller: displayNameController,
                   hintText: "Full Name",
                 ),
                 CustomTextField(

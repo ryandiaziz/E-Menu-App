@@ -31,7 +31,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   File? image;
   String? imageUrl;
   String iduser = '';
-  bool resto = true;
+  bool isResto = true;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -371,13 +371,18 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   }
 
   Future createRestaurant(Restaurant dataresto) async {
-    final docResto = FirebaseFirestore.instance.collection('restaurant').doc();
+    User? user = FirebaseAuth.instance.currentUser;
+    final docResto = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('reso')
+        .doc();
     dataresto.id = docResto.id;
 
     final json = dataresto.toJson();
     await docResto.set(json);
 
-    Navigator.pushNamed(context, '/profile-ad', arguments: resto);
+    Navigator.pushNamed(context, '/profile-ad', arguments: isResto);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,

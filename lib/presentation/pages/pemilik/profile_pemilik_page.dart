@@ -71,7 +71,7 @@ class ProfileAdPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          state.user.fullname,
+                          state.user.displayName,
                           style: titleTextStyle.copyWith(
                               fontSize: 24, fontWeight: semiBold),
                         ),

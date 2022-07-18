@@ -27,7 +27,7 @@ class AuthRepository {
 
   Future<UserModel> signUp({
     required String id,
-    required String fullname,
+    required String displayName,
     required String username,
     required String email,
     required String password,
@@ -41,7 +41,7 @@ class AuthRepository {
 
       UserModel user = UserModel(
         id: userCredential.user!.uid,
-        fullname: fullname,
+        displayName: displayName,
         username: username,
         email: email,
         password: password,

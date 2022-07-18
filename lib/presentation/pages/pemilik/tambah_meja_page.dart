@@ -1,5 +1,6 @@
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class TambahMejaPage extends StatefulWidget {
   const TambahMejaPage({Key? key}) : super(key: key);
@@ -9,8 +10,18 @@ class TambahMejaPage extends StatefulWidget {
 }
 
 class _TambahMejaPageState extends State<TambahMejaPage> {
+  final controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Widget qrGenerate() {
+      return Center(
+        child: QrImage(
+          data: controller.text,
+          size: 300,
+        ),
+      );
+    }
+
     Widget nomejaInput() {
       return Container(
         margin: const EdgeInsets.only(top: 10),
@@ -36,11 +47,17 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        // controller: fullnameController,
+                        controller: controller,
                         style: primaryTextStyle,
-                        decoration: InputDecoration.collapsed(
+                        decoration: InputDecoration(
                             hintText: "Masukan Nomor Meja",
-                            hintStyle: subtitleTextStyle),
+                            hintStyle: subtitleTextStyle,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {});
+                              },
+                              icon: Icon(Icons.done),
+                            )),
                       ),
                     )
                   ],
@@ -100,13 +117,16 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
         body: SafeArea(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // header(),
-                nomejaInput(),
-                submitMeja(),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // header(),
+                  qrGenerate(),
+                  nomejaInput(),
+                  submitMeja(),
+                ],
+              ),
             ),
           ),
         ));
