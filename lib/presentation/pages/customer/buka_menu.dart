@@ -30,7 +30,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
 
   File? image;
   String? imageUrl;
-  String iduser = '';
+  String? iduser;
   bool isResto = true;
 
   Future getImage(ImageSource source) async {
@@ -111,7 +111,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await getImage(ImageSource.gallery);
-                        _upload('${image?.path}');
+                        // await _upload('${image?.path}');
                       },
                       child: const Icon(Icons.image),
                     ),
@@ -129,13 +129,13 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
       return Center(
         child: Stack(
           children: [
-            imageUrl != null
+            image != null
                 ? SizedBox(
                     height: 120,
                     width: 120,
                     child: ClipOval(
-                      child: Image.network(
-                        imageUrl!,
+                      child: Image.file(
+                        image!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -263,7 +263,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
       );
     }
 
-    Widget header() {
+    Widget submit() {
       User? user = FirebaseAuth.instance.currentUser;
       return Container(
         width: double.infinity,
@@ -275,7 +275,8 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               )),
-          onPressed: () {
+          onPressed: () async {
+            await _upload('${image?.path}');
             final dataresto = Restaurant(
               name: namarestoranC.text,
               alamat: alamatrestoranC.text,
@@ -283,37 +284,6 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
               idUser: user!.uid,
             );
             createRestaurant(dataresto);
-          },
-          child: Text(
-            'Buka E-Menu',
-            style:
-                secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-          ),
-        ),
-      );
-    }
-
-    Widget submitMenu() {
-      return Container(
-        width: double.infinity,
-        height: 50,
-        margin: const EdgeInsets.only(top: 40),
-        child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: priceColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              )),
-          onPressed: () {
-            // getUID();
-            // final dataresto = Restaurant(
-            //   name: namarestoranC.text,
-            //   alamat: alamatrestoranC.text,
-            //   imageUrl: '$imageUrl',
-
-            // );
-
-            // createRestaurant(dataresto);
           },
           child: Text(
             'Buka E-Menu',
@@ -362,7 +332,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                 fotoResto(),
                 namarestoran(),
                 alamatrestoran(),
-                header(),
+                submit(),
                 // showdata(context),
               ],
             ),
@@ -371,12 +341,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   }
 
   Future createRestaurant(Restaurant dataresto) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    final docResto = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .collection('reso')
-        .doc();
+    final docResto = FirebaseFirestore.instance.collection('restaurant').doc();
     dataresto.id = docResto.id;
 
     final json = dataresto.toJson();

@@ -41,7 +41,7 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
         titleSpacing: -5,
         elevation: 0,
         title: Text(
-          "Riwayat Pesanan Anda",
+          "Riwayat Pesanan",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
           // fontWeight: semiBold,
         ),

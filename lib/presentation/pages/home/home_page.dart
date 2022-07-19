@@ -192,9 +192,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Stream<List<Restaurant>> readRestaurant() => FirebaseFirestore.instance
-      .collection('users')
-      .doc('ppbQ5c1RS0R6I5rtC6a9k0b22OY2')
-      .collection('reso')
+      .collection('restaurant')
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Restaurant.fromJson(doc.data())).toList());

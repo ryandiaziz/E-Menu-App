@@ -20,6 +20,13 @@ class RiwayatCardCus extends StatelessWidget {
         // crossAxisAlignment: CrossAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "Aby Resto",
+            style: primaryTextStyle.copyWith(fontWeight: bold, fontSize: 18),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
