@@ -1,6 +1,5 @@
 import 'package:e_menu_app/widgets/change_screen.dart';
 import 'package:e_menu_app/widgets/custom_textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
@@ -16,7 +15,7 @@ class SignInPage extends StatefulWidget {
 String p =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-RegExp regExp = new RegExp(p);
+RegExp regExp = RegExp(p);
 
 class _SignInPageState extends State<SignInPage> {
   TextEditingController emailController = TextEditingController();

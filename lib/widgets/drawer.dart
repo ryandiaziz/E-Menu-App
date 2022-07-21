@@ -104,6 +104,8 @@ class NavigationDrawer extends StatelessWidget {
   }
 }
 
+bool? dta;
+
 Widget buildMenuItems(BuildContext context) => Container(
       color: Colors.white,
       margin: const EdgeInsets.only(top: 10),

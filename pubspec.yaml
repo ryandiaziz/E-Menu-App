@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: null
   dartz: null
   dio: null
+  dropdown_search: null
   equatable: null
   firebase_auth: null
   firebase_core: null
@@ -42,6 +43,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: null
   flutter_lints: null
+  flutter_rating_bar:
   flutter_svg: null
   font_awesome_flutter: ^10.1.0
   google_fonts: null
@@ -53,6 +55,7 @@ dependencies:
   qr_code_scanner: null
   qr_flutter: null
   staggered_grid_view_flutter: null
+  uuid: 3.0.6
 
 dev_dependencies:
   flutter_launcher_icons: null

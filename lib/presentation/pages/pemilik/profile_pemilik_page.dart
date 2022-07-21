@@ -15,6 +15,7 @@ class ProfileAdPage extends StatelessWidget {
     Widget header() {
       return BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
+          // ignore: todo
           // TODO: implement listener
           if (state is AuthFailed) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -26,7 +27,7 @@ class ProfileAdPage extends StatelessWidget {
                 context, '/scan-page', (route) => false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("Berhasil Keluar"),
+                content: const Text("Berhasil Keluar"),
                 backgroundColor: primaryColor,
               ),
             );
@@ -34,7 +35,7 @@ class ProfileAdPage extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is AuthSuccess) {
             return AppBar(
               backgroundColor: Colors.white,
@@ -53,7 +54,7 @@ class ProfileAdPage extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(true);
                       },
                       child: Icon(
                         Icons.arrow_back,

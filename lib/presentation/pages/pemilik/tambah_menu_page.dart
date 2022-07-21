@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:path/path.dart' as path;
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import '../../../models/menu_model.dart';
 
@@ -26,8 +23,12 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   final TextEditingController _namaProdukC = TextEditingController();
   final TextEditingController _hargaProdukC = TextEditingController();
   FirebaseStorage storage = FirebaseStorage.instance;
-  List<String> items = ['Makanan', 'Minuman', 'Cemilan'];
-  String selectedItem = 'Makanan';
+
+  // Initial Selected Value
+  String dropdownvalue = 'Makanan';
+
+  // List of items in our dropdown menu
+  var items = ['Makanan', 'Minuman', 'Cemilan'];
 
   File? image;
   String? imageUrl;
@@ -104,7 +105,6 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                       onPressed: () async {
                         Navigator.of(context).pop;
                         getImage(ImageSource.camera);
-                        _upload('${image?.path}');
                       },
                       child: const Icon(Icons.camera),
                     ),
@@ -133,51 +133,30 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
 
     Widget menuImage() {
       return Center(
-        child: Stack(
-          children: [
-            image != null
-                ? SizedBox(
+        child: GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (builder) => bottomSheetResto(),
+            );
+          },
+          child: image != null
+              ? ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: Image.file(
+                    image!,
                     height: 150,
-                    width: 150,
-                    child: Image.file(
-                      image!,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image.asset(
-                      "assets/img/img_restoran.jpg",
-                      fit: BoxFit.cover,
-                    ),
+                    fit: BoxFit.cover,
                   ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (builder) => bottomSheetResto(),
-                  );
-                },
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: backgroundColor3,
-                  ),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: secondsubtitleColor,
-                    size: 25,
+                )
+              : SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset(
+                    "assets/img/add-image.png",
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-            ),
-          ],
         ),
       );
     }
@@ -186,23 +165,50 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
       return Container(
         color: const Color(0xffEFF0F6),
         margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         width: double.infinity,
         height: 50,
-        child: DropdownButtonFormField<String>(
-          value: selectedItem,
-          items: items
-              .map((item) => DropdownMenuItem(
-                    child: Text(
-                      item,
-                      style: primaryTextStyle,
-                    ),
-                    value: item,
-                  ))
-              .toList(),
-          onChanged: (item) => setState(() {
-            selectedItem = item!;
-          }),
+        child: DropdownButton(
+          // Initial Value
+          value: dropdownvalue,
+          hint: const Text('Kategori'),
+
+          // Down Arrow Icon
+          icon: const Icon(Icons.keyboard_arrow_down),
+          isExpanded: true,
+          itemHeight: 50,
+
+          // Array list of items
+          items: items.map((String items) {
+            return DropdownMenuItem(
+              value: items,
+              child: Text(items),
+            );
+          }).toList(),
+          // After selecting the desired option,it will
+          // change button value to selected value
+          onChanged: (String? newValue) {
+            setState(() {
+              dropdownvalue = newValue!;
+            });
+          },
         ),
+
+        // child: DropdownButtonFormField<String>(
+        //   value: selectedItem,
+        //   items: items
+        //       .map((item) => DropdownMenuItem(
+        //             child: Text(
+        //               item,
+        //               style: primaryTextStyle,
+        //             ),
+        //             value: item,
+        //           ))
+        //       .toList(),
+        //   onChanged: (item) => setState(() {
+        //     selectedItem = item!;
+        //   }),
+        // ),
       );
     }
 
@@ -215,14 +221,14 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
             style: TextButton.styleFrom(
                 backgroundColor: priceColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                 )),
             onPressed: () async {
               await _upload('${image?.path}');
               final datamenu = Menu(
                 nama: _namaProdukC.text,
                 harga: _hargaProdukC.text,
-                kategori: selectedItem,
+                kategori: dropdownvalue,
                 imageUrl: '$imageUrl',
               );
               createMenu(datamenu);
@@ -291,20 +297,14 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   }
 
   Future createMenu(Menu datamenu) async {
-    final docMenu = FirebaseFirestore.instance
-        .collection('restaurant')
-        .doc('Fv9wbK0CFM3GFeWphXzh')
-        .collection('menu')
-        .doc();
+    final docMenu = FirebaseFirestore.instance.collection('menu').doc();
     datamenu.id = docMenu.id;
 
     final json = datamenu.toJson();
     await docMenu.set(json);
 
-    Navigator.pushNamed(
-      context,
-      '/profile-ad',
-    );
+    Navigator.pushReplacementNamed(context, '/profile-ad');
+
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,

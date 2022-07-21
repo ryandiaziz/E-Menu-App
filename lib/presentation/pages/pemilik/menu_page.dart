@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/menu_card.dart';
 import 'package:e_menu_app/presentation/card/product_card.dart';
 import 'package:e_menu_app/presentation/card/qrcode_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../../../models/menu_model.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -17,41 +20,56 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor3,
-        appBar: AppBar(
-          // centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: secondsubtitleColor,
-            ),
-          ),
-          automaticallyImplyLeading: true,
-          titleSpacing: -5,
-          elevation: 0,
-          title: Text(
-            "Menu Saya",
-            style: primaryTextStyle.copyWith(fontWeight: semiBold),
-            // fontWeight: semiBold,
+      backgroundColor: backgroundColor3,
+      appBar: AppBar(
+        // centerTitle: true,
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: secondsubtitleColor,
           ),
         ),
-        body: Container(
-          margin: const EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
-          child: ListView(
-            children: [
-              const SizedBox(
-                height: 10,
+        automaticallyImplyLeading: true,
+        titleSpacing: -5,
+        elevation: 0,
+        title: Text(
+          "Menu Saya",
+          style: primaryTextStyle.copyWith(fontWeight: semiBold),
+          // fontWeight: semiBold,
+        ),
+      ),
+      body: StreamBuilder<List<Menu>>(
+        stream: readMenu(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something Went Wrong');
+          } else if (snapshot.hasData) {
+            final menu = snapshot.data!;
+            return Container(
+              margin: const EdgeInsets.only(
+                left: 10,
+                right: 10,
               ),
-              menuadmin(context, controller),
-            ],
-          ),
-        ));
+              child: ListView(
+                children: menu.map(menuadmin).toList(),
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
   }
+
+  Stream<List<Menu>> readMenu() => FirebaseFirestore.instance
+      .collection('menu')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Menu.fromJson(doc.data())).toList());
 }

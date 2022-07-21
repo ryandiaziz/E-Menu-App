@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/models/restaurant_model.dart';
-import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,8 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../aplication/auth/cubit/auth_cubit.dart';
+import 'package:uuid/uuid.dart';
 
 class BukaMenuPage extends StatefulWidget {
   const BukaMenuPage({Key? key}) : super(key: key);
@@ -31,7 +28,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
   File? image;
   String? imageUrl;
   String? iduser;
-  bool isResto = true;
+  String? isResto;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -98,7 +95,6 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                       onPressed: () async {
                         Navigator.of(context).pop;
                         getImage(ImageSource.camera);
-                        _upload('${image?.path}');
                       },
                       child: const Icon(Icons.camera),
                     ),
@@ -111,7 +107,6 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await getImage(ImageSource.gallery);
-                        // await _upload('${image?.path}');
                       },
                       child: const Icon(Icons.image),
                     ),
@@ -276,6 +271,9 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                 borderRadius: BorderRadius.circular(10),
               )),
           onPressed: () async {
+            setState(() {
+              var isResto = const Uuid();
+            });
             await _upload('${image?.path}');
             final dataresto = Restaurant(
               name: namarestoranC.text,
@@ -283,7 +281,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
               imageUrl: '$imageUrl',
               idUser: user!.uid,
             );
-            createRestaurant(dataresto);
+            createRestaurant(dataresto).whenComplete(() => null);
           },
           child: Text(
             'Buka E-Menu',
@@ -347,7 +345,8 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
     final json = dataresto.toJson();
     await docResto.set(json);
 
-    Navigator.pushNamed(context, '/profile-ad', arguments: isResto);
+    Navigator.pushReplacementNamed(context, '/profile-ad');
+
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,
