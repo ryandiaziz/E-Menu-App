@@ -132,6 +132,10 @@ class ProfileAdPage extends StatelessWidget {
             Image.asset(
               _gambar,
               width: 24,
+              color: secondsubtitleColor,
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Text(
               text,
@@ -153,7 +157,10 @@ class ProfileAdPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(CupertinoIcons.square_list),
+                Icon(
+                  CupertinoIcons.square_list,
+                  color: secondsubtitleColor,
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Row(
@@ -187,7 +194,7 @@ class ProfileAdPage extends StatelessWidget {
                         Navigator.pushNamed(context, '/pesanan-page-admin');
                       },
                       child: menuItemPesanan(
-                          "assets/icon/icon_belumdibuat.png", "Belum Dibuat"),
+                          "assets/icon/menu-belum-dibuat.png", "Belum Dibuat"),
                     )
                   ],
                 ),
@@ -198,7 +205,7 @@ class ProfileAdPage extends StatelessWidget {
                         Navigator.pushNamed(context, '/pesanan-page-admin');
                       },
                       child: menuItemPesanan(
-                          "assets/icon/icon_selesai.png", "Selesai"),
+                          "assets/icon/menu-selesai.png", "Selesai"),
                     )
                   ],
                 ),
@@ -207,7 +214,7 @@ class ProfileAdPage extends StatelessWidget {
                     GestureDetector(
                       onTap: () {},
                       child: menuItemPesanan(
-                          "assets/icon/icon_riwayat.png", "Riwayat Pesanan"),
+                          "assets/icon/menu-riwayat.png", "Riwayat Pesanan"),
                     )
                   ],
                 ),

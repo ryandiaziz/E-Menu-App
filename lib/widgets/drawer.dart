@@ -15,7 +15,7 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Drawer(
-        backgroundColor: backgroundColor2,
+        backgroundColor: Colors.white,
         child: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,7 +51,7 @@ class NavigationDrawer extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (state is AuthSuccess) {
           return Material(
-            color: Colors.white,
+            color: priceColor,
             child: InkWell(
               onTap: () {
                 Navigator.pop(context);
@@ -114,7 +114,11 @@ Widget buildMenuItems(BuildContext context) => Container(
         runSpacing: 5,
         children: [
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Image.asset(
+              'assets/icon/history.png',
+              width: 25,
+              color: secondsubtitleColor,
+            ),
             title: Text(
               "Riwayat Pesanan",
               style: secondPrimaryTextStyle.copyWith(fontSize: 14),
@@ -125,7 +129,11 @@ Widget buildMenuItems(BuildContext context) => Container(
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Image.asset(
+              'assets/icon/menu.png',
+              width: 25,
+              color: secondsubtitleColor,
+            ),
             title: Text(
               "E-Menu",
               style: secondPrimaryTextStyle.copyWith(fontSize: 14),
@@ -136,7 +144,11 @@ Widget buildMenuItems(BuildContext context) => Container(
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Image.asset(
+              'assets/icon/menu.png',
+              width: 25,
+              color: secondsubtitleColor,
+            ),
             title: Text(
               'Buka E-Menu',
               style: secondPrimaryTextStyle.copyWith(fontSize: 14),
@@ -147,7 +159,11 @@ Widget buildMenuItems(BuildContext context) => Container(
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Image.asset(
+              'assets/icon/log-out.png',
+              width: 25,
+              color: secondsubtitleColor,
+            ),
             title: Text(
               "Keluar",
               style: secondPrimaryTextStyle.copyWith(fontSize: 14),

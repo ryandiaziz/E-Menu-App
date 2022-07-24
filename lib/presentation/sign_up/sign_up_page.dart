@@ -217,9 +217,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: "Full Name",
                 ),
                 CustomTextField(
-                  image: 'assets/icon/icon_phone.png',
+                  image: 'assets/icon/phone.png',
                   controller: noHPController,
-                  hintText: "No HP",
+                  hintText: "Phone Numer",
                 ),
                 CustomTextField(
                   image: 'assets/icon/icon_email.png',

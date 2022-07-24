@@ -111,17 +111,17 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: priceColor,
           automaticallyImplyLeading: true,
           elevation: 0,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/navigation-page');
-              },
-              child: const Icon(Icons.menu_book),
-            ),
-            const SizedBox(
-              width: 10,
-            )
-          ],
+          // actions: [
+          //   GestureDetector(
+          //     onTap: () {
+          //       Navigator.pushNamed(context, '/navigation-page');
+          //     },
+          //     child: const Icon(Icons.menu_book),
+          //   ),
+          //   const SizedBox(
+          //     width: 10,
+          //   )
+          // ],
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.qr_code),
