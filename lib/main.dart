@@ -21,6 +21,7 @@ import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 
+import 'presentation/pages/home/auntentikasi.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/home/navigation.dart';
 import 'presentation/pages/home/onboarding_page.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashPage(),
           '/onboarding-page': (context) => const Onboarding(),
           '/home-page': (context) => const HomePage(),
-          '/scan-page': (context) => QRScanPage(),
+          '/auntentikasi': (context) => const Autentikasi(),
           '/restaurant-page': (context) => ListRestoran(),
           '/navigation-page': (context) => const NavigationPage(),
           '/sign-in': (context) => const SignInPage(),
@@ -69,7 +70,6 @@ class MyApp extends StatelessWidget {
           '/tambah-meja-admin': (context) => const TambahMejaPage(),
           '/riwayat-pesanan-anda': (context) => const RiwayatPesananPage(),
           '/buka-emenu': (context) => const BukaMenuPage(),
-          '/detail-restoran': (context) => DetailRestoran(),
         },
         title: 'Flutter Demo',
         // theme: ThemeData(

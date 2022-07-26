@@ -43,8 +43,10 @@ dependencies:
     sdk: flutter
   flutter_bloc: null
   flutter_lints: null
-  flutter_rating_bar:
+  flutter_rating_bar: null
+  flutter_screenutil: any
   flutter_svg: null
+  fluttertoast: any
   font_awesome_flutter: ^10.1.0
   google_fonts: null
   google_sign_in: null
@@ -56,6 +58,7 @@ dependencies:
   qr_flutter: null
   staggered_grid_view_flutter: null
   uuid: 3.0.6
+  dots_indicator:
 
 dev_dependencies:
   flutter_launcher_icons: null

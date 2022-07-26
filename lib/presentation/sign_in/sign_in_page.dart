@@ -201,11 +201,13 @@ class _SignInPageState extends State<SignInPage> {
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
+            color: Colors.red,
             margin: const EdgeInsets.symmetric(horizontal: 30),
             child: Form(
               key: _formkey,
               child: SingleChildScrollView(
                 child: Container(
+                  color: Colors.amber,
                   margin: const EdgeInsets.all(0),
                   height: MediaQuery.of(context).size.height - 130,
                   width: double.infinity,

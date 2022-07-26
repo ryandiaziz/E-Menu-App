@@ -1,10 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/presentation/pages/home/navigation.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:e_menu_app/presentation/card/product_card.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
   ScrollController controller = ScrollController();
+  var firestoreInstance = FirebaseFirestore.instance;
+  List menu = [];
+
+  fetchMenu() async {
+    QuerySnapshot qn = await firestoreInstance.collection("menu").get();
+    setState(() {
+      for (int i = 0; i < qn.docs.length; i++) {
+        menu.add({
+          "id": qn.docs[i]["id"],
+          "nama": qn.docs[i]["nama"],
+          "kategori": qn.docs[i]["kategori"],
+          "harga": qn.docs[i]["harga"],
+          "imageUrl": qn.docs[i]["imageUrl"],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
+
+  @override
+  void initState() {
+    fetchMenu();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,19 +202,12 @@ class MenuPage extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
-            onTap: () {
-              mySheet(context);
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 10, right: 10),
-              child: product(
-                context,
-                controller,
-                "Nasi Goreng",
-                12000,
-                "assets/img/image_nasgor.jpg",
-              ),
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: product(
+              context,
+              controller,
+              menu,
             ),
           )
         ],

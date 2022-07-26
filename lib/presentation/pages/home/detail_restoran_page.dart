@@ -2,8 +2,19 @@ import 'package:e_menu_app/presentation/card/product_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 
-class DetailRestoran extends StatelessWidget {
+// ignore: must_be_immutable
+class DetailRestoran extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  var restaurants;
+  DetailRestoran(this.restaurants, {Key? key}) : super(key: key);
+
+  @override
+  State<DetailRestoran> createState() => _DetailRestoranState();
+}
+
+class _DetailRestoranState extends State<DetailRestoran> {
   ScrollController controller = ScrollController();
+  List menu = [];
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +51,8 @@ class DetailRestoran extends StatelessWidget {
                     height: 100,
                     width: 100,
                     child: ClipOval(
-                      child: Image.asset(
-                        "assets/img/img_restoran.jpg",
+                      child: Image.network(
+                        widget.restaurants["imageUrl"],
                         width: 64,
                         fit: BoxFit.cover,
                       ),
@@ -51,11 +62,11 @@ class DetailRestoran extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    "Fridays Restaurant",
+                    widget.restaurants["name"],
                     style: titleTextStyle.copyWith(
                         fontSize: 24, fontWeight: semiBold),
                   ),
-                  Text("Jln. Medan-Banda Aceh",
+                  Text(widget.restaurants["alamat"],
                       style: secondSubtitleTextStyle.copyWith(
                           fontSize: 14, fontWeight: bold)),
                 ],
@@ -80,9 +91,7 @@ class DetailRestoran extends StatelessWidget {
             product(
               context,
               controller,
-              "Nasi Goreng",
-              12000,
-              "assets/img/image_burger.png",
+              menu,
             ),
           ],
         ));

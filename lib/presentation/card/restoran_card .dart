@@ -3,28 +3,31 @@ import 'package:e_menu_app/shared/theme.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
-Widget product(
+import '../pages/home/detail_restoran_page.dart';
+
+Widget restaurant(
   BuildContext context,
   ScrollController controller,
-  List menu,
+  List restaurants,
 ) {
   return StaggeredGridView.countBuilder(
     controller: controller,
     shrinkWrap: true,
     scrollDirection: Axis.vertical,
-    staggeredTileBuilder: (context) => const StaggeredTile.count(2, 2.9),
+    staggeredTileBuilder: (context) => const StaggeredTile.count(4, 1.9),
     // staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-    crossAxisCount: 4,
-    itemCount: menu.length,
+    crossAxisCount: 3,
+    itemCount: restaurants.length,
     crossAxisSpacing: 10,
-    mainAxisSpacing: 10,
+    mainAxisSpacing: 20,
     itemBuilder: (context, index) {
       return GestureDetector(
-        onTap: () {
-          mySheet(context, menu[index]);
-        },
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DetailRestoran(restaurants[index]))),
         child: Container(
-          // margin: const EdgeInsets.only(left: 5, right: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: Colors.white,
@@ -52,7 +55,7 @@ Widget product(
                   topRight: Radius.circular(5),
                 ),
                 child: Image.network(
-                  menu[index]["imageUrl"],
+                  restaurants[index]['imageUrl'],
                   width: double.infinity,
                   height: 150,
                   fit: BoxFit.cover,
@@ -61,44 +64,25 @@ Widget product(
               ),
               Expanded(
                 child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        menu[index]["nama"],
-                        style: titleTextStyle.copyWith(
-                            fontSize: 18, fontWeight: bold),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(menu[index]["harga"],
-                          style: priceTextStyle.copyWith(
-                              fontSize: 14, fontWeight: bold)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            "assets/icon/icon_star.png",
-                            width: 16,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "4.8",
-                            style: titleTextStyle.copyWith(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ],
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          restaurants[index]["name"],
+                          style: titleTextStyle.copyWith(
+                              fontSize: 18, fontWeight: bold),
+                        ),
+                        Text(
+                          restaurants[index]["alamat"],
+                          style: secondSubtitleTextStyle.copyWith(
+                              fontSize: 14, fontWeight: bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -110,7 +94,7 @@ Widget product(
   );
 }
 
-mySheet(BuildContext context, menu) {
+mySheet(BuildContext context) {
   showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -170,24 +154,22 @@ mySheet(BuildContext context, menu) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      menu["imageUrl"],
+                    Image.asset(
+                      "assets/img/image_nasgor.jpg",
                       width: 100,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          menu["nama"],
+                          "Nasi Goreng",
                           style: titleTextStyle.copyWith(
                               fontSize: 24, fontWeight: bold),
                         ),
+                        Text("Makanan",
+                            style: subtitleTextStyle.copyWith(fontSize: 18)),
                         Text(
-                          menu["kategori"],
-                          style: subtitleTextStyle.copyWith(fontSize: 18),
-                        ),
-                        Text(
-                          menu["harga"],
+                          "Rp22.00",
                           style: priceTextStyle.copyWith(
                               fontSize: 24, fontWeight: bold),
                         ),

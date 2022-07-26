@@ -64,8 +64,7 @@ class _OnboardingState extends State<Onboarding> {
                     contents.length, (index) => buildDot(index, context)),
               ),
             ),
-            daftarBtn(),
-            masukBtn(),
+            letsStart(),
           ],
         ),
       );
@@ -82,38 +81,15 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  Widget masukBtn() {
+  Widget letsStart() {
     return Container(
       width: double.infinity,
       height: 50,
-      margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            width: 2.0,
-            color: const Color(0xffEFF0F6),
-          )),
-      child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              )),
-          onPressed: () {
-            Navigator.pushNamed(context, '/sign-in');
-          },
-          child: Text(
-            "Sign In",
-            style: priceTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-          )),
-    );
-  }
-
-  Widget daftarBtn() {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 60),
+      margin: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 40 + MediaQuery.of(context).padding.bottom),
       child: TextButton(
           style: TextButton.styleFrom(
               backgroundColor: priceColor,
@@ -121,12 +97,11 @@ class _OnboardingState extends State<Onboarding> {
                 borderRadius: BorderRadius.circular(5),
               )),
           onPressed: () {
-            Navigator.pushNamed(context, '/sign-up');
+            Navigator.pushReplacementNamed(context, '/auntentikasi');
           },
           child: Text(
-            "Create an Account",
-            style:
-                secondaryTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+            "Let's Start",
+            style: secondaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
           )),
     );
   }

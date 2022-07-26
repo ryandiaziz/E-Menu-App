@@ -6,18 +6,18 @@ Widget buildRestaurant(Restaurant restaurant) => Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: Colors.white,
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            blurRadius: 3.0,
-            offset: Offset(0, 2),
+            color: Colors.grey.shade500,
+            blurRadius: 5.0,
+            offset: const Offset(4, 4),
+            spreadRadius: 1,
           ),
-          BoxShadow(
+          const BoxShadow(
             color: Colors.white,
-            offset: Offset(-2, 0),
-          ),
-          BoxShadow(
-            color: Colors.white,
-            offset: Offset(0, 2),
+            offset: Offset(-4, -4),
+            blurRadius: 15,
+            spreadRadius: 0,
           ),
         ],
       ),
