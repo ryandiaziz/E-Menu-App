@@ -247,10 +247,10 @@ class _SignInState extends State<SignIn> {
                           style: secondSubtitleTextStyle,
                         ),
                       ),
-                      CustomTextField(
-                          image: 'assets/icon/icon_email.png',
-                          controller: emailController,
-                          hintText: 'Email'),
+                      // CustomTextField(
+                      //     image: 'assets/icon/icon_email.png',
+                      //     controller: emailController,
+                      //     hintText: 'Email'),
                       passwordInput(),
                       // isLoading ? LoadingButton() : signInButton(),
                       signInButton(),

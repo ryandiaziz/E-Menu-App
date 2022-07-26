@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/models/restaurant_model.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -233,7 +234,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/icon/icon_profile_select.png',
+                      'assets/icon/address.png',
                       width: 17,
                       color: secondsubtitleColor,
                     ),
@@ -338,15 +339,24 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
         ));
   }
 
-  Future createRestaurant(Restaurant dataresto) async {
-    final docResto = FirebaseFirestore.instance.collection('restaurant').doc();
-    dataresto.id = docResto.id;
+  updateData(idResto) {
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("users");
+    return _collectionRef.doc(FirebaseAuth.instance.currentUser!.email).update({
+      "isOwner": true,
+      "idResto": idResto,
+    }).then((value) => ("Updated Successfully"));
+  }
 
+  Future createRestaurant(Restaurant dataresto) async {
+    final docResto = FirebaseFirestore.instance.collection('restaurants').doc();
+    dataresto.id = docResto.id;
     final json = dataresto.toJson();
     await docResto.set(json);
 
-    Navigator.pushReplacementNamed(context, '/profile-ad');
+    updateData(docResto.id);
 
+    Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,

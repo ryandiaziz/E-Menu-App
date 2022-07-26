@@ -19,6 +19,7 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    String idResto = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: backgroundColor3,
       appBar: AppBar(
@@ -37,13 +38,13 @@ class _MenuPageState extends State<MenuPage> {
         titleSpacing: -5,
         elevation: 0,
         title: Text(
-          "Menu Saya",
+          idResto,
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
           // fontWeight: semiBold,
         ),
       ),
       body: StreamBuilder<List<Menu>>(
-        stream: readMenu(),
+        stream: readMenu(idResto),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text('Something Went Wrong');
@@ -67,7 +68,9 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  Stream<List<Menu>> readMenu() => FirebaseFirestore.instance
+  Stream<List<Menu>> readMenu(String idResto) => FirebaseFirestore.instance
+      .collection('restaurants')
+      .doc(idResto)
       .collection('menu')
       .snapshots()
       .map((snapshot) =>

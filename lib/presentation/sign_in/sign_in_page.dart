@@ -215,10 +215,10 @@ class _SignInPageState extends State<SignInPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(child: header()),
-                      CustomTextField(
-                          image: 'assets/icon/icon_email.png',
-                          controller: emailController,
-                          hintText: 'Email'),
+                      // CustomTextField(
+                      //     image: 'assets/icon/icon_email.png',
+                      //     controller: emailController,
+                      //     hintText: 'Email'),
                       passwordInput(),
                       // isLoading ? LoadingButton() : signInButton(),
                       signInButton(),

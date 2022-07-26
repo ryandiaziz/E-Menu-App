@@ -3,11 +3,11 @@ import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/presentation/pages/customer/riwayat_pesanan_page.dart';
 import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/meja_page.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/menu_page.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/owner_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_menu_page.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/profile_pemilik_page.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
 import 'package:e_menu_app/widgets/qr_scanner.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -57,11 +57,10 @@ class MyApp extends StatelessWidget {
           '/auntentikasi': (context) => const Autentikasi(),
           '/restaurant-page': (context) => ListRestoran(),
           '/navigation-page': (context) => const NavigationPage(),
-          '/sign-in': (context) => const SignInPage(),
-          '/sign-up': (context) => const SignUpPage(),
+          // '/sign-in': (context) => const SignInPage(),
+          // '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),
           '/profile-cus': (context) => const ProfileCusPage(),
-          '/profile-ad': (context) => const ProfileAdPage(),
           '/editProfile': (context) => EditProfilePage(),
           '/pesanan-page-admin': (context) => const PesananPage(),
           '/menu-admin': (context) => const MenuPage(),

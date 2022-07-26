@@ -51,7 +51,7 @@ class _AutentikasiState extends State<Autentikasi> {
           .createUserWithEmailAndPassword(
               email: sU_emaiC.text, password: sU_PasswordC.text);
       var authCredential = userCredential.user;
-      print(authCredential!.uid);
+      (authCredential!.uid);
       if (authCredential.uid.isNotEmpty) {
         Navigator.push(context, CupertinoPageRoute(builder: (_) => UserForm()));
       } else {
@@ -65,7 +65,7 @@ class _AutentikasiState extends State<Autentikasi> {
             msg: "The account already exists for that email.");
       }
     } catch (e) {
-      print(e);
+      (e);
     }
   }
 
@@ -221,6 +221,7 @@ class _AutentikasiState extends State<Autentikasi> {
                         image: 'assets/icon/icon_email.png',
                         controller: sI_emaiC,
                         hintText: 'Email',
+                        keyBoardType: TextInputType.emailAddress,
                       ),
                       passwordInput(sI_PasswordC),
                       _button('Sign In', () {
@@ -234,6 +235,7 @@ class _AutentikasiState extends State<Autentikasi> {
                         image: 'assets/icon/icon_email.png',
                         controller: sU_emaiC,
                         hintText: 'Email',
+                        keyBoardType: TextInputType.emailAddress,
                       ),
                       passwordInput(sU_PasswordC),
                       _button('Continue', () {

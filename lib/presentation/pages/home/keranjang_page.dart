@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/keranjang_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 
@@ -137,6 +139,54 @@ class BagPage extends StatelessWidget {
       );
     }
 
+    Widget fetchData() {
+      return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .collection("cart")
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Something is wrong"),
+            );
+          }
+
+          return ListView.builder(
+              itemCount: snapshot.data == null ? 0 : snapshot.data!.docs.length,
+              itemBuilder: (_, index) {
+                DocumentSnapshot _documentSnapshot = snapshot.data!.docs[index];
+
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    leading: Text(_documentSnapshot['nama']),
+                    title: Text(
+                      "\$ ${_documentSnapshot['harga']}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red),
+                    ),
+                    trailing: GestureDetector(
+                      child: CircleAvatar(
+                        child: Icon(Icons.remove_circle),
+                      ),
+                      onTap: () {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.email)
+                            .collection("cart")
+                            .doc(_documentSnapshot.id)
+                            .delete();
+                      },
+                    ),
+                  ),
+                );
+              });
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -145,7 +195,7 @@ class BagPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Text(
-          "Keranjang",
+          "Cart",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
         ),
       ),

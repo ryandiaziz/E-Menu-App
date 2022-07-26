@@ -4,6 +4,7 @@ class Menu {
   final String harga;
   String imageUrl;
   final String kategori;
+  final String idResto;
 
   Menu({
     this.id = '',
@@ -11,6 +12,7 @@ class Menu {
     required this.harga,
     required this.kategori,
     this.imageUrl = '',
+    required this.idResto,
   });
 
   Map<String, dynamic> toJson() => {
@@ -19,6 +21,7 @@ class Menu {
         'harga': harga,
         'kategori': kategori,
         'imageUrl': imageUrl,
+        'idResto': idResto,
       };
   static Menu fromJson(Map<String, dynamic> json) => Menu(
         id: json['id'],
@@ -26,5 +29,6 @@ class Menu {
         harga: json['harga'],
         kategori: json['kategori'],
         imageUrl: json['imageUrl'],
+        idResto: json['idResto'],
       );
 }

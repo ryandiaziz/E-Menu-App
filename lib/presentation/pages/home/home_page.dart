@@ -3,16 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../aplication/auth/cubit/auth_cubit.dart';
-import '../../../models/restaurant_model.dart';
 import '../../../widgets/drawer.dart';
-import '../../card/list_restoran_card.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
 import '../../card/restoran_card .dart';
-import 'detail_restoran_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -45,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   fetchRestaurants() async {
-    QuerySnapshot qn = await firestoreInstance.collection("restaurant").get();
+    QuerySnapshot qn = await firestoreInstance.collection("restaurants").get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {
         restaurants.add({
@@ -117,6 +111,16 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(
             width: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, "/onboarding-page");
+            },
+            child: const Icon(Icons.logout),
+          ),
+          const SizedBox(
+            width: 10,
           )
         ],
       ),
@@ -127,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.pushNamed(context, '/scan-page');
         },
       ),
-      drawer: NavigationDrawer(),
+      drawer: const NavigationDrawer(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -203,11 +207,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             buildTitle(),
-            restaurant(
-              context,
-              controller,
-              restaurants,
-            ),
+            restaurants.isNotEmpty
+                ? restaurant(
+                    context,
+                    controller,
+                    restaurants,
+                  )
+                : Text(
+                    'No Restaurants',
+                    style: subtitleTextStyle,
+                  ),
           ],
         ),
       ),

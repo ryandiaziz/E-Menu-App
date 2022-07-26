@@ -211,21 +211,21 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomTextField(
-                  image: 'assets/icon/icon_profile_select.png',
-                  controller: displayNameController,
-                  hintText: "Full Name",
-                ),
-                CustomTextField(
-                  image: 'assets/icon/phone.png',
-                  controller: noHPController,
-                  hintText: "Phone Numer",
-                ),
-                CustomTextField(
-                  image: 'assets/icon/icon_email.png',
-                  controller: emailController,
-                  hintText: 'Email',
-                ),
+                // CustomTextField(
+                //   image: 'assets/icon/icon_profile_select.png',
+                //   controller: displayNameController,
+                //   hintText: "Full Name",
+                // ),
+                // CustomTextField(
+                //   image: 'assets/icon/phone.png',
+                //   controller: noHPController,
+                //   hintText: "Phone Numer",
+                // ),
+                // CustomTextField(
+                //   image: 'assets/icon/icon_email.png',
+                //   controller: emailController,
+                //   hintText: 'Email',
+                // ),
                 passwordInput(),
                 signUpButton(),
                 // isLoading ? LoadingButton() : signInButton(),

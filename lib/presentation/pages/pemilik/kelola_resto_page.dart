@@ -1,94 +1,71 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../aplication/auth/cubit/auth_cubit.dart';
+class KelolaRestoPage extends StatefulWidget {
+  String idResto;
 
-class ProfileAdPage extends StatelessWidget {
-  const ProfileAdPage({Key? key}) : super(key: key);
+  KelolaRestoPage(this.idResto, {Key? key}) : super(key: key);
 
   @override
+  State<KelolaRestoPage> createState() => _KelolaRestoPageState(idResto);
+}
+
+class _KelolaRestoPageState extends State<KelolaRestoPage> {
+  String idResto;
+  _KelolaRestoPageState(this.idResto);
+  @override
   Widget build(BuildContext context) {
-    // AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    // UserModel user = authProvider.user;
-    Widget header() {
-      return BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          // ignore: todo
-          // TODO: implement listener
-          if (state is AuthFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.errorMessage),
-              backgroundColor: Colors.red,
-            ));
-          } else if (state is AuthInitial) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/scan-page', (route) => false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text("Berhasil Keluar"),
-                backgroundColor: primaryColor,
+    Widget header(data) {
+      return AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        flexibleSpace: SafeArea(
+            child: Container(
+          margin: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 30,
+            bottom: 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Icon(
+                  Icons.arrow_back,
+                  size: 30,
+                  color: priceColor,
+                ),
               ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is AuthSuccess) {
-            return AppBar(
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              flexibleSpace: SafeArea(
-                  child: Container(
-                margin: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 30,
-                  bottom: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: 30,
-                        color: priceColor,
-                      ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipOval(
+                    child: Image.network(
+                      data['imageUrl'],
+                      width: 64,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipOval(
-                          child: Image.asset(
-                            "assets/img/image_profile_user.png",
-                            width: 64,
-                          ),
-                        ),
-                        Text(
-                          state.user.displayName,
-                          style: titleTextStyle.copyWith(
-                              fontSize: 24, fontWeight: semiBold),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                  ],
-                ),
-              )),
-            );
-          } else {
-            return const SizedBox();
-          }
-        },
+                  ),
+                  Text(
+                    data['name'],
+                    style: titleTextStyle.copyWith(
+                        fontSize: 24, fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 40,
+              ),
+            ],
+          ),
+        )),
       );
     }
 
@@ -146,7 +123,7 @@ class ProfileAdPage extends StatelessWidget {
       );
     }
 
-    Widget pesanan() {
+    Widget pesanan(data) {
       return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -244,12 +221,20 @@ class ProfileAdPage extends StatelessWidget {
               ),
               GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/menu-admin');
+                    Navigator.pushNamed(
+                      context,
+                      '/menu-admin',
+                      arguments: idResto,
+                    );
                   },
                   child: menuItem("Menu Saya")),
               GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/tambah-menu-admin');
+                    Navigator.pushNamed(
+                      context,
+                      '/tambah-menu-admin',
+                      arguments: idResto,
+                    );
                   },
                   child: menuItem("Tambah Menu")),
               GestureDetector(
@@ -269,13 +254,40 @@ class ProfileAdPage extends StatelessWidget {
     }
 
     return Scaffold(
-        backgroundColor: AppColor.placeholderBg,
-        body: Column(
-          children: [
-            header(),
-            pesanan(),
-            content(),
-          ],
-        ));
+      backgroundColor: AppColor.placeholderBg,
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("restaurants")
+            .doc(idResto)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          var data = snapshot.data;
+          if (data == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Column(
+            children: [
+              header(data),
+              pesanan(data),
+              content(),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
+// child: StreamBuilder(
+//           stream: FirebaseFirestore.instance.collection("users-form-data").doc(FirebaseAuth.instance.currentUser!.email).snapshots(),
+//           builder: (BuildContext context, AsyncSnapshot snapshot){
+//             var data = snapshot.data;
+//             if(data==null){
+//               return Center(child: CircularProgressIndicator(),);
+//             }
+//             return setDataToTextField(data);
+//           },
+
+//         ),
+//       )),

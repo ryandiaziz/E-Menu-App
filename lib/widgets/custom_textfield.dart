@@ -5,11 +5,13 @@ class CustomTextField extends StatelessWidget {
   final String image;
   final TextEditingController controller;
   final String hintText;
+  final dynamic keyBoardType;
 
   const CustomTextField({
     required this.image,
     required this.controller,
     required this.hintText,
+    required this.keyBoardType,
     Key? key,
   }) : super(key: key);
 
@@ -40,6 +42,7 @@ class CustomTextField extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextFormField(
+                      keyboardType: keyBoardType,
                       controller: controller,
                       style: primaryTextStyle,
                       decoration: InputDecoration.collapsed(

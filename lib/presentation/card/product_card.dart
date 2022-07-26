@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
@@ -108,6 +110,19 @@ Widget product(
       );
     },
   );
+}
+
+Future addToCart(menu) async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  var currentUser = _auth.currentUser;
+  CollectionReference _collectionRef =
+      FirebaseFirestore.instance.collection("users");
+  return _collectionRef.doc(currentUser!.email).collection("cart").doc().set({
+    "name": menu['nama'],
+    "harga": menu['harga'],
+    "kategori": menu["kategori"],
+    "imageUrl": menu["imageUrl"],
+  }).then((value) => ("Added to cart"));
 }
 
 mySheet(BuildContext context, menu) {
@@ -239,7 +254,9 @@ mySheet(BuildContext context, menu) {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           )),
-                      onPressed: () {},
+                      onPressed: () {
+                        addToCart(menu);
+                      },
                       child: Text(
                         "Tambahkan ke Keranjang",
                         style: secondaryTextStyle.copyWith(

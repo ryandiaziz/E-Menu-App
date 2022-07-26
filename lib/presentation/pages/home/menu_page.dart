@@ -15,7 +15,11 @@ class _MenuPageState extends State<MenuPage> {
   List menu = [];
 
   fetchMenu() async {
-    QuerySnapshot qn = await firestoreInstance.collection("menu").get();
+    QuerySnapshot qn = await firestoreInstance
+        .collection("restaurants")
+        .doc('nLqBZRotB0LIMX07MAdT')
+        .collection('menu')
+        .get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {
         menu.add({

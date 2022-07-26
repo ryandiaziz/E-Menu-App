@@ -83,6 +83,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    String idResto = ModalRoute.of(context)!.settings.arguments as String;
     Widget bottomSheetResto() {
       return Container(
         height: 100,
@@ -230,8 +231,9 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                 harga: _hargaProdukC.text,
                 kategori: dropdownvalue,
                 imageUrl: '$imageUrl',
+                idResto: idResto,
               );
-              createMenu(datamenu);
+              createMenu(datamenu, idResto);
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -260,7 +262,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         titleSpacing: -5,
         elevation: 0,
         title: Text(
-          "Tambah Menu",
+          idResto,
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
           // fontWeight: semiBold,
         ),
@@ -279,13 +281,16 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
             children: [
               menuImage(),
               CustomTextField(
-                  image: "assets/icon/icon_nama_menu.png",
-                  controller: _namaProdukC,
-                  hintText: 'Nama Menu'),
+                image: "assets/icon/icon_nama_menu.png",
+                controller: _namaProdukC,
+                hintText: 'Nama Menu',
+                keyBoardType: TextInputType.text,
+              ),
               CustomTextField(
                 image: "assets/icon/icon_price.png",
                 controller: _hargaProdukC,
                 hintText: "Harga",
+                keyBoardType: TextInputType.number,
               ),
               buildCategory(),
               submitMenu()
@@ -296,15 +301,19 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
     );
   }
 
-  Future createMenu(Menu datamenu) async {
-    final docMenu = FirebaseFirestore.instance.collection('menu').doc();
+  Future createMenu(Menu datamenu, String idResto) async {
+    final docMenu = FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(idResto)
+        .collection('menu')
+        .doc();
     datamenu.id = docMenu.id;
 
     final json = datamenu.toJson();
     await docMenu.set(json);
 
-    Navigator.pushReplacementNamed(context, '/profile-ad');
-
+    // Navigator.pushReplacementNamed(context, '/profile-ad');
+    Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,
