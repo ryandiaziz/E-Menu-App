@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/product_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../../card/product_card_home.dart';
 
 // ignore: must_be_immutable
 class DetailRestoran extends StatefulWidget {
@@ -14,7 +17,38 @@ class DetailRestoran extends StatefulWidget {
 
 class _DetailRestoranState extends State<DetailRestoran> {
   ScrollController controller = ScrollController();
+  var firestoreInstance = FirebaseFirestore.instance;
   List menu = [];
+
+  fetchMenu() async {
+    QuerySnapshot qn = await firestoreInstance
+        .collection("restaurants")
+        .doc(idResto)
+        .collection('menu')
+        .get();
+    setState(() {
+      for (int i = 0; i < qn.docs.length; i++) {
+        menu.add({
+          "id": qn.docs[i]["id"],
+          "nama": qn.docs[i]["nama"],
+          "kategori": qn.docs[i]["kategori"],
+          "harga": qn.docs[i]["harga"],
+          "imageUrl": qn.docs[i]["imageUrl"],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
+
+  String? idResto;
+
+  @override
+  void initState() {
+    idResto = widget.restaurants['id'];
+    fetchMenu();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +122,7 @@ class _DetailRestoranState extends State<DetailRestoran> {
             const SizedBox(
               height: 10,
             ),
-            product(
+            productHome(
               context,
               controller,
               menu,

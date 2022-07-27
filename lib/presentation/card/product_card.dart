@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+import 'package:e_menu_app/presentation/pages/home/menu_page.dart';
+
+int kuantitas = 5;
 
 Widget product(
   BuildContext context,
@@ -225,13 +228,18 @@ mySheet(BuildContext context, menu) {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.asset(
-                              "assets/icon/icon_min.png",
-                              width: 25,
-                              color: priceColor,
+                            GestureDetector(
+                              onTap: () {
+                                kuantitas++;
+                              },
+                              child: Image.asset(
+                                "assets/icon/icon_min.png",
+                                width: 25,
+                                color: priceColor,
+                              ),
                             ),
                             Text(
-                              "1",
+                              kuantitas.toString(),
                               style: titleTextStyle.copyWith(
                                   fontSize: 18, fontWeight: semiBold),
                             ),

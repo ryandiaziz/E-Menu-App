@@ -244,9 +244,15 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                   child: menuItem("Meja Saya")),
               GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/tambah-meja-admin');
+                    Navigator.pushNamed(
+                      context,
+                      '/tambah-meja-admin',
+                      arguments: idResto,
+                    );
                   },
-                  child: menuItem("Tambah Meja")),
+                  child: menuItem(
+                    "Tambah Meja",
+                  )),
             ],
           ),
         ),

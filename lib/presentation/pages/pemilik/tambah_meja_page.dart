@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -10,13 +12,17 @@ class TambahMejaPage extends StatefulWidget {
 }
 
 class _TambahMejaPageState extends State<TambahMejaPage> {
-  final controller = TextEditingController();
+  TextEditingController qrC = TextEditingController();
+  String? noMeja;
+  String? idMeja;
+
   @override
   Widget build(BuildContext context) {
+    String idResto = ModalRoute.of(context)!.settings.arguments as String;
     Widget qrGenerate() {
       return Center(
         child: QrImage(
-          data: controller.text,
+          data: idMeja ?? "E-Menu",
           size: 300,
         ),
       );
@@ -47,17 +53,13 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        controller: controller,
+                        keyboardType: TextInputType.number,
+                        controller: qrC,
                         style: primaryTextStyle,
                         decoration: InputDecoration(
-                            hintText: "Masukan Nomor Meja",
-                            hintStyle: subtitleTextStyle,
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {});
-                              },
-                              icon: Icon(Icons.done),
-                            )),
+                          hintText: "Masukan Nomor Meja",
+                          hintStyle: subtitleTextStyle,
+                        ),
                       ),
                     )
                   ],
@@ -73,14 +75,18 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
       return Container(
         width: double.infinity,
         height: 50,
-        margin: const EdgeInsets.only(top: 40),
+        margin: const EdgeInsets.only(top: 40, bottom: 20),
         child: TextButton(
             style: TextButton.styleFrom(
                 backgroundColor: priceColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 )),
-            onPressed: () {
+            onPressed: () async {
+              setState(() {
+                noMeja = qrC.text;
+              });
+              await createTable(idResto);
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -122,13 +128,34 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // header(),
-                  qrGenerate(),
+
                   nomejaInput(),
                   submitMeja(),
+                  idMeja == null ? SizedBox() : qrGenerate(),
                 ],
               ),
             ),
           ),
         ));
+  }
+
+  Future createTable(String idResto) async {
+    final docMenu = FirebaseFirestore.instance.collection('tables').doc();
+    setState(() {
+      idMeja = docMenu.id;
+    });
+
+    await docMenu.set({
+      'id': idMeja,
+      'noMeja': noMeja,
+      'idResto': idResto,
+    });
+
+    // Navigator.pushReplacementNamed(context, '/profile-ad');
+    // Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('Daftar Berhasil'),
+      backgroundColor: priceColor,
+    ));
   }
 }
