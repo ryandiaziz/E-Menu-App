@@ -8,7 +8,8 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+  var dataMeja;
+  MenuPage({this.dataMeja, Key? key}) : super(key: key);
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -292,7 +293,12 @@ class _MenuPageState extends State<MenuPage> {
                           borderRadius: BorderRadius.circular(12),
                         )),
                     onPressed: () {
+                      Navigator.pop(context);
                       addToCart(menu);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Ditambahkan Ke Keranjang'),
+                        backgroundColor: priceColor,
+                      ));
                     },
                     child: Text(
                       "Tambahkan ke Keranjang",

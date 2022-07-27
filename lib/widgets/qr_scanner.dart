@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+import '../presentation/pages/home/menu_page.dart';
 import '../presentation/pages/home/navigation.dart';
 
 class QRScanPage extends StatefulWidget {
@@ -14,6 +16,7 @@ class QRScanPage extends StatefulWidget {
 
 class _QRScanPageState extends State<QRScanPage> {
   final qrkey = GlobalKey(debugLabel: 'QR');
+  List dataMeja = [];
 
   Barcode? barcode;
   QRViewController? controller;
@@ -33,6 +36,8 @@ class _QRScanPageState extends State<QRScanPage> {
     }
   }
 
+  String? idMeja;
+
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Scaffold(
@@ -47,10 +52,27 @@ class _QRScanPageState extends State<QRScanPage> {
       );
 
   Widget buildResult() {
-    return Text(
-      barcode != null ? 'Result: ${barcode!.code}' : 'Scan a Code!',
-      style: const TextStyle(color: Colors.white),
-      maxLines: 3,
+    return Column(
+      children: [
+        barcode != null
+            ? ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    idMeja = barcode!.code;
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    '/navigation-page',
+                    arguments: idMeja,
+                  );
+                },
+                child: Text('Lanjut'))
+            : const Text(
+                'Scan a Code! bro',
+                style: TextStyle(color: Colors.white),
+                maxLines: 3,
+              ),
+      ],
     );
   }
 

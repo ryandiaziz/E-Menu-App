@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.qr_code),
         backgroundColor: priceColor,
         onPressed: () {
-          Navigator.pushNamed(context, '/scan-page');
+          Navigator.pushNamed(context, '/qrscan');
         },
       ),
       drawer: const NavigationDrawer(),

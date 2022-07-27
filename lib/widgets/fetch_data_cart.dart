@@ -113,6 +113,10 @@ Widget fetchData(String collectionName) {
                               .collection("cart")
                               .doc(_documentSnapshot.id)
                               .delete();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text('Menu Dihapus'),
+                            backgroundColor: alertColor,
+                          ));
                         },
                         child: Image.asset(
                           "assets/icon/icon_remove.png",
