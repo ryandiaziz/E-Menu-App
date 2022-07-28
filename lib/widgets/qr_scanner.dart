@@ -60,10 +60,13 @@ class _QRScanPageState extends State<QRScanPage> {
                   setState(() {
                     idMeja = barcode!.code;
                   });
-                  Navigator.pushNamed(
+                  Navigator.pushReplacement(
                     context,
-                    '/navigation-page',
-                    arguments: idMeja,
+                    MaterialPageRoute(
+                      builder: (_) => NavigationPage(
+                        idMeja: idMeja!,
+                      ),
+                    ),
                   );
                 },
                 child: Text('Lanjut'))

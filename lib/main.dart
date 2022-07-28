@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
           '/home-page': (context) => const HomePage(),
           '/auntentikasi': (context) => const Autentikasi(),
           '/restaurant-page': (context) => ListRestoran(),
-          '/navigation-page': (context) => const NavigationPage(),
+          // '/navigation-page': (context) => const NavigationPage(),
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),

@@ -8,22 +8,25 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 class MenuPage extends StatefulWidget {
-  var dataMeja;
+  dynamic dataMeja;
   MenuPage({this.dataMeja, Key? key}) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<MenuPage> createState() => _MenuPageState(dataMeja);
 }
 
 class _MenuPageState extends State<MenuPage> {
+  dynamic dataMeja;
+  _MenuPageState(this.dataMeja);
   ScrollController controller = ScrollController();
   var firestoreInstance = FirebaseFirestore.instance;
   List menu = [];
+  // List meja = [];
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
         .collection("restaurants")
-        .doc('nLqBZRotB0LIMX07MAdT')
+        .doc(dataMeja['idResto'])
         .collection('menu')
         .get();
     setState(() {
@@ -442,7 +445,7 @@ class _MenuPageState extends State<MenuPage> {
                 height: 25,
                 child: Center(
                   child: Text(
-                    "99",
+                    dataMeja['noMeja'],
                     style: subtitleTextStyle.copyWith(
                       color: Colors.white,
                       fontWeight: bold,
@@ -475,6 +478,11 @@ class _MenuPageState extends State<MenuPage> {
         shrinkWrap: true,
         children: [
           titleCatagories(),
+          ElevatedButton(
+              onPressed: () {
+                print(dataMeja['idResto']);
+              },
+              child: Text('meja')),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/widgets/cus_appbar.dart';
@@ -10,19 +11,22 @@ import 'package:e_menu_app/shared/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NavigationPage extends StatefulWidget {
-  const NavigationPage({Key? key}) : super(key: key);
+  String idMeja;
+  NavigationPage({required this.idMeja, Key? key}) : super(key: key);
 
   @override
-  State<NavigationPage> createState() => _NavigationPageState();
+  State<NavigationPage> createState() => _NavigationPageState(idMeja);
 }
 
 class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
+  String idMeja;
+  _NavigationPageState(this.idMeja);
 
-  final screens = [
-    MenuPage(),
-    BagPage(),
-  ];
+  // final screens = [
+  //   MenuPage(idMeja: idMeja),
+  //   BagPage(),
+  // ];
 
   Widget indicator() {
     return Container(
@@ -35,6 +39,23 @@ class _NavigationPageState extends State<NavigationPage> {
             bottomRight: Radius.circular(28),
           )),
     );
+  }
+
+  Widget body(dataMeja) {
+    switch (index) {
+      case 0:
+        return MenuPage(
+          dataMeja: dataMeja,
+        );
+      case 1:
+        return BagPage();
+      case 2:
+        return RiwayatPage();
+      default:
+        return MenuPage(
+          dataMeja: dataMeja,
+        );
+    }
   }
 
   Widget customBottomNav() {
@@ -92,11 +113,25 @@ class _NavigationPageState extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // String idResto = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: Colors.amber,
       bottomNavigationBar: customBottomNav(),
-      body: screens[index],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('tables')
+            .doc(idMeja)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          var dataMeja = snapshot.data;
+          if (dataMeja == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return body(dataMeja);
+        },
+      ),
+      // body()
       // appBar: CusAppBar(),
     );
   }

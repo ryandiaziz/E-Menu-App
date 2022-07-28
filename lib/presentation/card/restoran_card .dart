@@ -23,9 +23,13 @@ Widget restaurant(
     itemBuilder: (context, index) {
       return GestureDetector(
         onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => DetailRestoran(restaurants[index]))),
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailRestoran(
+              restaurants[index],
+            ),
+          ),
+        ),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
