@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: null
   dartz: null
   dio: null
+  dots_indicator: null
   dropdown_search: null
   equatable: null
   firebase_auth: null
@@ -52,13 +53,13 @@ dependencies:
   google_sign_in: null
   image_cropper: null
   image_picker: null
+  intl: ^0.17.0
   path_provider: null
   provider: null
   qr_code_scanner: null
   qr_flutter: null
   staggered_grid_view_flutter: null
   uuid: 3.0.6
-  dots_indicator:
 
 dev_dependencies:
   flutter_launcher_icons: null

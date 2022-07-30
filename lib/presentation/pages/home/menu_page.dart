@@ -109,7 +109,7 @@ class _MenuPageState extends State<MenuPage> {
       "kategori": menu["kategori"],
       "imageUrl": menu["imageUrl"],
       "quantity": 1,
-      "quantityPrice": null
+      "quantityPrice": null,
     });
   }
 

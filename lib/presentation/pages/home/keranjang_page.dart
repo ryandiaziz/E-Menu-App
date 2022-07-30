@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:intl/intl.dart';
 
 class BagPage extends StatefulWidget {
   dynamic dataMeja;
@@ -17,22 +18,61 @@ class _BagPageState extends State<BagPage> {
   List dataCart = [];
   _BagPageState(this.dataMeja);
   String? idCheckout;
+  int? harga;
+  int totalHarga = 0;
+  String? idOrder;
 
-  Future addCheckout(dynamic dataCart, int countCart) async {
+  Future addOrder(dynamic dataCart, int countCart) async {
+    var docOrder = FirebaseFirestore.instance.collection('order').doc();
+
+    for (var i = 0; i < countCart; i++) {
+      setState(() {
+        dataCart[i]['quantityPrice'] == null
+            ? harga = dataCart[i]['harga']
+            : harga = dataCart[i]['quantityPrice'];
+        totalHarga = totalHarga + harga!;
+      });
+    }
+
+    await docOrder.set({
+      "id": docOrder.id,
+      "pemesan": FirebaseAuth.instance.currentUser!.email,
+      "total": totalHarga,
+      "date": DateTime.now(),
+      "noMeja": dataCart[0]['noMeja'],
+      "idResto": dataCart[0]['idResto'],
+      "namaResto": dataCart[0]['namaResto'],
+    });
+
+    setState(() {
+      idOrder = docOrder.id;
+      harga = 0;
+      totalHarga = 0;
+    });
+
+    // Navigator.pushReplacementNamed(context, '/profile-ad');
+    // Navigator.pop(context);
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //   content: const Text('Daftar Berhasil'),
+    //   backgroundColor: priceColor,
+    // ));
+  }
+
+  Future addItemsToOrder(dynamic dataCart, int countCart) async {
     for (var i = 0; i < countCart; i++) {
       var docCheckout = FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .collection('ordered')
+          .collection('order')
+          .doc(idOrder)
+          .collection('items')
           .doc();
 
       docCheckout.set({
         "id": docCheckout.id,
         "nama": dataCart[i]['name'],
-        "noMeja": dataCart[i]['noMeja'],
-        "idResto": dataCart[i]['idResto'],
-        "namaResto": dataCart[i]['namaResto'],
-        "harga": dataCart[i]['harga'],
+        "harga": dataCart[i]['quantityPrice'] == null
+            ? dataCart[i]['harga']
+            : dataCart[i]['quantityPrice'],
+        "kuantitas": dataCart[i]['quantity'],
         "kategori": dataCart[i]["kategori"],
         "imageUrl": dataCart[i]["imageUrl"],
       });
@@ -126,7 +166,7 @@ class _BagPageState extends State<BagPage> {
                   style: subtitleTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
                 ),
-                const Text('Rp 18000')
+                // ElevatedButton(onPressed: () {}, child: Text('dataCart'))
               ],
             ),
             // SizedBox(
@@ -142,9 +182,9 @@ class _BagPageState extends State<BagPage> {
               child: TextButton(
                   onPressed: () async {
                     // print(countCart);
-                    await addCheckout(dataCart, countCart);
+                    await addOrder(dataCart, countCart);
+                    await addItemsToOrder(dataCart, countCart);
                     await deleteCart(dataCart, countCart);
-
                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     //   content: const Text('Menu Dihapus'),
                     //   backgroundColor: alertColor,
@@ -249,10 +289,13 @@ class _BagPageState extends State<BagPage> {
                           width: 100,
                           height: 95,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      dataCart[index]['imageUrl']))),
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                dataCart[index]['imageUrl'],
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           width: 12,
@@ -284,13 +327,21 @@ class _BagPageState extends State<BagPage> {
                               ),
                               dataCart[index]['quantityPrice'] == null
                                   ? Text(
-                                      dataCart[index]['harga'].toString(),
+                                      NumberFormat.currency(
+                                        locale: 'id',
+                                        symbol: 'Rp ',
+                                        decimalDigits: 0,
+                                      ).format((dataCart[index]['harga'])),
                                       style: priceTextStyle.copyWith(
                                           fontWeight: semiBold, fontSize: 14),
                                     )
                                   : Text(
-                                      dataCart[index]['quantityPrice']
-                                          .toString(),
+                                      NumberFormat.currency(
+                                        locale: 'id',
+                                        symbol: 'Rp ',
+                                        decimalDigits: 0,
+                                      ).format(
+                                          (dataCart[index]['quantityPrice'])),
                                       style: priceTextStyle.copyWith(
                                           fontWeight: semiBold, fontSize: 14),
                                     ),
@@ -425,15 +476,16 @@ class _BagPageState extends State<BagPage> {
             .where('idResto', isEqualTo: dataMeja['idResto'])
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          var dataCart = snapshot.data?.docs;
+          dynamic dataCart = snapshot.data?.docs;
           int? countCart = snapshot.data?.docs.length;
 
           if (dataCart == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(
+                color: priceColor,
+              ),
             );
           }
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
