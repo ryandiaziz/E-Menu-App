@@ -41,7 +41,7 @@ class _RiwayatCardCusState extends State<RiwayatCardCus> {
                   const SizedBox(
                     height: 32,
                   ),
-                  buildRating()
+                  // buildRating()
                 ],
               ),
               actions: [

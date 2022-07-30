@@ -48,9 +48,9 @@ class _NavigationPageState extends State<NavigationPage> {
           dataMeja: dataMeja,
         );
       case 1:
-        return BagPage();
-      case 2:
-        return RiwayatPage();
+        return BagPage(
+          dataMeja: dataMeja,
+        );
       default:
         return MenuPage(
           dataMeja: dataMeja,

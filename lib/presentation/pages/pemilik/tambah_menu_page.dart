@@ -228,7 +228,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
               await _upload('${image?.path}');
               final datamenu = Menu(
                 nama: _namaProdukC.text,
-                harga: _hargaProdukC.text,
+                harga: int.parse(_hargaProdukC.text),
                 kategori: dropdownvalue,
                 imageUrl: '$imageUrl',
                 idResto: idResto,

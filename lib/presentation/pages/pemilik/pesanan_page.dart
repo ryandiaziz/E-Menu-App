@@ -15,12 +15,13 @@ class _PesananPageState extends State<PesananPage> {
     const Tab(text: 'Belum dibuat'),
     const Tab(text: 'Selesai'),
   ];
-
   @override
   Widget build(BuildContext context) {
+    // int index = ModalRoute.of(context).settings.arguments as int;
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
+          // initialIndex: index??0,
           length: myTab.length,
           child: Scaffold(
             backgroundColor: AppColor.placeholderBg,

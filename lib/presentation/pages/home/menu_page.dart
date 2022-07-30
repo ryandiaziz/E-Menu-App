@@ -21,7 +21,12 @@ class _MenuPageState extends State<MenuPage> {
   ScrollController controller = ScrollController();
   var firestoreInstance = FirebaseFirestore.instance;
   List menu = [];
+  List resto = [];
   // List meja = [];
+  String? namaResto;
+  String? idCart;
+  String? idPesanan;
+  int kuantitas = 1;
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
@@ -35,7 +40,7 @@ class _MenuPageState extends State<MenuPage> {
           "id": qn.docs[i]["id"],
           "nama": qn.docs[i]["nama"],
           "kategori": qn.docs[i]["kategori"],
-          "harga": qn.docs[i]["harga"],
+          "harga": qn.docs[i]["harga"].toString(),
           "imageUrl": qn.docs[i]["imageUrl"],
         });
       }
@@ -44,39 +49,98 @@ class _MenuPageState extends State<MenuPage> {
     return qn.docs;
   }
 
-  int kuantitas = 2;
-
-  tambahKuantias() {
+  fetchRestaurant() async {
+    QuerySnapshot qn = await firestoreInstance
+        .collection("restaurants")
+        .where('id', isEqualTo: dataMeja['idResto'])
+        .get();
     setState(() {
-      kuantitas++;
+      resto.add({
+        "id": qn.docs[0]["id"],
+        "idUser": qn.docs[0]["idUser"],
+        "name": qn.docs[0]["name"],
+        "alamat": qn.docs[0]["alamat"],
+        "imageUrl": qn.docs[0]["imageUrl"],
+      });
+      namaResto = resto[0]['name'];
     });
-  }
 
-  kurangKuantias() {
-    setState(() {
-      if (kuantitas > 1) {
-        kuantitas--;
-      }
-    });
+    return qn.docs;
   }
 
   @override
   void initState() {
     fetchMenu();
+    fetchRestaurant();
     super.initState();
   }
 
+  // Future addToCart(menu) async {
+  //   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //   var currentUser = _auth.currentUser;
+  //   CollectionReference _collectionRef =
+  //       FirebaseFirestore.instance.collection("users");
+  //   return _collectionRef.doc(currentUser!.email).collection("cart").doc().set({
+  //     "id": _collectionRef.id,
+  //     "noMeja": dataMeja['noMeja'],
+  //     "idResto": dataMeja['idResto'],
+  //     "name": menu['nama'],
+  //     "harga": menu['harga'],
+  //     "kategori": menu["kategori"],
+  //     "imageUrl": menu["imageUrl"],
+  //   }).then((value) => ("Added to cart"));
+  // }
   Future addToCart(menu) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    var currentUser = _auth.currentUser;
-    CollectionReference _collectionRef =
-        FirebaseFirestore.instance.collection("users");
-    return _collectionRef.doc(currentUser!.email).collection("cart").doc().set({
+    final docCart = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection('cart')
+        .doc();
+    setState(() {
+      idCart = docCart.id;
+    });
+    await docCart.set({
+      'id': idCart,
+      "noMeja": dataMeja['noMeja'],
+      "idResto": dataMeja['idResto'],
+      "namaResto": namaResto,
       "name": menu['nama'],
-      "harga": menu['harga'],
+      "harga": int.parse(menu['harga']),
       "kategori": menu["kategori"],
       "imageUrl": menu["imageUrl"],
-    }).then((value) => ("Added to cart"));
+      "quantity": 1,
+      "quantityPrice": null
+    });
+  }
+
+//   Future addToCart(menu) async {
+//     final docCart = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.email).collection('cart').doc();
+//     setState(() {
+//       idCart = docCart.id;
+//     });
+
+//     await docCart.set({
+//       'id': idCart,
+//       "noMeja": dataMeja['noMeja'],
+//       "idResto": dataMeja['idResto'],
+//       "name": menu['nama'],
+//       "harga": menu['harga'],
+//       "kategori": menu["kategori"],
+//       "imageUrl": menu["imageUrl"],
+//     });
+
+//     // Navigator.pushReplacementNamed(context, '/profile-ad');
+//     // Navigator.pop(context);
+//     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//       content: const Text('Daftar Berhasil'),
+//       backgroundColor: priceColor,
+//     ));
+//   }
+// }
+  void tambahKuantitas() {
+    setState(() {
+      kuantitas++;
+    });
   }
 
   @override
@@ -86,12 +150,6 @@ class _MenuPageState extends State<MenuPage> {
         child: Container(
           decoration: BoxDecoration(
             color: secondaryColor,
-            border: Border(
-              top: BorderSide(
-                width: 1,
-                color: secondsubtitleColor,
-              ),
-            ),
           ),
           padding: const EdgeInsets.only(left: 10),
           width: double.infinity,
@@ -258,7 +316,7 @@ class _MenuPageState extends State<MenuPage> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              kurangKuantias();
+                              // kurangKuantias();
                             },
                             child: Image.asset(
                               "assets/icon/icon_min.png",
@@ -267,13 +325,14 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                           ),
                           Text(
-                            '$kuantitas',
+                            kuantitas.toString(),
                             style: titleTextStyle.copyWith(
                                 fontSize: 18, fontWeight: semiBold),
                           ),
                           GestureDetector(
                             onTap: () {
-                              tambahKuantias();
+                              tambahKuantitas();
+                              // tambahKuantias();
                             },
                             child: Image.asset(
                               "assets/icon/icon_max.png",
@@ -477,12 +536,8 @@ class _MenuPageState extends State<MenuPage> {
       body: ListView(
         shrinkWrap: true,
         children: [
+          Text(namaResto ?? ''),
           titleCatagories(),
-          ElevatedButton(
-              onPressed: () {
-                print(dataMeja['idResto']);
-              },
-              child: Text('meja')),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(

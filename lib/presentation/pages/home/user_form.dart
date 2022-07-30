@@ -51,8 +51,8 @@ class _UserFormState extends State<UserForm> {
         .set({
           "id": currentUser.uid,
           "name": nameController.text,
-          "phone": phoneController.text,
-          "email": currentUser.email,
+          "phone": int.parse(phoneController.text),
+          "email": (currentUser.email),
           "dob": dobController.text,
           "gender": gendervalue,
           "isOwner": false,

@@ -179,7 +179,9 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/pesanan-page-admin');
+                        int index = 1;
+                        Navigator.pushNamed(context, '/pesanan-page-admin',
+                            arguments: index);
                       },
                       child: menuItemPesanan(
                           "assets/icon/menu-selesai.png", "Selesai"),

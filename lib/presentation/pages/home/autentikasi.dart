@@ -53,7 +53,8 @@ class _AutentikasiState extends State<Autentikasi> {
       var authCredential = userCredential.user;
       (authCredential!.uid);
       if (authCredential.uid.isNotEmpty) {
-        Navigator.push(context, CupertinoPageRoute(builder: (_) => UserForm()));
+        Navigator.push(
+            context, CupertinoPageRoute(builder: (_) => const UserForm()));
       } else {
         Fluttertoast.showToast(msg: "Something is wrong");
       }

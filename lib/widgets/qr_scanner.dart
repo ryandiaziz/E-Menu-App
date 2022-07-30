@@ -69,7 +69,7 @@ class _QRScanPageState extends State<QRScanPage> {
                     ),
                   );
                 },
-                child: Text('Lanjut'))
+                child: const Text('Lanjut'))
             : const Text(
                 'Scan a Code! bro',
                 style: TextStyle(color: Colors.white),

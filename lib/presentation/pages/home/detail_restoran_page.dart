@@ -32,7 +32,7 @@ class _DetailRestoranState extends State<DetailRestoran> {
           "id": qn.docs[i]["id"],
           "nama": qn.docs[i]["nama"],
           "kategori": qn.docs[i]["kategori"],
-          "harga": qn.docs[i]["harga"],
+          "harga": (qn.docs[i]["harga"].toString()),
           "imageUrl": qn.docs[i]["imageUrl"],
         });
       }

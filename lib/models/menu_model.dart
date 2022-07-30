@@ -1,7 +1,7 @@
 class Menu {
   String id;
   final String nama;
-  final String harga;
+  final int harga;
   String imageUrl;
   final String kategori;
   final String idResto;
