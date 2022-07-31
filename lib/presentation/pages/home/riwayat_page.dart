@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/card/riwayat_customer_card.dart';
+import 'package:e_menu_app/presentation/card/order_cus_cart.dart';
 import 'package:e_menu_app/shared/theme.dart';
 
 class RiwayatPage extends StatelessWidget {
@@ -59,11 +59,11 @@ class RiwayatPage extends StatelessWidget {
     Widget content() {
       return ListView(
         children: [
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-          RiwayatCardCus(),
+          OrderCardCus(),
+          OrderCardCus(),
+          OrderCardCus(),
+          OrderCardCus(),
+          OrderCardCus(),
         ],
       );
     }

@@ -21,6 +21,8 @@ class _BagPageState extends State<BagPage> {
   int? harga;
   int totalHarga = 0;
   String? idOrder;
+  int? item;
+  int totalItems = 0;
 
   Future addOrder(dynamic dataCart, int countCart) async {
     var docOrder = FirebaseFirestore.instance.collection('order').doc();
@@ -30,6 +32,8 @@ class _BagPageState extends State<BagPage> {
         dataCart[i]['quantityPrice'] == null
             ? harga = dataCart[i]['harga']
             : harga = dataCart[i]['quantityPrice'];
+        item = dataCart[i]['quantity'];
+        totalItems = totalItems + item!;
         totalHarga = totalHarga + harga!;
       });
     }
@@ -37,17 +41,23 @@ class _BagPageState extends State<BagPage> {
     await docOrder.set({
       "id": docOrder.id,
       "pemesan": FirebaseAuth.instance.currentUser!.email,
-      "total": totalHarga,
-      "date": DateTime.now(),
+      "totalHarga": totalHarga,
+      "totalItems": totalItems,
+      "date": DateTime.now().toString(),
       "noMeja": dataCart[0]['noMeja'],
       "idResto": dataCart[0]['idResto'],
       "namaResto": dataCart[0]['namaResto'],
+      "imgResto": dataCart[0]['imgResto'],
+      "status": false,
+      "bayar": false,
     });
 
     setState(() {
       idOrder = docOrder.id;
       harga = 0;
       totalHarga = 0;
+      item = 0;
+      totalItems = 0;
     });
 
     // Navigator.pushReplacementNamed(context, '/profile-ad');
@@ -185,10 +195,12 @@ class _BagPageState extends State<BagPage> {
                     await addOrder(dataCart, countCart);
                     await addItemsToOrder(dataCart, countCart);
                     await deleteCart(dataCart, countCart);
-                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //   content: const Text('Menu Dihapus'),
-                    //   backgroundColor: alertColor,
-                    // ));
+                    Navigator.of(context).pop();
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text('Berhasil Menambah Pesanan'),
+                      backgroundColor: priceColor,
+                    ));
                     // showModalBottomSheet(
                     //   context: context,
                     //   builder: (builder) => bottomSheetCheckout(),

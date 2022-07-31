@@ -24,6 +24,7 @@ class _MenuPageState extends State<MenuPage> {
   List resto = [];
   // List meja = [];
   String? namaResto;
+  String? imgResto;
   String? idCart;
   String? idPesanan;
   int kuantitas = 1;
@@ -63,6 +64,7 @@ class _MenuPageState extends State<MenuPage> {
         "imageUrl": qn.docs[0]["imageUrl"],
       });
       namaResto = resto[0]['name'];
+      imgResto = resto[0]['imageUrl'];
     });
 
     return qn.docs;
@@ -104,6 +106,7 @@ class _MenuPageState extends State<MenuPage> {
       "noMeja": dataMeja['noMeja'],
       "idResto": dataMeja['idResto'],
       "namaResto": namaResto,
+      "imgResto": imgResto,
       "name": menu['nama'],
       "harga": int.parse(menu['harga']),
       "kategori": menu["kategori"],

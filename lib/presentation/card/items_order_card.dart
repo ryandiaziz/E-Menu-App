@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 
-class RiwayatCardCus extends StatefulWidget {
-  const RiwayatCardCus({Key? key}) : super(key: key);
+class ItemsCardCus extends StatefulWidget {
+  dynamic dataItems;
+  ItemsCardCus({this.dataItems, Key? key}) : super(key: key);
 
   @override
-  State<RiwayatCardCus> createState() => _RiwayatCardCusState();
+  State<ItemsCardCus> createState() => _ItemsCardCusState();
 }
 
-class _RiwayatCardCusState extends State<RiwayatCardCus> {
+class _ItemsCardCusState extends State<ItemsCardCus> {
   double? rating;
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class _RiwayatCardCusState extends State<RiwayatCardCus> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Aby Resto",
+            widget.dataItems['nama'],
             style: primaryTextStyle.copyWith(fontWeight: bold, fontSize: 18),
           ),
           const SizedBox(
@@ -84,8 +86,8 @@ class _RiwayatCardCusState extends State<RiwayatCardCus> {
                 height: 95,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                        image: AssetImage("assets/img/image_nasgor.jpg"))),
+                    image: DecorationImage(
+                        image: NetworkImage(widget.dataItems['imageUrl']))),
               ),
               const SizedBox(
                 width: 12,
@@ -96,15 +98,26 @@ class _RiwayatCardCusState extends State<RiwayatCardCus> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    "Nasi Goreng",
-                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  Row(
+                    children: [
+                      Text(
+                        '',
+                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Items",
+                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 3,
                   ),
                   Text(
-                    "05 Mei 2022, 08:00",
+                    '',
                     style: subtitleTextStyle.copyWith(
                         fontSize: 12, fontWeight: regular),
                   ),
@@ -193,7 +206,7 @@ class _RiwayatCardCusState extends State<RiwayatCardCus> {
                 width: 4,
               ),
               Text(
-                "Rp24.000",
+                '',
                 style: primaryTextStyle.copyWith(fontWeight: regular),
               ),
             ],

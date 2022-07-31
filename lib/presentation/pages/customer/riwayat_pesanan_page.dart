@@ -1,5 +1,8 @@
-import 'package:e_menu_app/presentation/card/riwayat_customer_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/card/order_cus_cart.dart';
+import 'package:e_menu_app/presentation/pages/customer/rincian_pesanan.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RiwayatPesananPage extends StatefulWidget {
@@ -12,14 +15,55 @@ class RiwayatPesananPage extends StatefulWidget {
 class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
   @override
   Widget build(BuildContext context) {
-    Widget content() {
-      return ListView(
-        children: [
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-          RiwayatCardCus(),
-        ],
+    Widget buildOrder(dynamic dataOrder, int countOrder) {
+      return Expanded(
+        child: ListView.builder(
+            itemCount: countOrder,
+            itemBuilder: (_, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          RincianPesananPage(dataOrder: dataOrder[index]),
+                    ),
+                  );
+                },
+                child: OrderCardCus(
+                  dataOrder: dataOrder[index],
+                ),
+              );
+            }),
+      );
+    }
+
+    Widget getOrder() {
+      return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("order")
+            .where('pemesan',
+                isEqualTo: FirebaseAuth.instance.currentUser!.email)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          dynamic dataOrder = snapshot.data?.docs;
+          int? countOrder = snapshot.data?.docs.length;
+
+          if (dataOrder == null) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: priceColor,
+              ),
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              buildOrder(dataOrder, countOrder!),
+              // costumBottomNav(dataCart, countCart)
+            ],
+          );
+        },
       );
     }
 
@@ -46,7 +90,7 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
           // fontWeight: semiBold,
         ),
       ),
-      body: content(),
+      body: getOrder(),
     );
   }
 }
