@@ -3,15 +3,15 @@ import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
-class OrderCardCus extends StatefulWidget {
+class OrderCardOwner extends StatefulWidget {
   dynamic dataOrder;
-  OrderCardCus({this.dataOrder, Key? key}) : super(key: key);
+  OrderCardOwner({this.dataOrder, Key? key}) : super(key: key);
 
   @override
-  State<OrderCardCus> createState() => _OrderCardCusState();
+  State<OrderCardOwner> createState() => _OrderCardOwnerState();
 }
 
-class _OrderCardCusState extends State<OrderCardCus> {
+class _OrderCardOwnerState extends State<OrderCardOwner> {
   double? rating;
   @override
   Widget build(BuildContext context) {
@@ -41,9 +41,13 @@ class _OrderCardCusState extends State<OrderCardCus> {
                 width: 100,
                 height: 95,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                        image: NetworkImage(widget.dataOrder['imgResto']))),
+                  borderRadius: BorderRadius.circular(12),
+                  image: const DecorationImage(
+                    image: AssetImage(
+                      "assets/img/image_profile_user.png",
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(
                 width: 12,
@@ -52,7 +56,7 @@ class _OrderCardCusState extends State<OrderCardCus> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.dataOrder['namaResto'],
+                    widget.dataOrder['namaPemesan'],
                     style: primaryTextStyle.copyWith(
                         fontWeight: bold, fontSize: 18),
                   ),

@@ -42,7 +42,7 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
       return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("order")
-            .where('pemesan',
+            .where('emailPemesan',
                 isEqualTo: FirebaseAuth.instance.currentUser!.email)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

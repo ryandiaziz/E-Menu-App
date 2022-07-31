@@ -1,160 +1,75 @@
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/card/order_cus_cart.dart';
+import 'package:e_menu_app/presentation/pages/customer/rincian_pesanan.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class BelumDibuat extends StatelessWidget {
+class BelumDibuat extends StatefulWidget {
   const BelumDibuat({Key? key}) : super(key: key);
 
   @override
+  State<BelumDibuat> createState() => _BelumDibuatState();
+}
+
+class _BelumDibuatState extends State<BelumDibuat> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(
-        // top: 10,
-        bottom: 10,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 10,
-      ),
-      decoration: BoxDecoration(
-        color: secondaryColor,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //Baris 1
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 100,
-                height: 95,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                        image: AssetImage("assets/img/image_nasgor.jpg"))),
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Nasi Goreng",
-                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "05 Mei 2022, 08:00",
-                    style: subtitleTextStyle.copyWith(
-                        fontSize: 12, fontWeight: regular),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Makanan",
-                    style: secondSubtitleTextStyle.copyWith(
-                        fontWeight: regular, fontSize: 14),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "2 x",
-                        style: primaryTextStyle.copyWith(fontWeight: regular),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Rp 12.000",
-                        style: priceTextStyle.copyWith(
-                            fontWeight: semiBold, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                ],
-              ),
-              const Expanded(
-                child: SizedBox(),
-              ),
-              Container(
-                width: 47,
-                decoration: BoxDecoration(
-                  // border: Border.all(color: priceColor, width: 0.5),
-                  borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(15),
-                      bottomLeft: Radius.circular(15)),
-                  color: secondsubtitleColor,
-                ),
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  top: 5,
-                  bottom: 5,
-                  right: 10,
-                ),
-                child: Column(
-                  children: [
-                    Text('Meja',
-                        style: secondaryTextStyle.copyWith(
-                            fontSize: 12, fontWeight: bold)),
-                    const SizedBox(
-                      height: 5,
+    String idResto = ModalRoute.of(context)!.settings.arguments as String;
+    Widget buildOrder(dynamic dataOrder, int countOrder) {
+      return Expanded(
+        child: ListView.builder(
+            itemCount: countOrder,
+            itemBuilder: (_, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          RincianPesananPage(dataOrder: dataOrder[index]),
                     ),
-                    Text('5',
-                        style: secondaryTextStyle.copyWith(
-                            fontSize: 16, fontWeight: bold)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: 100,
-            decoration: BoxDecoration(
-              color: const Color(0xffEFF0F6),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Center(
-              child: Text(
-                "Sudah Bayar",
-                style:
-                    priceTextStyle.copyWith(fontSize: 14, fontWeight: semiBold),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          SizedBox(
-            height: 40,
-            width: double.infinity,
-            child: TextButton(
-                onPressed: () {
-                  // Navigator.pushNamed(context, "/checkout");
+                  );
                 },
-                style: TextButton.styleFrom(
-                    backgroundColor: priceColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5))),
-                child: Text(
-                  "Selesai",
-                  style: secondaryTextStyle.copyWith(
-                      fontSize: 18, fontWeight: semiBold),
-                )),
-          ),
-        ],
-      ),
+                child: OrderCardCus(
+                  dataOrder: dataOrder[index],
+                ),
+              );
+            }),
+      );
+    }
+
+    Widget getOrder() {
+      return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("order")
+            .where('idResto', isEqualTo: idResto)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          dynamic dataOrder = snapshot.data?.docs;
+          int? countOrder = snapshot.data?.docs.length;
+
+          if (dataOrder == null) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: priceColor,
+              ),
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              buildOrder(dataOrder, countOrder!),
+              // costumBottomNav(dataCart, countCart)
+            ],
+          );
+        },
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: backgroundColor3,
+      body: Container(),
     );
   }
 }

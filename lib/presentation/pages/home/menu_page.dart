@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/presentation/pages/home/navigation.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:intl/intl.dart';
 // import 'package:e_menu_app/presentation/card/product_card.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
@@ -108,6 +109,7 @@ class _MenuPageState extends State<MenuPage> {
       "namaResto": namaResto,
       "imgResto": imgResto,
       "name": menu['nama'],
+      "hargaAsli": int.parse(menu['harga']),
       "harga": int.parse(menu['harga']),
       "kategori": menu["kategori"],
       "imageUrl": menu["imageUrl"],
@@ -222,10 +224,9 @@ class _MenuPageState extends State<MenuPage> {
 
     Widget bottomSheetDetail(menu) {
       return Container(
-        height: 300,
-        padding: const EdgeInsets.only(
-          // top: 10,
-          top: 10,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 20,
         ),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
@@ -237,42 +238,11 @@ class _MenuPageState extends State<MenuPage> {
           margin:
               const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //Baris 1
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        "assets/icon/icon_star.png",
-                        width: 24,
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        "4.8",
-                        style: titleTextStyle.copyWith(
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        "(41 Reviews)",
-                        style: titleTextStyle.copyWith(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(),
-                ],
-              ),
-              //Baris 2
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,70 +257,32 @@ class _MenuPageState extends State<MenuPage> {
                       Text(
                         menu["nama"],
                         style: titleTextStyle.copyWith(
-                            fontSize: 24, fontWeight: bold),
+                            fontSize: 22, fontWeight: bold),
                       ),
                       Text(
                         menu["kategori"],
                         style: subtitleTextStyle.copyWith(fontSize: 18),
                       ),
                       Text(
-                        menu["harga"],
+                        NumberFormat.currency(
+                          locale: 'id',
+                          symbol: 'Rp ',
+                          decimalDigits: 0,
+                        ).format(int.parse(menu["harga"])),
                         style: priceTextStyle.copyWith(
-                            fontSize: 24, fontWeight: bold),
+                            fontSize: 20, fontWeight: bold),
                       ),
                     ],
                   ),
                 ],
               ),
-              //Bariis 3
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 35,
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffEFF0F6),
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // kurangKuantias();
-                            },
-                            child: Image.asset(
-                              "assets/icon/icon_min.png",
-                              width: 25,
-                              color: priceColor,
-                            ),
-                          ),
-                          Text(
-                            kuantitas.toString(),
-                            style: titleTextStyle.copyWith(
-                                fontSize: 18, fontWeight: semiBold),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              tambahKuantitas();
-                              // tambahKuantias();
-                            },
-                            child: Image.asset(
-                              "assets/icon/icon_max.png",
-                              width: 25,
-                              color: priceColor,
-                            ),
-                          ),
-                        ]),
-                  ),
-                ],
-              ),
+
               Container(
                 width: double.infinity,
                 height: 50,
-                margin: const EdgeInsets.only(top: 20, bottom: 10),
+                margin: const EdgeInsets.only(
+                  top: 40,
+                ),
                 child: TextButton(
                     style: TextButton.styleFrom(
                         backgroundColor: priceColor,
@@ -361,6 +293,7 @@ class _MenuPageState extends State<MenuPage> {
                       Navigator.pop(context);
                       addToCart(menu);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(seconds: 1),
                         content: const Text('Ditambahkan Ke Keranjang'),
                         backgroundColor: priceColor,
                       ));
@@ -393,6 +326,7 @@ class _MenuPageState extends State<MenuPage> {
             onTap: () {
               // mySheet(menu[index]);
               showModalBottomSheet(
+                isScrollControlled: true,
                 context: context,
                 builder: (builder) => bottomSheetDetail(menu[index]),
               );
@@ -449,9 +383,15 @@ class _MenuPageState extends State<MenuPage> {
                           const SizedBox(
                             height: 5,
                           ),
-                          Text(menu[index]["harga"],
-                              style: priceTextStyle.copyWith(
-                                  fontSize: 14, fontWeight: bold)),
+                          Text(
+                            NumberFormat.currency(
+                              locale: 'id',
+                              symbol: 'Rp ',
+                              decimalDigits: 0,
+                            ).format(int.parse(menu[index]["harga"])),
+                            style: priceTextStyle.copyWith(
+                                fontWeight: semiBold, fontSize: 14),
+                          ),
                           const SizedBox(
                             height: 5,
                           ),

@@ -56,6 +56,7 @@ class _UserFormState extends State<UserForm> {
           "dob": dobController.text,
           "gender": gendervalue,
           "isOwner": false,
+          "imageUrl": null,
         })
         .then((value) => Navigator.pushReplacementNamed(context, '/home-page'))
         .catchError((error) => ("something is wrong. $error"));

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/widgets/cus_appbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/presentation/pages/home/keranjang_page.dart';
 import 'package:e_menu_app/presentation/pages/home/menu_page.dart';
@@ -41,7 +42,7 @@ class _NavigationPageState extends State<NavigationPage> {
     );
   }
 
-  Widget body(dataMeja) {
+  Widget body(dataMeja, dataUser) {
     switch (index) {
       case 0:
         return MenuPage(
@@ -50,6 +51,7 @@ class _NavigationPageState extends State<NavigationPage> {
       case 1:
         return BagPage(
           dataMeja: dataMeja,
+          dataUser: dataUser,
         );
       default:
         return MenuPage(
@@ -111,6 +113,27 @@ class _NavigationPageState extends State<NavigationPage> {
     );
   }
 
+  Widget getUser(dynamic dataMeja) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("users")
+          .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        dynamic dataUser = snapshot.data?.docs;
+
+        if (dataUser == null) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: priceColor,
+            ),
+          );
+        }
+        return body(dataMeja, dataUser);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +151,7 @@ class _NavigationPageState extends State<NavigationPage> {
               child: CircularProgressIndicator(),
             );
           }
-          return body(dataMeja);
+          return getUser(dataMeja);
         },
       ),
       // body()

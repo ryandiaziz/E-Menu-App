@@ -6,17 +6,24 @@ import 'package:intl/intl.dart';
 
 class BagPage extends StatefulWidget {
   dynamic dataMeja;
+  dynamic dataUser;
 
-  BagPage({this.dataMeja, Key? key}) : super(key: key);
+  BagPage({this.dataMeja, this.dataUser, Key? key}) : super(key: key);
   @override
-  State<BagPage> createState() => _BagPageState(dataMeja);
+  State<BagPage> createState() => _BagPageState(dataMeja, dataUser);
 }
 
 class _BagPageState extends State<BagPage> {
+  _BagPageState(
+    this.dataMeja,
+    this.dataUser,
+  );
+  var firestoreInstance = FirebaseFirestore.instance;
   int? newPrice;
   dynamic dataMeja;
+  dynamic dataUser;
   List dataCart = [];
-  _BagPageState(this.dataMeja);
+
   String? idCheckout;
   int? harga;
   int totalHarga = 0;
@@ -24,26 +31,21 @@ class _BagPageState extends State<BagPage> {
   int? item;
   int totalItems = 0;
 
+  //Fungsi Menambahkah Data Pesanan
   Future addOrder(dynamic dataCart, int countCart) async {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    String date = dateFormat.format(DateTime.now());
     var docOrder = FirebaseFirestore.instance.collection('order').doc();
-
-    for (var i = 0; i < countCart; i++) {
-      setState(() {
-        dataCart[i]['quantityPrice'] == null
-            ? harga = dataCart[i]['harga']
-            : harga = dataCart[i]['quantityPrice'];
-        item = dataCart[i]['quantity'];
-        totalItems = totalItems + item!;
-        totalHarga = totalHarga + harga!;
-      });
-    }
+    //Mencari Total Harga dan Total Items
 
     await docOrder.set({
       "id": docOrder.id,
-      "pemesan": FirebaseAuth.instance.currentUser!.email,
+      "namaPemesan": dataUser[0]['name'],
+      "imgPemesan": dataUser[0]['imageUrl'],
+      "emailPemesan": dataUser[0]['email'],
       "totalHarga": totalHarga,
       "totalItems": totalItems,
-      "date": DateTime.now().toString(),
+      "date": date,
       "noMeja": dataCart[0]['noMeja'],
       "idResto": dataCart[0]['idResto'],
       "namaResto": dataCart[0]['namaResto'],
@@ -54,10 +56,6 @@ class _BagPageState extends State<BagPage> {
 
     setState(() {
       idOrder = docOrder.id;
-      harga = 0;
-      totalHarga = 0;
-      item = 0;
-      totalItems = 0;
     });
 
     // Navigator.pushReplacementNamed(context, '/profile-ad');
@@ -79,9 +77,8 @@ class _BagPageState extends State<BagPage> {
       docCheckout.set({
         "id": docCheckout.id,
         "nama": dataCart[i]['name'],
-        "harga": dataCart[i]['quantityPrice'] == null
-            ? dataCart[i]['harga']
-            : dataCart[i]['quantityPrice'],
+        "hargaAsli": dataCart[i]['hargaAsli'],
+        "hargaTotal": dataCart[i]['quantityPrice'] ?? dataCart[i]['harga'],
         "kuantitas": dataCart[i]['quantity'],
         "kategori": dataCart[i]["kategori"],
         "imageUrl": dataCart[i]["imageUrl"],
@@ -109,48 +106,131 @@ class _BagPageState extends State<BagPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget bottomSheetCheckout() {
+    Widget bottomSheetCheckout(dynamic dataCart, int countCart) {
       return Container(
-        height: 100,
-        width: double.infinity,
         margin: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 20,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Pilih Foto"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(),
+                Text(
+                  "Checkout",
+                  style: primaryTextStyle.copyWith(
+                      fontWeight: semiBold, fontSize: 22),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      harga = 0;
+                      totalHarga = 0;
+                      item = 0;
+                      totalItems = 0;
+                    });
+                  },
+                  child: const Icon(Icons.close),
+                ),
+              ],
+            ),
             const SizedBox(
               height: 20,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop;
-                        // getImage(ImageSource.camera);
-                      },
-                      child: const Icon(Icons.camera),
-                    ),
-                    const Text('Kamera')
-                  ],
+                Text('Nama Pemesan',
+                    style: subtitleTextStyle.copyWith(fontSize: 14)),
+                Text(
+                  dataUser[0]['name'],
+                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
                 ),
-                Column(
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        // await getImage(ImageSource.gallery);
-                        // await _upload('${image?.path}');
-                      },
-                      child: const Icon(Icons.image),
-                    ),
-                    const Text('Galeri')
-                  ],
-                )
               ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Email', style: subtitleTextStyle.copyWith(fontSize: 14)),
+                Text(
+                  dataUser[0]['email'],
+                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
+                Text(
+                  dataMeja['noMeja'],
+                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Items', style: subtitleTextStyle.copyWith(fontSize: 14)),
+                Text(
+                  '$totalItems',
+                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Total Harga',
+                    style: subtitleTextStyle.copyWith(fontSize: 14)),
+                Text(
+                  NumberFormat.currency(
+                    locale: 'id',
+                    symbol: 'Rp ',
+                    decimalDigits: 0,
+                  ).format((totalHarga)),
+                  style: priceTextStyle.copyWith(
+                      fontWeight: semiBold, fontSize: 14),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await addOrder(dataCart, countCart);
+                  await addItemsToOrder(dataCart, countCart);
+                  await deleteCart(dataCart, countCart);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Confirm',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: priceColor,
+                  elevation: 3,
+                ),
+              ),
             )
           ],
         ),
@@ -161,74 +241,67 @@ class _BagPageState extends State<BagPage> {
       return Container(
         color: secondaryColor,
         margin: const EdgeInsets.symmetric(horizontal: 2),
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         height: 110,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Total",
-                  style: subtitleTextStyle.copyWith(
-                      fontSize: 16, fontWeight: semiBold),
+        child: SizedBox(
+          height: 50,
+          // margin: EdgeInsets.symmetric(horizontal: 20),
+          child: TextButton(
+              onPressed: () async {
+                for (var i = 0; i < countCart; i++) {
+                  setState(() {
+                    dataCart[i]['quantityPrice'] == null
+                        ? harga = dataCart[i]['harga']
+                        : harga = dataCart[i]['quantityPrice'];
+                    item = dataCart[i]['quantity'];
+                    totalItems = totalItems + item!;
+                    totalHarga = totalHarga + harga!;
+                  });
+                }
+                if (item != null) {
+                  if (item! > 0) {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      enableDrag: false,
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (builder) =>
+                          bottomSheetCheckout(dataCart, countCart),
+                    );
+                  }
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: const Duration(seconds: 1),
+                  content: const Text('Pesan dulu'),
+                  backgroundColor: alertColor,
+                ));
+
+                // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //   content: const Text('Berhasil Menambah Pesanan'),
+                //   backgroundColor: priceColor,
+                // ));
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: priceColor,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                // ElevatedButton(onPressed: () {}, child: Text('dataCart'))
-              ],
-            ),
-            // SizedBox(
-            //   height: 20,
-            // ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 50,
-              // margin: EdgeInsets.symmetric(horizontal: 20),
-              child: TextButton(
-                  onPressed: () async {
-                    // print(countCart);
-                    await addOrder(dataCart, countCart);
-                    await addItemsToOrder(dataCart, countCart);
-                    await deleteCart(dataCart, countCart);
-                    Navigator.of(context).pop();
-
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: const Text('Berhasil Menambah Pesanan'),
-                      backgroundColor: priceColor,
-                    ));
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   builder: (builder) => bottomSheetCheckout(),
-                    // );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: priceColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Continue",
+                    style: secondaryTextStyle.copyWith(
+                        fontSize: 18, fontWeight: semiBold),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Continue",
-                        style: secondaryTextStyle.copyWith(
-                            fontSize: 18, fontWeight: semiBold),
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: secondaryColor,
-                      )
-                    ],
-                  )),
-            )
-          ],
+                  Icon(
+                    Icons.arrow_forward,
+                    color: secondaryColor,
+                  )
+                ],
+              )),
         ),
       );
     }
@@ -357,11 +430,6 @@ class _BagPageState extends State<BagPage> {
                                       style: priceTextStyle.copyWith(
                                           fontWeight: semiBold, fontSize: 14),
                                     ),
-                              Text(
-                                dataCart[index]['id'],
-                                style: priceTextStyle.copyWith(
-                                    fontWeight: semiBold, fontSize: 14),
-                              ),
                             ],
                           ),
                         ),
@@ -375,6 +443,7 @@ class _BagPageState extends State<BagPage> {
                                 .delete();
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 1),
                               content: const Text('Menu Dihapus'),
                               backgroundColor: alertColor,
                             ));

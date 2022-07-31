@@ -4,14 +4,18 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 class ItemsCardCus extends StatefulWidget {
-  dynamic dataItems;
-  ItemsCardCus({this.dataItems, Key? key}) : super(key: key);
+  final String? idResto;
+  final dynamic dataItems;
+  const ItemsCardCus({this.dataItems, this.idResto, Key? key})
+      : super(key: key);
 
   @override
-  State<ItemsCardCus> createState() => _ItemsCardCusState();
+  State<ItemsCardCus> createState() => _ItemsCardCusState(idResto);
 }
 
 class _ItemsCardCusState extends State<ItemsCardCus> {
+  _ItemsCardCusState(this.idResto);
+  String? idResto;
   double? rating;
   @override
   Widget build(BuildContext context) {
@@ -43,7 +47,7 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                   const SizedBox(
                     height: 32,
                   ),
-                  // buildRating()
+                  buildRating()
                 ],
               ),
               actions: [
@@ -71,13 +75,6 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
         // crossAxisAlignment: CrossAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.dataItems['nama'],
-            style: primaryTextStyle.copyWith(fontWeight: bold, fontSize: 18),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -95,51 +92,36 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        '',
-                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Items",
-                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                      ),
-                    ],
+                  Text(
+                    widget.dataItems['nama'],
+                    style: primaryTextStyle.copyWith(
+                        fontWeight: bold, fontSize: 18),
                   ),
                   const SizedBox(
                     height: 3,
                   ),
                   Text(
-                    '',
-                    style: subtitleTextStyle.copyWith(
-                        fontSize: 12, fontWeight: regular),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Makanan",
+                    widget.dataItems['kategori'],
                     style: secondSubtitleTextStyle.copyWith(
                         fontWeight: regular, fontSize: 14),
                   ),
                   Row(
                     children: [
                       Text(
-                        "2 x",
+                        "${widget.dataItems['kuantitas']} x",
                         style: primaryTextStyle.copyWith(fontWeight: regular),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
                       Text(
-                        "Rp 12.000",
+                        NumberFormat.currency(
+                          locale: 'id',
+                          symbol: 'Rp ',
+                          decimalDigits: 0,
+                        ).format(
+                          (widget.dataItems['hargaAsli']),
+                        ),
                         style: priceTextStyle.copyWith(
                             fontWeight: semiBold, fontSize: 14),
                       ),
@@ -148,47 +130,49 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                 ],
               ),
               const Expanded(child: SizedBox()),
-              rating != null
-                  ? Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text('$rating'),
-                      ],
-                    )
-                  : InkWell(
-                      onTap: () {
-                        showRating();
-                      },
-                      child: Container(
-                        width: 47,
-                        decoration: BoxDecoration(
-                          // border: Border.all(color: priceColor, width: 0.5),
-                          borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15)),
-                          color: secondsubtitleColor,
-                        ),
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          top: 5,
-                          bottom: 5,
-                          right: 10,
-                        ),
-                        child: Column(
+              idResto == null
+                  ? rating != null
+                      ? Row(
                           children: [
-                            Text('rate',
-                                style: secondaryTextStyle.copyWith(
-                                    fontSize: 12, fontWeight: bold)),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text('$rating'),
                           ],
-                        ),
-                      ),
-                    ),
+                        )
+                      : InkWell(
+                          onTap: () {
+                            showRating();
+                          },
+                          child: Container(
+                            width: 47,
+                            decoration: BoxDecoration(
+                              // border: Border.all(color: priceColor, width: 0.5),
+                              borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                  bottomLeft: Radius.circular(15)),
+                              color: secondsubtitleColor,
+                            ),
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              top: 5,
+                              bottom: 5,
+                              right: 10,
+                            ),
+                            child: Column(
+                              children: [
+                                Text('rate',
+                                    style: secondaryTextStyle.copyWith(
+                                        fontSize: 12, fontWeight: bold)),
+                              ],
+                            ),
+                          ),
+                        )
+                  : const SizedBox(),
             ],
           ),
           Divider(
@@ -199,15 +183,22 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Total",
+                "SubTotal",
                 style: primaryTextStyle.copyWith(fontWeight: regular),
               ),
               const SizedBox(
                 width: 4,
               ),
               Text(
-                '',
-                style: primaryTextStyle.copyWith(fontWeight: regular),
+                NumberFormat.currency(
+                  locale: 'id',
+                  symbol: 'Rp ',
+                  decimalDigits: 0,
+                ).format(
+                  (widget.dataItems['hargaTotal']),
+                ),
+                style:
+                    priceTextStyle.copyWith(fontWeight: semiBold, fontSize: 14),
               ),
             ],
           ),
