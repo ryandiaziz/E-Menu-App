@@ -9,13 +9,30 @@ import '../../card/order_owner_cart.dart';
 import '../customer/rincian_pesanan.dart';
 
 class PesananPage extends StatefulWidget {
-  const PesananPage({Key? key}) : super(key: key);
+  final String idResto;
+  final int index;
+
+  const PesananPage({
+    required this.idResto,
+    required this.index,
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<PesananPage> createState() => _PesananPageState();
+  State<PesananPage> createState() => _PesananPageState(
+        idResto,
+        index,
+      );
 }
 
 class _PesananPageState extends State<PesananPage> {
+  _PesananPageState(
+    this._idResto,
+    this._index,
+  );
+
+  final String _idResto;
+  final int _index;
   List<Tab> myTab = [
     const Tab(text: 'Belum dibuat'),
     const Tab(text: 'Selesai'),
@@ -23,9 +40,6 @@ class _PesananPageState extends State<PesananPage> {
 
   @override
   Widget build(BuildContext context) {
-    String idResto = ModalRoute.of(context)!.settings.arguments as String;
-    // int index = ModalRoute.of(context).settings.arguments as int;
-
     Widget buildBelumDibuat(dynamic dataOrder, int countOrder, String status) {
       return Expanded(
         child: ListView.builder(
@@ -40,7 +54,7 @@ class _PesananPageState extends State<PesananPage> {
                             MaterialPageRoute(
                               builder: (_) => RincianPesananPage(
                                   dataOrder: dataOrder[index],
-                                  idResto: idResto),
+                                  idResto: _idResto),
                             ),
                           );
                         },
@@ -57,7 +71,7 @@ class _PesananPageState extends State<PesananPage> {
                             MaterialPageRoute(
                               builder: (_) => RincianPesananPage(
                                   dataOrder: dataOrder[index],
-                                  idResto: idResto),
+                                  idResto: _idResto),
                             ),
                           );
                         },
@@ -75,7 +89,7 @@ class _PesananPageState extends State<PesananPage> {
       return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("order")
-            .where('idResto', isEqualTo: idResto)
+            .where('idResto', isEqualTo: _idResto)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           dynamic dataOrder = snapshot.data?.docs;
@@ -103,7 +117,7 @@ class _PesananPageState extends State<PesananPage> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-          // initialIndex: index??0,
+          initialIndex: _index,
           length: myTab.length,
           child: Scaffold(
             backgroundColor: AppColor.placeholderBg,

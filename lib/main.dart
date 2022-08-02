@@ -8,6 +8,7 @@ import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
+import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
 import 'package:e_menu_app/widgets/qr_scanner.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/presentation/pages/home/list_retoran_page.dart';
 import 'package:e_menu_app/presentation/pages/product/detail_product_page.dart';
-import 'package:e_menu_app/presentation/profile/edit_profile.dart';
+import 'package:e_menu_app/presentation/profile/edit_profile_resto.dart';
 import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
@@ -61,9 +62,9 @@ class MyApp extends StatelessWidget {
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),
-          '/profile-cus': (context) => const ProfileCusPage(),
-          '/editProfile': (context) => EditProfilePage(),
-          '/pesanan-page-admin': (context) => const PesananPage(),
+          '/edit-profile-user': (context) => const EditProfileUserPage(),
+          '/edit-profile-resto': (context) => const EditProfileRestoPage(),
+          // '/pesanan-page-admin': (context) => const PesananPage(),
           '/menu-admin': (context) => const MenuPage(),
           '/tambah-menu-admin': (context) => const TambahMenuPage(),
           '/meja-admin': (context) => const MejaPage(),

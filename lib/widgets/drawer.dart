@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
+import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/editProfile');
+          Navigator.pushNamed(context, '/edit-profile-user');
         },
         child: Container(
           decoration: BoxDecoration(
@@ -97,11 +98,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ),
           child: Column(
             children: [
-              const CircleAvatar(
-                radius: 40,
-                backgroundImage:
-                    AssetImage("assets/img/image_profile_user.png"),
-              ),
+              dataUser['imageUrl'] != null
+                  ? CircleAvatar(
+                      radius: 40,
+                      backgroundImage: NetworkImage(dataUser['imageUrl']))
+                  : const CircleAvatar(
+                      radius: 40,
+                      backgroundImage:
+                          AssetImage("assets/img/image_profile_user.png"),
+                    ),
               const SizedBox(height: 12),
               Text(
                 dataUser["name"],

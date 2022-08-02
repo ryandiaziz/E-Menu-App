@@ -40,12 +40,13 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
     void showRating() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text('Rate This Menu'),
+              title: const Center(child: Text('Rate This Menu')),
               content: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('Please leave a star rating'),
                   const SizedBox(
-                    height: 32,
+                    height: 20,
                   ),
                   buildRating()
                 ],
@@ -133,15 +134,15 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
               idResto == null
                   ? rating != null
                       ? Row(
-                          children: [
-                            const Icon(
+                          children: const [
+                            Icon(
                               Icons.star,
                               color: Colors.yellow,
                             ),
-                            const SizedBox(
+                            SizedBox(
                               width: 10,
                             ),
-                            Text('$rating'),
+                            Text('Sudah dinilai'),
                           ],
                         )
                       : InkWell(

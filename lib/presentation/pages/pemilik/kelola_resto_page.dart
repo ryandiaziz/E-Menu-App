@@ -1,21 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class KelolaRestoPage extends StatefulWidget {
-  String idResto;
+  final String idResto;
 
-  KelolaRestoPage(this.idResto, {Key? key}) : super(key: key);
+  const KelolaRestoPage(this.idResto, {Key? key}) : super(key: key);
 
   @override
   State<KelolaRestoPage> createState() => _KelolaRestoPageState(idResto);
 }
 
 class _KelolaRestoPageState extends State<KelolaRestoPage> {
-  String idResto;
-  _KelolaRestoPageState(this.idResto);
+  final String _idResto;
+  _KelolaRestoPageState(this._idResto);
   @override
   Widget build(BuildContext context) {
     Widget header(data) {
@@ -168,11 +169,21 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/pesanan-page-admin',
-                            arguments: idResto);
+                        int index = 0;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                PesananPage(index: index, idResto: _idResto),
+                          ),
+                        );
+                        // Navigator.pushNamed(context, '/pesanan-page-admin',
+                        //     arguments: idResto);
                       },
                       child: menuItemPesanan(
-                          "assets/icon/menu-belum-dibuat.png", "Belum Dibuat"),
+                        "assets/icon/menu-belum-dibuat.png",
+                        "Belum Dibuat",
+                      ),
                     )
                   ],
                 ),
@@ -181,23 +192,34 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                     GestureDetector(
                       onTap: () {
                         int index = 1;
-                        Navigator.pushNamed(context, '/pesanan-page-admin',
-                            arguments: idResto);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PesananPage(
+                              index: index,
+                              idResto: _idResto,
+                            ),
+                          ),
+                        );
+                        // Navigator.pushNamed(context, '/pesanan-page-admin',
+                        //     arguments: idResto);
                       },
                       child: menuItemPesanan(
-                          "assets/icon/menu-selesai.png", "Selesai"),
+                        "assets/icon/menu-selesai.png",
+                        "Selesai",
+                      ),
                     )
                   ],
                 ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: menuItemPesanan(
-                          "assets/icon/menu-riwayat.png", "Riwayat Pesanan"),
-                    )
-                  ],
-                ),
+                // Column(
+                //   children: [
+                //     GestureDetector(
+                //       onTap: () {},
+                //       child: menuItemPesanan(
+                //           "assets/icon/menu-riwayat.png", "Riwayat Pesanan"),
+                //     )
+                //   ],
+                // ),
               ],
             )
           ],
@@ -218,16 +240,20 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/editProfile');
+                  Navigator.pushNamed(
+                    context,
+                    '/edit-profile-resto',
+                    arguments: _idResto,
+                  );
                 },
-                child: menuItem("Data Pribadi"),
+                child: menuItem("Data Restoran"),
               ),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(
                       context,
                       '/menu-admin',
-                      arguments: idResto,
+                      arguments: _idResto,
                     );
                   },
                   child: menuItem("Menu Saya")),
@@ -236,21 +262,21 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                     Navigator.pushNamed(
                       context,
                       '/tambah-menu-admin',
-                      arguments: idResto,
+                      arguments: _idResto,
                     );
                   },
                   child: menuItem("Tambah Menu")),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/meja-admin');
-                  },
-                  child: menuItem("Meja Saya")),
+              // GestureDetector(
+              //     onTap: () {
+              //       Navigator.pushNamed(context, '/meja-admin');
+              //     },
+              //     child: menuItem("Meja Saya")),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(
                       context,
                       '/tambah-meja-admin',
-                      arguments: idResto,
+                      arguments: _idResto,
                     );
                   },
                   child: menuItem(
@@ -264,10 +290,11 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
 
     return Scaffold(
       backgroundColor: AppColor.placeholderBg,
+      resizeToAvoidBottomInset: false,
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("restaurants")
-            .doc(idResto)
+            .doc(_idResto)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           var data = snapshot.data;

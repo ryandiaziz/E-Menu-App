@@ -37,18 +37,31 @@ class _OrderCardOwnerState extends State<OrderCardOwner> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 100,
-                height: 95,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  image: const DecorationImage(
-                    image: AssetImage(
-                      "assets/img/image_profile_user.png",
+              widget.dataOrder['imgPemesan'] == null
+                  ? Container(
+                      width: 100,
+                      height: 95,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: const DecorationImage(
+                          image: AssetImage(
+                            "assets/img/image_profile_user.png",
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      width: 100,
+                      height: 95,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            widget.dataOrder['imgPemesan'],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
               const SizedBox(
                 width: 12,
               ),

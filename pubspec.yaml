@@ -37,6 +37,7 @@ dependencies:
   dots_indicator: null
   dropdown_search: null
   equatable: null
+  firebase_analytics: ^9.3.0
   firebase_auth: null
   firebase_core: null
   firebase_storage: null
