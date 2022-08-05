@@ -80,14 +80,19 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/edit-profile-user');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => EditProfileUserPage(dataUser: dataUser),
+            ),
+          );
         },
         child: Container(
           decoration: BoxDecoration(
             color: secondaryColor,
             border: Border(
               bottom: BorderSide(
-                width: 3,
+                width: 1,
                 color: AppColor.placeholder.withOpacity(0.25),
               ),
             ),

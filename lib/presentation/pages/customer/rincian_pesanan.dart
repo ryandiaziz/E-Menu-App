@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import '../../card/items_order_card.dart';
 
 class RincianPesananPage extends StatefulWidget {
-  dynamic dataOrder;
-  String? idResto;
-  RincianPesananPage({this.dataOrder, this.idResto, Key? key})
+  final dynamic dataOrder;
+  final String? idResto;
+  const RincianPesananPage({this.dataOrder, this.idResto, Key? key})
       : super(key: key);
 
   @override
@@ -19,6 +19,7 @@ class RincianPesananPage extends StatefulWidget {
 
 class _RincianPesananPageState extends State<RincianPesananPage> {
   _RincianPesananPageState(this.dataOrder, this.idResto);
+
   String? idResto;
   dynamic dataOrder;
 
@@ -27,7 +28,7 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
     Widget costumBottomNav() {
       return Container(
         color: secondaryColor,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         // padding: const EdgeInsets.only(left: 10, right: 10),
         // height: idResto == null ? 110 : 150,
         child: Column(
@@ -35,6 +36,46 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
           children: [
             const SizedBox(
               height: 10,
+            ),
+            idResto != null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Nama Pemesanan",
+                        style: subtitleTextStyle.copyWith(
+                            fontSize: 14, fontWeight: semiBold),
+                      ),
+                      Text(dataOrder['namaPemesan'])
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Nama Restoran",
+                        style: subtitleTextStyle.copyWith(
+                            fontSize: 14, fontWeight: semiBold),
+                      ),
+                      Text(dataOrder['namaResto'])
+                    ],
+                  ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "No Meja",
+                  style: subtitleTextStyle.copyWith(
+                      fontSize: 14, fontWeight: semiBold),
+                ),
+                Text(dataOrder['noMeja'])
+              ],
+            ),
+            const SizedBox(
+              height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,6 +88,9 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                 Text(dataOrder['date'])
               ],
             ),
+            const SizedBox(
+              height: 5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -57,6 +101,9 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                 ),
                 Text('${dataOrder['totalItems']}')
               ],
+            ),
+            const SizedBox(
+              height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,7 +228,7 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
         ),
         automaticallyImplyLeading: true,
         titleSpacing: -5,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           "Rincian Pesanan",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),

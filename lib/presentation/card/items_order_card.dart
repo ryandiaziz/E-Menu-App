@@ -17,6 +17,7 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
   _ItemsCardCusState(this.idResto);
   String? idResto;
   double? rating;
+
   @override
   Widget build(BuildContext context) {
     Widget buildRating() {
@@ -61,16 +62,18 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
             ));
 
     return Container(
-      margin: const EdgeInsets.only(
-        // top: 10,
-        bottom: 10,
-      ),
       padding: const EdgeInsets.symmetric(
-        horizontal: 16,
+        horizontal: 10,
         vertical: 10,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: AppColor.placeholder.withOpacity(0.25),
+          ),
+        ),
       ),
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,10 +155,9 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                           child: Container(
                             width: 47,
                             decoration: BoxDecoration(
-                              // border: Border.all(color: priceColor, width: 0.5),
-                              borderRadius: const BorderRadius.only(
-                                  bottomRight: Radius.circular(15),
-                                  bottomLeft: Radius.circular(15)),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
                               color: secondsubtitleColor,
                             ),
                             padding: const EdgeInsets.only(
@@ -176,9 +178,8 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                   : const SizedBox(),
             ],
           ),
-          Divider(
-            thickness: 1,
-            color: AppColor.placeholder.withOpacity(0.25),
+          const SizedBox(
+            height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,10 +203,6 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                     priceTextStyle.copyWith(fontWeight: semiBold, fontSize: 14),
               ),
             ],
-          ),
-          Divider(
-            thickness: 1,
-            color: AppColor.placeholder.withOpacity(0.25),
           ),
         ],
       ),

@@ -557,16 +557,21 @@ class _BagPageState extends State<BagPage> {
             .where('idResto', isEqualTo: dataMeja['idResto'])
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          dynamic dataCart = snapshot.data?.docs;
-          int? countCart = snapshot.data?.docs.length;
-
-          if (dataCart == null) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
                 color: priceColor,
               ),
             );
           }
+
+          if (snapshot.data!.docs.isEmpty) {
+            return emptyCart();
+          }
+
+          dynamic dataCart = snapshot.data?.docs;
+          int? countCart = snapshot.data?.docs.length;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -584,7 +589,7 @@ class _BagPageState extends State<BagPage> {
         centerTitle: true,
         backgroundColor: secondaryColor,
         automaticallyImplyLeading: false,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           "Cart",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),

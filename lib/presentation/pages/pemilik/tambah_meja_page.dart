@@ -30,7 +30,7 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
 
     Widget nomejaInput() {
       return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,7 +75,7 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
       return Container(
         width: double.infinity,
         height: 50,
-        margin: const EdgeInsets.only(top: 40, bottom: 20),
+        margin: const EdgeInsets.only(top: 20, bottom: 20),
         child: TextButton(
             style: TextButton.styleFrom(
                 backgroundColor: priceColor,
@@ -113,7 +113,7 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
           ),
           automaticallyImplyLeading: true,
           titleSpacing: -5,
-          elevation: 0,
+          elevation: 1,
           title: Text(
             "Tambah Meja",
             style: primaryTextStyle.copyWith(fontWeight: semiBold),
@@ -131,7 +131,7 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
 
                   nomejaInput(),
                   submitMeja(),
-                  idMeja == null ? SizedBox() : qrGenerate(),
+                  idMeja == null ? const SizedBox() : qrGenerate(),
                 ],
               ),
             ),

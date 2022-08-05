@@ -180,7 +180,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     }
 
-    Widget scrollCategories(gambar, text) {
+    Widget scrollCategories(text) {
       return Container(
         margin: const EdgeInsets.only(top: 10),
         child: Row(
@@ -197,21 +197,10 @@ class _MenuPageState extends State<MenuPage> {
                   10,
                 ),
               ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    gambar,
-                    width: 24,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    text,
-                    style: secondaryTextStyle.copyWith(
-                        fontSize: 18, fontWeight: bold),
-                  )
-                ],
+              child: Text(
+                text,
+                style:
+                    secondaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
               ),
             ),
             const SizedBox(
@@ -430,7 +419,7 @@ class _MenuPageState extends State<MenuPage> {
         centerTitle: true,
         backgroundColor: secondaryColor,
         automaticallyImplyLeading: false,
-        elevation: 0,
+        elevation: 1,
         leading: Stack(
           alignment: AlignmentDirectional.centerStart,
           children: [
@@ -479,7 +468,7 @@ class _MenuPageState extends State<MenuPage> {
       body: ListView(
         shrinkWrap: true,
         children: [
-          Text(namaResto ?? ''),
+          // Text(namaResto ?? ''),
           titleCatagories(),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -488,20 +477,16 @@ class _MenuPageState extends State<MenuPage> {
               child: Row(
                 children: [
                   scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
+                    // "assets/img/image_burger.png",
+                    "Makanan",
                   ),
                   scrollCategories(
-                    "assets/icon/icon_sandwich.png",
-                    "Sandwich",
+                    // "assets/icon/icon_sandwich.png",
+                    "Minuman",
                   ),
                   scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
-                  ),
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
+                    // "assets/img/image_burger.png",
+                    "Cemilan",
                   ),
                 ],
               ),

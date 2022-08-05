@@ -115,7 +115,7 @@ class _DetailRestoranState extends State<DetailRestoran> {
     }
 
     return Scaffold(
-        backgroundColor: AppColor.placeholderBg,
+        backgroundColor: secondaryColor,
         body: ListView(
           children: [
             header(),

@@ -4,6 +4,7 @@ import 'package:e_menu_app/presentation/pages/customer/rincian_pesanan.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class RiwayatPesananPage extends StatefulWidget {
   const RiwayatPesananPage({Key? key}) : super(key: key);
@@ -15,6 +16,28 @@ class RiwayatPesananPage extends StatefulWidget {
 class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
   @override
   Widget build(BuildContext context) {
+    Widget emptyOrder() {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              "assets/svg/undraw_no_data_re_kwbl.svg",
+              width: 150,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Belum ada pesanan",
+              style:
+                  subtitleTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget buildOrder(dynamic dataOrder, int countOrder) {
       return Expanded(
         child: ListView.builder(
@@ -46,16 +69,18 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
                 isEqualTo: FirebaseAuth.instance.currentUser!.email)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          dynamic dataOrder = snapshot.data?.docs;
-          int? countOrder = snapshot.data?.docs.length;
-
-          if (dataOrder == null) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
                 color: priceColor,
               ),
             );
           }
+          if (snapshot.data!.docs.isEmpty) {
+            return emptyOrder();
+          }
+          dynamic dataOrder = snapshot.data?.docs;
+          int? countOrder = snapshot.data?.docs.length;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -68,7 +93,7 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor3,
+      backgroundColor: secondaryColor,
       appBar: AppBar(
         // centerTitle: true,
         backgroundColor: Colors.white,
@@ -83,7 +108,7 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage> {
         ),
         automaticallyImplyLeading: true,
         titleSpacing: -5,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           "Riwayat Pesanan",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),

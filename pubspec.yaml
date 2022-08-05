@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   bloc: null
-  camera: ^0.10.0
+  camera: any
   carousel_slider: null
   cloud_firestore: null
   cupertino_icons: null
@@ -37,7 +37,6 @@ dependencies:
   dots_indicator: null
   dropdown_search: null
   equatable: null
-  firebase_analytics: ^9.3.0
   firebase_auth: null
   firebase_core: null
   firebase_storage: null
@@ -49,18 +48,17 @@ dependencies:
   flutter_screenutil: any
   flutter_svg: null
   fluttertoast: any
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: any
   google_fonts: null
   google_sign_in: null
   image_cropper: null
   image_picker: null
-  intl: ^0.17.0
+  intl: any
   path_provider: null
   provider: null
   qr_code_scanner: null
   qr_flutter: null
   staggered_grid_view_flutter: null
-  uuid: 3.0.6
 
 dev_dependencies:
   flutter_launcher_icons: null

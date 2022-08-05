@@ -1,12 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/card/resto_cart%20.dart';
+import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import '../../../widgets/drawer.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-
-import '../../card/restoran_card .dart';
+import 'navigation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -38,27 +39,9 @@ class _HomePageState extends State<HomePage> {
     return qn.docs;
   }
 
-  fetchRestaurants() async {
-    QuerySnapshot qn = await firestoreInstance.collection("restaurants").get();
-    setState(() {
-      for (int i = 0; i < qn.docs.length; i++) {
-        restaurants.add({
-          "id": qn.docs[i]["id"],
-          "idUser": qn.docs[i]["idUser"],
-          "name": qn.docs[i]["name"],
-          "alamat": qn.docs[i]["alamat"],
-          "imageUrl": qn.docs[i]["imageUrl"],
-        });
-      }
-    });
-
-    return qn.docs;
-  }
-
   @override
   void initState() {
     fetchCarouselImages();
-    fetchRestaurants();
     super.initState();
   }
 
@@ -84,13 +67,62 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 "View all",
                 style: primaryTextStyle.copyWith(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: medium,
                 ),
               ),
             ),
           ],
         ),
+      );
+    }
+
+    Widget buildResto(dataResto, countResto) {
+      return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: countResto,
+        itemBuilder: (_, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DetailRestoran(dataResto[index]),
+                ),
+              );
+            },
+            child: RestoCard(dataResto: dataResto[index]),
+          );
+        },
+      );
+    }
+
+    Widget getResto() {
+      return StreamBuilder<QuerySnapshot>(
+        stream:
+            FirebaseFirestore.instance.collection("restaurants").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: priceColor,
+              ),
+            );
+          }
+
+          var dataResto = snapshot.data?.docs;
+          var countResto = snapshot.data?.docs.length;
+
+          if (dataResto == null) {
+            return const Center(
+              child: Text(
+                'No data',
+              ),
+            );
+          }
+          return buildResto(dataResto, countResto);
+        },
       );
     }
 
@@ -105,7 +137,14 @@ class _HomePageState extends State<HomePage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/navigation-page');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => NavigationPage(
+                    idMeja: 'MshMTcmisf6TNsZo2JMw',
+                  ),
+                ),
+              );
             },
             child: const Icon(Icons.menu_book),
           ),
@@ -135,11 +174,12 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               margin: const EdgeInsets.only(top: 10),
               child: AspectRatio(
-                aspectRatio: 2.3,
+                aspectRatio: 2.6 / 1.6,
                 child: CarouselSlider(
                   items: carouselImages
                       .map(
@@ -147,20 +187,6 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 15.0,
-                                offset: Offset(4, 4),
-                                spreadRadius: 1,
-                              ),
-                              BoxShadow(
-                                color: Colors.white,
-                                offset: Offset(-4, -4),
-                                blurRadius: 15,
-                                spreadRadius: 1,
-                              ),
-                            ],
                           ),
                           margin: const EdgeInsets.all(3.0),
                           child: ClipRRect(
@@ -207,16 +233,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             buildTitle(),
-            restaurants.isNotEmpty
-                ? restaurant(
-                    context,
-                    controller,
-                    restaurants,
-                  )
-                : Text(
-                    'No Restaurants',
-                    style: subtitleTextStyle,
-                  ),
+            getResto()
           ],
         ),
       ),

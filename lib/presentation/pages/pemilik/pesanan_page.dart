@@ -135,7 +135,7 @@ class _PesananPageState extends State<PesananPage> {
               ),
               automaticallyImplyLeading: true,
               titleSpacing: -5,
-              elevation: 0,
+              elevation: 1,
               title: Text(
                 "Pesanan",
                 style: primaryTextStyle.copyWith(fontWeight: semiBold),

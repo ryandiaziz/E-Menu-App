@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),
-          '/edit-profile-user': (context) => const EditProfileUserPage(),
+          // '/edit-profile-user': (context) => const EditProfileUserPage(),
           '/edit-profile-resto': (context) => const EditProfileRestoPage(),
           // '/pesanan-page-admin': (context) => const PesananPage(),
           '/menu-admin': (context) => const MenuPage(),

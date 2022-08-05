@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/widgets/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -12,7 +13,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 
 class EditProfileUserPage extends StatefulWidget {
-  const EditProfileUserPage({Key? key}) : super(key: key);
+  final dynamic dataUser;
+  const EditProfileUserPage({this.dataUser, Key? key}) : super(key: key);
 
   @override
   State<EditProfileUserPage> createState() => _EditProfileUserPageState();
@@ -22,10 +24,17 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
   // File? image;
 
   FirebaseStorage storage = FirebaseStorage.instance;
+
+  TextEditingController genderController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController? namaC;
   TextEditingController? emailC;
   File? image;
   String? imageUrl;
+  String? dropdownvalue;
+
+  // List of items in our dropdown menu
+  var items = ['Laki-laki', 'Perempuan'];
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -55,6 +64,13 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
         print(error);
       }
     }
+  }
+
+  @override
+  void initState() {
+    dropdownvalue = widget.dataUser['gender'];
+
+    super.initState();
   }
 
   @override
@@ -106,118 +122,111 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
       );
     }
 
-    Widget fotoProfile(dataUser) {
-      return Center(
-        child: Stack(
-          children: [
-            image != null
-                ? SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: ClipOval(
-                      child: Image.file(
-                        image!,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                : dataUser['imageUrl'] != null
-                    ? SizedBox(
-                        height: 120,
-                        width: 120,
-                        child: ClipOval(
-                          child: Image.network(
-                            dataUser['imageUrl'],
-                            fit: BoxFit.cover,
-                          ),
+    Widget fotoProfile() {
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Stack(
+            children: [
+              image != null
+                  ? SizedBox(
+                      height: 120,
+                      width: 120,
+                      child: ClipOval(
+                        child: Image.file(
+                          image!,
+                          fit: BoxFit.cover,
                         ),
-                      )
-                    : SizedBox(
-                        height: 120,
-                        width: 120,
-                        child: ClipOval(
-                            child: Image.asset(
-                          "assets/img/image_profile_user.png",
-                          width: 64,
-                        )),
                       ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (builder) => bottomSheetResto(),
-                  );
-                },
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: backgroundColor3,
-                  ),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: secondsubtitleColor,
-                    size: 25,
+                    )
+                  : widget.dataUser['imageUrl'] != null
+                      ? SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: ClipOval(
+                            child: Image.network(
+                              widget.dataUser['imageUrl'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: ClipOval(
+                              child: Image.asset(
+                            "assets/img/image_profile_user.png",
+                            width: 64,
+                          )),
+                        ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (builder) => bottomSheetResto(),
+                    );
+                  },
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: backgroundColor3,
+                    ),
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: secondsubtitleColor,
+                      size: 25,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
 
-    Widget nama(dataUser) {
-      return Container(
-        margin: const EdgeInsets.only(top: 30),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Nama",
-            style: primaryTextStyle.copyWith(fontSize: 13),
-          ),
-          TextFormField(
-            style: primaryTextStyle,
-            controller: namaC = TextEditingController(text: dataUser['name']),
-            decoration: InputDecoration(
+    // Widget buildgender() {
+    //   return Container(
+    //     color: const Color(0xffEFF0F6),
+    //     margin: const EdgeInsets.only(top: 20),
+    //     padding: const EdgeInsets.symmetric(horizontal: 15),
+    //     width: double.infinity,
+    //     height: 50,
+    //     child: DropdownButton(
+    //       // Initial Value
+    //       value: dropdownvalue,
+    //       hint: const Text('Pilih Jenis Kelamin'),
 
-                // hintText: "${user.name}",
-                hintText: dataUser['name'],
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: subtitleColor))),
-          )
-        ]),
-      );
-    }
+    //       // Down Arrow Icon
+    //       icon: const Icon(Icons.keyboard_arrow_down),
+    //       isExpanded: true,
+    //       itemHeight: 50,
 
-    Widget email(dataUser) {
-      return Container(
-        margin: const EdgeInsets.only(top: 30),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Email",
-            style: primaryTextStyle.copyWith(fontSize: 13),
-          ),
-          TextFormField(
-            readOnly: true,
-            style: primaryTextStyle,
-            controller: emailC = TextEditingController(text: dataUser['email']),
-            decoration: InputDecoration(
-                // hintText: "${user.username}",
-                hintText: dataUser['email'],
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: subtitleColor))),
-          )
-        ]),
-      );
-    }
+    //       // Array list of items
+    //       items: items.map((String items) {
+    //         return DropdownMenuItem(
+    //           value: items,
+    //           child: Text(items),
+    //         );
+    //       }).toList(),
+    //       // After selecting the desired option,it will
+    //       // change button value to selected value
+    //       onChanged: (String? newValue) {
+    //         setState(() {
+    //           dropdownvalue = newValue!;
+    //         });
+    //       },
+    //     ),
 
-    Widget submit(dataUser) {
+    //   );
+    // }
+
+    Widget submit() {
       return Container(
         width: double.infinity,
         height: 50,
@@ -240,7 +249,8 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
             upadateResto.update({
               'name': namaC!.text,
               'alamat': emailC!.text,
-              'imageUrl': imageUrl ?? dataUser['imageUrl'],
+              'phone': phoneController.text,
+              'imageUrl': imageUrl ?? widget.dataUser['imageUrl'],
             });
 
             Navigator.pop(context);
@@ -254,67 +264,66 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
       );
     }
 
-    Widget content(dataUser) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fotoProfile(dataUser),
-            nama(dataUser),
-            email(dataUser),
-            submit(dataUser),
-          ],
-        ),
-      );
-    }
-
     return Scaffold(
-      backgroundColor: secondaryColor,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        // centerTitle: true,
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: secondsubtitleColor,
+        backgroundColor: secondaryColor,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          // centerTitle: true,
+          backgroundColor: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: secondsubtitleColor,
+            ),
+          ),
+          automaticallyImplyLeading: true,
+          titleSpacing: -5,
+          elevation: 1,
+          title: Text(
+            "Edit Profile",
+            style: primaryTextStyle.copyWith(fontWeight: semiBold),
+            // fontWeight: semiBold,
           ),
         ),
-        automaticallyImplyLeading: true,
-        titleSpacing: -5,
-        elevation: 0,
-        title: Text(
-          "Edit Profile",
-          style: primaryTextStyle.copyWith(fontWeight: semiBold),
-          // fontWeight: semiBold,
-        ),
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(FirebaseAuth.instance.currentUser!.email)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          var dataUser = snapshot.data;
-          if (dataUser == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return SingleChildScrollView(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              content(dataUser),
-            ],
-          ));
-        },
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                fotoProfile(),
+                CustomTextField(
+                  image: 'assets/icon/icon_profile_select.png',
+                  controller: namaC =
+                      TextEditingController(text: widget.dataUser['name']),
+                  hintText: 'Nama',
+                  keyBoardType: TextInputType.name,
+                  read: false,
+                ),
+                CustomTextField(
+                  image: 'assets/icon/icon_email.png',
+                  controller: emailC =
+                      TextEditingController(text: widget.dataUser['email']),
+                  hintText: 'Input Email',
+                  keyBoardType: TextInputType.emailAddress,
+                  read: true,
+                ),
+                CustomTextField(
+                  image: 'assets/icon/phone.png',
+                  controller: phoneController = TextEditingController(
+                      text: widget.dataUser['phone'].toString()),
+                  hintText: 'Input Phone Number',
+                  keyBoardType: TextInputType.phone,
+                  read: false,
+                ),
+                // buildgender(),
+                submit(),
+              ],
+            ),
+          ),
+        ));
   }
 }

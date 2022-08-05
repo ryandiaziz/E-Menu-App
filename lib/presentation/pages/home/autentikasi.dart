@@ -211,18 +211,19 @@ class _AutentikasiState extends State<Autentikasi> {
                   primaryTextStyle.copyWith(fontWeight: semiBold, fontSize: 16),
               tabs: myTab,
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height - 300,
-                child: TabBarView(children: [
-                  Column(
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 300,
+              child: TabBarView(children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
                         controller: sI_emaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
+                        read: false,
                       ),
                       passwordInput(sI_PasswordC),
                       _button('Sign In', () {
@@ -230,22 +231,26 @@ class _AutentikasiState extends State<Autentikasi> {
                       })
                     ],
                   ),
-                  Column(
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
                         controller: sU_emaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
+                        read: false,
                       ),
                       passwordInput(sU_PasswordC),
                       _button('Continue', () {
                         signUp();
                       })
                     ],
-                  )
-                ]),
-              ),
+                  ),
+                )
+              ]),
             )
           ],
         ),

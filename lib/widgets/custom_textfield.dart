@@ -6,12 +6,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final dynamic keyBoardType;
+  final bool read;
 
   const CustomTextField({
     required this.image,
     required this.controller,
     required this.hintText,
     required this.keyBoardType,
+    required this.read,
     Key? key,
   }) : super(key: key);
 
@@ -42,6 +44,7 @@ class CustomTextField extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextFormField(
+                      readOnly: read,
                       keyboardType: keyBoardType,
                       controller: controller,
                       style: primaryTextStyle,

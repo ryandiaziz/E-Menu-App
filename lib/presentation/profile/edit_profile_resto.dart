@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/widgets/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -109,114 +110,70 @@ class _EditProfileRestoPageState extends State<EditProfileRestoPage> {
     }
 
     Widget fotoProfile(dataResto) {
-      return Center(
-        child: Stack(
-          children: [
-            image != null
-                ? SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: ClipOval(
-                      child: Image.file(
-                        image!,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                : dataResto['imageUrl'] != null
-                    ? SizedBox(
-                        height: 120,
-                        width: 120,
-                        child: ClipOval(
-                          child: Image.network(
-                            dataResto['imageUrl'],
-                            fit: BoxFit.cover,
-                          ),
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Stack(
+            children: [
+              image != null
+                  ? SizedBox(
+                      height: 120,
+                      width: 120,
+                      child: ClipOval(
+                        child: Image.file(
+                          image!,
+                          fit: BoxFit.cover,
                         ),
-                      )
-                    : SizedBox(
-                        height: 120,
-                        width: 120,
-                        child: ClipOval(
-                            child: Image.asset(
-                          "assets/img/image_profile_user.png",
-                          width: 64,
-                        )),
                       ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (builder) => bottomSheetResto(),
-                  );
-                },
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: backgroundColor3,
-                  ),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: secondsubtitleColor,
-                    size: 25,
+                    )
+                  : dataResto['imageUrl'] != null
+                      ? SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: ClipOval(
+                            child: Image.network(
+                              dataResto['imageUrl'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: ClipOval(
+                              child: Image.asset(
+                            "assets/img/image_profile_user.png",
+                            width: 64,
+                          )),
+                        ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (builder) => bottomSheetResto(),
+                    );
+                  },
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: backgroundColor3,
+                    ),
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: secondsubtitleColor,
+                      size: 25,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
-    }
-
-    Widget namaResto(dataResto) {
-      return Container(
-        margin: const EdgeInsets.only(top: 30),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Nama Resto",
-            style: primaryTextStyle.copyWith(fontSize: 13),
-          ),
-          TextFormField(
-            style: primaryTextStyle,
-            controller: namarestoranC =
-                TextEditingController(text: dataResto['name']),
-            decoration: InputDecoration(
-
-                // hintText: "${user.name}",
-                hintText: dataResto['name'],
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: subtitleColor))),
-          )
-        ]),
-      );
-    }
-
-    Widget alamat(dataResto) {
-      return Container(
-        margin: const EdgeInsets.only(top: 30),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Alamat",
-            style: primaryTextStyle.copyWith(fontSize: 13),
-          ),
-          TextFormField(
-            style: primaryTextStyle,
-            controller: alamatrestoranC =
-                TextEditingController(text: dataResto['alamat']),
-            decoration: InputDecoration(
-                // hintText: "${user.username}",
-                hintText: dataResto['alamat'],
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: subtitleColor))),
-          )
-        ]),
       );
     }
 
@@ -265,8 +222,24 @@ class _EditProfileRestoPageState extends State<EditProfileRestoPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             fotoProfile(dataResto),
-            namaResto(dataResto),
-            alamat(dataResto),
+            CustomTextField(
+              image: 'assets/icon/icon_restoran.png',
+              controller: namarestoranC =
+                  TextEditingController(text: dataResto['name']),
+              hintText: 'Nama Restoran',
+              keyBoardType: TextInputType.text,
+              read: false,
+            ),
+            CustomTextField(
+              image: 'assets/icon/address.png',
+              controller: alamatrestoranC =
+                  TextEditingController(text: dataResto['alamat']),
+              hintText: 'Alamat Restoran',
+              keyBoardType: TextInputType.text,
+              read: false,
+            ),
+            // namaResto(dataResto),
+
             submit(dataResto),
           ],
         ),
@@ -290,7 +263,7 @@ class _EditProfileRestoPageState extends State<EditProfileRestoPage> {
         ),
         automaticallyImplyLeading: true,
         titleSpacing: -5,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           "Edit Resto",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),

@@ -262,7 +262,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         titleSpacing: -5,
         elevation: 0,
         title: Text(
-          idResto,
+          'Tambah Menu',
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
           // fontWeight: semiBold,
         ),
@@ -285,12 +285,14 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                 controller: _namaProdukC,
                 hintText: 'Nama Menu',
                 keyBoardType: TextInputType.text,
+                read: false,
               ),
               CustomTextField(
                 image: "assets/icon/icon_price.png",
                 controller: _hargaProdukC,
                 hintText: "Harga",
                 keyBoardType: TextInputType.number,
+                read: false,
               ),
               buildCategory(),
               submitMenu()
