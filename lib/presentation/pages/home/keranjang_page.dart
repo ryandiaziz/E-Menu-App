@@ -30,9 +30,10 @@ class _BagPageState extends State<BagPage> {
   String? idOrder;
   int? item;
   int totalItems = 0;
+  bool? pembayaran;
 
   //Fungsi Menambahkah Data Pesanan
-  Future addOrder(dynamic dataCart, int countCart) async {
+  Future addOrder(dynamic dataCart, int countCart, bool bayar) async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     String date = dateFormat.format(DateTime.now());
     var docOrder = FirebaseFirestore.instance.collection('order').doc();
@@ -51,7 +52,7 @@ class _BagPageState extends State<BagPage> {
       "namaResto": dataCart[0]['namaResto'],
       "imgResto": dataCart[0]['imgResto'],
       "status": false,
-      "bayar": false,
+      "bayar": bayar,
     });
 
     setState(() {
@@ -82,6 +83,7 @@ class _BagPageState extends State<BagPage> {
         "kuantitas": dataCart[i]['quantity'],
         "kategori": dataCart[i]["kategori"],
         "imageUrl": dataCart[i]["imageUrl"],
+        "idMenu": dataCart[i]['idMenu'],
       });
     }
 
@@ -104,137 +106,160 @@ class _BagPageState extends State<BagPage> {
     }
   }
 
+  int? selectedValue;
+
   @override
   Widget build(BuildContext context) {
     Widget bottomSheetCheckout(dynamic dataCart, int countCart) {
-      return Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(),
-                Text(
-                  "Checkout",
-                  style: primaryTextStyle.copyWith(
-                      fontWeight: semiBold, fontSize: 22),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    setState(() {
-                      harga = 0;
-                      totalHarga = 0;
-                      item = 0;
-                      totalItems = 0;
-                    });
-                  },
-                  child: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Nama Pemesan',
-                    style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataUser[0]['name'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Email', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataUser[0]['email'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataMeja['noMeja'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Items', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  '$totalItems',
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Total Harga',
-                    style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  NumberFormat.currency(
-                    locale: 'id',
-                    symbol: 'Rp ',
-                    decimalDigits: 0,
-                  ).format((totalHarga)),
-                  style: priceTextStyle.copyWith(
-                      fontWeight: semiBold, fontSize: 14),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              height: 50,
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  await addOrder(dataCart, countCart);
-                  await addItemsToOrder(dataCart, countCart);
-                  await deleteCart(dataCart, countCart);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: priceColor,
-                  elevation: 3,
-                ),
+      return StatefulBuilder(builder: (BuildContext context,
+          StateSetter setState /*You can rename this!*/) {
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(),
+                  Text(
+                    "Checkout",
+                    style: primaryTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 22),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        harga = 0;
+                        totalHarga = 0;
+                        item = 0;
+                        totalItems = 0;
+                      });
+                    },
+                    child: const Icon(Icons.close),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
-      );
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              RadioListTile<int>(
+                  title: const Text('E-Payments'),
+                  value: 0,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = true;
+                      })),
+              RadioListTile<int>(
+                  title: const Text('COD'),
+                  value: 1,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = false;
+                      })),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Nama Pemesan',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataUser[0]['name'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Email',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataUser[0]['email'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataMeja['noMeja'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Items',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    '$totalItems',
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Harga',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp ',
+                      decimalDigits: 0,
+                    ).format((totalHarga)),
+                    style: priceTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 14),
+                  ),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await addOrder(dataCart, countCart, pembayaran!);
+                    await addItemsToOrder(dataCart, countCart);
+                    await deleteCart(dataCart, countCart);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: priceColor,
+                    elevation: 3,
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      });
     }
 
     Widget costumBottomNav(dynamic dataCart, int countCart) {

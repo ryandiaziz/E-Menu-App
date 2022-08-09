@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/pages/home/data.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
 import 'package:e_menu_app/shared/theme.dart';
@@ -139,6 +140,29 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         child: Wrap(
           runSpacing: 5,
           children: [
+            dataUser["isAdmin"] == true
+                ? ListTile(
+                    leading: Image.asset(
+                      'assets/icon/history.png',
+                      width: 22,
+                      color: secondsubtitleColor,
+                    ),
+                    title: Text(
+                      "Users & Restaurants Data",
+                      style: secondPrimaryTextStyle.copyWith(
+                          fontSize: 14, fontWeight: medium),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DataPage(),
+                        ),
+                      );
+                    },
+                  )
+                : SizedBox(),
             ListTile(
               leading: Image.asset(
                 'assets/icon/history.png',

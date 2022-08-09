@@ -292,8 +292,6 @@ class _EditMenuState extends State<EditMenu> {
             }
 
             var upadateMenu = FirebaseFirestore.instance
-                .collection('restaurants')
-                .doc(widget.dataMenu['idResto'])
                 .collection('menu')
                 .doc(widget.dataMenu['id']);
 

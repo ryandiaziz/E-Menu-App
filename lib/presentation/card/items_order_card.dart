@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,6 +19,36 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
   _ItemsCardCusState(this.idResto);
   String? idResto;
   double? rating;
+
+  Future addRatingData() async {
+    int date = (DateTime.now().millisecondsSinceEpoch);
+    var docRating = FirebaseFirestore.instance.collection('ratings').doc();
+
+    await docRating.set({
+      "idUser": FirebaseAuth.instance.currentUser!.email,
+      "idMenu": widget.dataItems['idMenu'],
+      "rating": rating,
+      "timestamp": date,
+    });
+  }
+
+  Future addMenuRating() async {
+    QuerySnapshot checkMenuRating = await FirebaseFirestore.instance
+        .collection('menu-rating')
+        .where('idMenu', isEqualTo: widget.dataItems['idMenu'])
+        .get();
+
+    if (checkMenuRating.docs.isEmpty) {
+      var addMenuRating =
+          FirebaseFirestore.instance.collection('menu-rating').doc();
+
+      await addMenuRating.set({
+        "idMenu": widget.dataItems['idMenu'],
+        "namaMenu": widget.dataItems['nama'],
+        "kategori": widget.dataItems['kategori'],
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +86,10 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
               ),
               actions: [
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
+                      await addRatingData();
+                      await addMenuRating();
                     },
                     child: const Text('OK'))
               ],
@@ -134,48 +168,71 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                 ],
               ),
               const Expanded(child: SizedBox()),
-              idResto == null
-                  ? rating != null
-                      ? Row(
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Sudah dinilai'),
-                          ],
-                        )
-                      : InkWell(
-                          onTap: () {
-                            showRating();
-                          },
-                          child: Container(
-                            width: 47,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              color: secondsubtitleColor,
-                            ),
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              top: 5,
-                              bottom: 5,
-                              right: 10,
-                            ),
-                            child: Column(
-                              children: [
-                                Text('rate',
-                                    style: secondaryTextStyle.copyWith(
-                                        fontSize: 12, fontWeight: bold)),
-                              ],
-                            ),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("ratings")
+                    .where('idUser',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.email)
+                    .where('idMenu', isEqualTo: widget.dataItems['idMenu'])
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: priceColor,
+                      ),
+                    );
+                  }
+                  int count = snapshot.data!.docs.length;
+                  if (snapshot.data!.docs.isEmpty) {
+                    return InkWell(
+                      onTap: () {
+                        showRating();
+                      },
+                      child: Container(
+                        width: 47,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(15),
                           ),
-                        )
-                  : const SizedBox(),
+                          color: secondsubtitleColor,
+                        ),
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          top: 5,
+                          bottom: 5,
+                          right: 10,
+                        ),
+                        child: Column(
+                          children: [
+                            Text('rate',
+                                style: secondaryTextStyle.copyWith(
+                                    fontSize: 12, fontWeight: bold)),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Row(
+                    children: const [
+                      Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Sudah dinilai'),
+                    ],
+                  );
+                  // return ElevatedButton(
+                  //     onPressed: () {
+                  //       print(dataRating[0]['rating']);
+                  //     },
+                  //     child: Text('data'));
+                },
+              )
             ],
           ),
           const SizedBox(

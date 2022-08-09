@@ -26,15 +26,14 @@ class _MenuPageState extends State<MenuPage> {
   // List meja = [];
   String? namaResto;
   String? imgResto;
-  String? idCart;
+
   String? idPesanan;
   int kuantitas = 1;
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
-        .collection("restaurants")
-        .doc(dataMeja['idResto'])
-        .collection('menu')
+        .collection("menu")
+        .where('idResto', isEqualTo: dataMeja['idResto'])
         .get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {
@@ -78,70 +77,48 @@ class _MenuPageState extends State<MenuPage> {
     super.initState();
   }
 
-  // Future addToCart(menu) async {
-  //   final FirebaseAuth _auth = FirebaseAuth.instance;
-  //   var currentUser = _auth.currentUser;
-  //   CollectionReference _collectionRef =
-  //       FirebaseFirestore.instance.collection("users");
-  //   return _collectionRef.doc(currentUser!.email).collection("cart").doc().set({
-  //     "id": _collectionRef.id,
-  //     "noMeja": dataMeja['noMeja'],
-  //     "idResto": dataMeja['idResto'],
-  //     "name": menu['nama'],
-  //     "harga": menu['harga'],
-  //     "kategori": menu["kategori"],
-  //     "imageUrl": menu["imageUrl"],
-  //   }).then((value) => ("Added to cart"));
-  // }
   Future addToCart(menu) async {
-    final docCart = FirebaseFirestore.instance
+    QuerySnapshot checkMenuRating = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('cart')
-        .doc();
-    setState(() {
-      idCart = docCart.id;
-    });
-    await docCart.set({
-      'id': idCart,
-      "noMeja": dataMeja['noMeja'],
-      "idResto": dataMeja['idResto'],
-      "namaResto": namaResto,
-      "imgResto": imgResto,
-      "name": menu['nama'],
-      "hargaAsli": int.parse(menu['harga']),
-      "harga": int.parse(menu['harga']),
-      "kategori": menu["kategori"],
-      "imageUrl": menu["imageUrl"],
-      "quantity": 1,
-      "quantityPrice": null,
-    });
+        .where('idMenu', isEqualTo: menu['id'])
+        .get();
+
+    if (checkMenuRating.docs.isEmpty) {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc();
+
+      await docCart.set({
+        'id': docCart.id,
+        "noMeja": dataMeja['noMeja'],
+        "idResto": dataMeja['idResto'],
+        "namaResto": namaResto,
+        "imgResto": imgResto,
+        "name": menu['nama'],
+        "hargaAsli": int.parse(menu['harga']),
+        "harga": int.parse(menu['harga']),
+        "kategori": menu["kategori"],
+        "imageUrl": menu["imageUrl"],
+        'idMenu': menu['id'],
+        "quantity": 1,
+        "quantityPrice": null,
+      });
+    } else {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc(checkMenuRating.docs[0]['id']);
+      await docCart.update({
+        'quantity': checkMenuRating.docs[0]['quantity'] + 1,
+      });
+    }
   }
 
-//   Future addToCart(menu) async {
-//     final docCart = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.email).collection('cart').doc();
-//     setState(() {
-//       idCart = docCart.id;
-//     });
-
-//     await docCart.set({
-//       'id': idCart,
-//       "noMeja": dataMeja['noMeja'],
-//       "idResto": dataMeja['idResto'],
-//       "name": menu['nama'],
-//       "harga": menu['harga'],
-//       "kategori": menu["kategori"],
-//       "imageUrl": menu["imageUrl"],
-//     });
-
-//     // Navigator.pushReplacementNamed(context, '/profile-ad');
-//     // Navigator.pop(context);
-//     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//       content: const Text('Daftar Berhasil'),
-//       backgroundColor: priceColor,
-//     ));
-//   }
-// }
   void tambahKuantitas() {
     setState(() {
       kuantitas++;

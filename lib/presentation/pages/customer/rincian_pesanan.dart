@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +38,17 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
           children: [
             const SizedBox(
               height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "ID Pesanan",
+                  style: subtitleTextStyle.copyWith(
+                      fontSize: 14, fontWeight: semiBold),
+                ),
+                Text(dataOrder['id'])
+              ],
             ),
             idResto != null
                 ? Row(

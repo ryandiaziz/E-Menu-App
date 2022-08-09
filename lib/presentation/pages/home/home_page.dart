@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/resto_cart%20.dart';
@@ -8,6 +10,7 @@ import 'package:e_menu_app/shared/theme.dart';
 import '../../../widgets/drawer.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'navigation.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,7 +23,9 @@ class _HomePageState extends State<HomePage> {
   // GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   ScrollController controller = ScrollController();
   List<String> carouselImages = [];
+  List<String>? carouselRekom = [];
   List restaurants = [];
+  String? idUser = FirebaseAuth.instance.currentUser!.email;
   var firestoreInstance = FirebaseFirestore.instance;
   var dotPosition = 0;
 
@@ -35,12 +40,40 @@ class _HomePageState extends State<HomePage> {
         (qn.docs[i]["img-path"]);
       }
     });
-
     return qn.docs;
+  }
+
+  Future sendData() async {
+    final url = Uri.parse("http://10.140.165.223:8000/api");
+    await http.post(url, body: jsonEncode({'idUser': idUser}));
+  }
+
+  Future getRecommendations() async {
+    final recommendations = await FirebaseFirestore.instance
+        .collection('recommendations')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+    if (recommendations.exists) {
+      for (var i = 0; i < 5; i++) {
+        final menu = await FirebaseFirestore.instance
+            .collection('menu')
+            .doc(recommendations['rekomendasi'][i])
+            .get();
+
+        setState(() {
+          carouselRekom!.add(
+            menu['imageUrl'],
+          );
+          (menu['imageUrl']);
+        });
+      }
+    }
   }
 
   @override
   void initState() {
+    sendData();
+    getRecommendations();
     fetchCarouselImages();
     super.initState();
   }
@@ -139,9 +172,12 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
+                // dina PYbUTbBHl6BQenCNzZff
+                // ryan PnfLHMrrK5AX3zRMz6KB
+                // tin  E5Kqdoq5Lj0a0Ki2OiQ7
                 MaterialPageRoute(
                   builder: (_) => NavigationPage(
-                    idMeja: 'MshMTcmisf6TNsZo2JMw',
+                    idMeja: 'PYbUTbBHl6BQenCNzZff',
                   ),
                 ),
               );
@@ -176,62 +212,74 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              child: AspectRatio(
-                aspectRatio: 2.6 / 1.6,
-                child: CarouselSlider(
-                  items: carouselImages
-                      .map(
-                        (item) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                          ),
-                          margin: const EdgeInsets.all(3.0),
-                          child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5.0)),
-                            child: Image.network(
-                              item,
-                              fit: BoxFit.cover,
-                              width: 300,
-                              height: 300,
+            // ElevatedButton(
+            //     onPressed: () {
+            //       // getRecommendations();
+            //       sendData();
+            //     },
+            //     child: Text('Cek Rekomendasi')),
+            carouselRekom!.isNotEmpty
+                ? Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: AspectRatio(
+                          aspectRatio: 2.6 / 1.6,
+                          child: CarouselSlider(
+                            items: carouselRekom!
+                                .map(
+                                  (item) => Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.white,
+                                    ),
+                                    margin: const EdgeInsets.all(3.0),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      child: Image.network(
+                                        item,
+                                        fit: BoxFit.cover,
+                                        width: 300,
+                                        height: 300,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            options: CarouselOptions(
+                              autoPlay: false,
+                              enlargeCenterPage: true,
+                              viewportFraction: 0.8,
+                              enlargeStrategy: CenterPageEnlargeStrategy.height,
+                              onPageChanged: (val, carouselPageChangedReason) {
+                                setState(
+                                  () {
+                                    dotPosition = val;
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ),
-                      )
-                      .toList(),
-                  options: CarouselOptions(
-                    autoPlay: false,
-                    enlargeCenterPage: true,
-                    viewportFraction: 0.8,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                    onPageChanged: (val, carouselPageChangedReason) {
-                      setState(
-                        () {
-                          dotPosition = val;
-                        },
-                      );
-                    },
+                      ),
+                      DotsIndicator(
+                        dotsCount:
+                            carouselImages.isEmpty ? 1 : carouselImages.length,
+                        position: dotPosition.toDouble(),
+                        decorator: DotsDecorator(
+                          activeColor: priceColor,
+                          color: priceColor.withOpacity(0.5),
+                          spacing: const EdgeInsets.all(2),
+                          activeSize: const Size(8, 8),
+                          size: const Size(6, 6),
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox(
+                    height: 10,
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            DotsIndicator(
-              dotsCount: carouselImages.isEmpty ? 1 : carouselImages.length,
-              position: dotPosition.toDouble(),
-              decorator: DotsDecorator(
-                activeColor: priceColor,
-                color: priceColor.withOpacity(0.5),
-                spacing: const EdgeInsets.all(2),
-                activeSize: const Size(8, 8),
-                size: const Size(6, 6),
-              ),
-            ),
             buildTitle(),
             getResto()
           ],

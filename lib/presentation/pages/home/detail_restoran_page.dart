@@ -22,9 +22,8 @@ class _DetailRestoranState extends State<DetailRestoran> {
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
-        .collection("restaurants")
-        .doc(idResto)
-        .collection('menu')
+        .collection("menu")
+        .where('idResto', isEqualTo: widget.restaurants['id'])
         .get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {

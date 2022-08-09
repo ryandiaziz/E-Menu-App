@@ -18,6 +18,29 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   ScrollController controller = ScrollController();
 
+  Future addItemsToOrder(dynamic dataCart, int countCart) async {
+    for (var i = 0; i < countCart; i++) {
+      var docCheckout =
+          FirebaseFirestore.instance.collection('menu').doc(dataCart[i]['id']);
+
+      docCheckout.set({
+        "id": dataCart[i]['id'],
+        "nama": dataCart[i]['nama'],
+        "harga": dataCart[i]['harga'],
+        "kategori": dataCart[i]["kategori"],
+        "imageUrl": dataCart[i]["imageUrl"],
+        "idResto": dataCart[i]['idResto'],
+      });
+    }
+
+    // Navigator.pushReplacementNamed(context, '/profile-ad');
+    // Navigator.pop(context);
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //   content: const Text('Daftar Berhasil'),
+    //   backgroundColor: priceColor,
+    // ));
+  }
+
   @override
   Widget build(BuildContext context) {
     String idResto = ModalRoute.of(context)!.settings.arguments as String;
@@ -117,9 +140,7 @@ class _MenuPageState extends State<MenuPage> {
                               child: GestureDetector(
                                 onTap: () {
                                   FirebaseFirestore.instance
-                                      .collection('restaurants')
-                                      .doc(dataMenu[index]['idResto'])
-                                      .collection("menu")
+                                      .collection('menu')
                                       .doc(dataMenu[index]['id'])
                                       .delete();
                                 },
@@ -205,9 +226,8 @@ class _MenuPageState extends State<MenuPage> {
     Widget getMenu() {
       return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection("restaurants")
-            .doc(idResto)
-            .collection('menu')
+            .collection("menu")
+            .where('idResto', isEqualTo: idResto)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -233,6 +253,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     }
 
+    //
     return Scaffold(
         backgroundColor: secondaryColor,
         appBar: AppBar(

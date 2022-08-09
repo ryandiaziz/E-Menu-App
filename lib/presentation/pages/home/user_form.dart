@@ -56,6 +56,7 @@ class _UserFormState extends State<UserForm> {
           "dob": dobController.text,
           "gender": gendervalue,
           "isOwner": false,
+          "isAdmin": false,
           "imageUrl": null,
         })
         .then((value) => Navigator.pushReplacementNamed(context, '/home-page'))

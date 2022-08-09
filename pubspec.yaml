@@ -53,6 +53,7 @@ dependencies:
   google_sign_in: null
   image_cropper: null
   image_picker: null
+  http: any
   intl: any
   path_provider: null
   provider: null

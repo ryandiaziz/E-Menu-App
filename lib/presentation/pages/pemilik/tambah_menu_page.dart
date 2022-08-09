@@ -304,11 +304,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   }
 
   Future createMenu(Menu datamenu, String idResto) async {
-    final docMenu = FirebaseFirestore.instance
-        .collection('restaurants')
-        .doc(idResto)
-        .collection('menu')
-        .doc();
+    final docMenu = FirebaseFirestore.instance.collection('menu').doc();
     datamenu.id = docMenu.id;
 
     final json = datamenu.toJson();
