@@ -33,6 +33,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   File? image;
   String? imageUrl;
   String? iduser;
+  String? restoId;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -225,15 +226,11 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                   borderRadius: BorderRadius.circular(5),
                 )),
             onPressed: () async {
-              await _upload('${image?.path}');
-              final datamenu = Menu(
-                nama: _namaProdukC.text,
-                harga: int.parse(_hargaProdukC.text),
-                kategori: dropdownvalue,
-                imageUrl: '$imageUrl',
-                idResto: idResto,
-              );
-              createMenu(datamenu, idResto);
+              setState(() {
+                restoId = idResto;
+              });
+              vaildation();
+
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -301,6 +298,54 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         ),
       ),
     );
+  }
+
+  void vaildation() async {
+    if (image == null &&
+        _namaProdukC.text.isEmpty &&
+        _hargaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Lengkapi form untuk menambah menu!"),
+        ),
+      );
+    } else if (image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Tambahkan gambar menu!"),
+        ),
+      );
+    } else if (_namaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Masukkan nama menu!"),
+        ),
+      );
+    } else if (_hargaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Masukkan harga menu!"),
+        ),
+      );
+    } else {
+      await _upload('${image?.path}');
+      final datamenu = Menu(
+        nama: _namaProdukC.text,
+        harga: int.parse(_hargaProdukC.text),
+        kategori: dropdownvalue,
+        imageUrl: '$imageUrl',
+        idResto: restoId!,
+      );
+      createMenu(datamenu, restoId!);
+    }
   }
 
   Future createMenu(Menu datamenu, String idResto) async {

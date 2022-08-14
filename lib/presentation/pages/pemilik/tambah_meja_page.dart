@@ -15,6 +15,41 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
   TextEditingController qrC = TextEditingController();
   String? noMeja;
   String? idMeja;
+  String? restoId;
+
+  void vaildation() async {
+    if (qrC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Isi nomor meja!"),
+        ),
+      );
+    } else {
+      await createTable(restoId!);
+    }
+  }
+
+  Future createTable(String idResto) async {
+    final docMenu = FirebaseFirestore.instance.collection('tables').doc();
+    setState(() {
+      idMeja = docMenu.id;
+    });
+
+    await docMenu.set({
+      'id': idMeja,
+      'noMeja': noMeja,
+      'idResto': idResto,
+    });
+
+    // Navigator.pushReplacementNamed(context, '/profile-ad');
+    // Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('Daftar Berhasil'),
+      backgroundColor: priceColor,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +120,9 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
             onPressed: () async {
               setState(() {
                 noMeja = qrC.text;
+                restoId = idResto;
               });
-              await createTable(idResto);
+              vaildation();
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -137,25 +173,5 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
             ),
           ),
         ));
-  }
-
-  Future createTable(String idResto) async {
-    final docMenu = FirebaseFirestore.instance.collection('tables').doc();
-    setState(() {
-      idMeja = docMenu.id;
-    });
-
-    await docMenu.set({
-      'id': idMeja,
-      'noMeja': noMeja,
-      'idResto': idResto,
-    });
-
-    // Navigator.pushReplacementNamed(context, '/profile-ad');
-    // Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text('Daftar Berhasil'),
-      backgroundColor: priceColor,
-    ));
   }
 }

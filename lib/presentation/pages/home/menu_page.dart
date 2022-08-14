@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
+import 'menu_kategori.dart';
+
 class MenuPage extends StatefulWidget {
   dynamic dataMeja;
   MenuPage({this.dataMeja, Key? key}) : super(key: key);
@@ -85,11 +87,23 @@ class _MenuPageState extends State<MenuPage> {
         .where('idMenu', isEqualTo: menu['id'])
         .get();
 
+    QuerySnapshot checkTotal = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection('total')
+        .where('idResto', isEqualTo: dataMeja['idResto'])
+        .get();
+
     if (checkMenuRating.docs.isEmpty) {
       final docCart = FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('cart')
+          .doc();
+      final docTotal = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('total')
           .doc();
 
       await docCart.set({
@@ -105,7 +119,8 @@ class _MenuPageState extends State<MenuPage> {
         "imageUrl": menu["imageUrl"],
         'idMenu': menu['id'],
         "quantity": 1,
-        "quantityPrice": null,
+        "cQP": null,
+        "quantityPrice": 0,
       });
     } else {
       final docCart = FirebaseFirestore.instance
@@ -114,7 +129,10 @@ class _MenuPageState extends State<MenuPage> {
           .collection('cart')
           .doc(checkMenuRating.docs[0]['id']);
       await docCart.update({
+        'cQP': 0,
         'quantity': checkMenuRating.docs[0]['quantity'] + 1,
+        'quantityPrice':
+            checkMenuRating.docs[0]['quantityPrice'] + int.parse(menu['harga'])
       });
     }
   }
@@ -429,18 +447,18 @@ class _MenuPageState extends State<MenuPage> {
           "Menu",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search_rounded,
-                color: secondsubtitleColor,
-                size: 35,
-              )),
-          const SizedBox(
-            width: 5,
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {},
+        //       icon: Icon(
+        //         Icons.search_rounded,
+        //         color: secondsubtitleColor,
+        //         size: 35,
+        //       )),
+        //   const SizedBox(
+        //     width: 5,
+        //   )
+        // ],
       ),
       body: ListView(
         shrinkWrap: true,
@@ -453,17 +471,63 @@ class _MenuPageState extends State<MenuPage> {
               margin: const EdgeInsets.only(left: 10),
               child: Row(
                 children: [
-                  scrollCategories(
-                    // "assets/img/image_burger.png",
-                    "Makanan",
+                  //KATEGORI
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Makanan',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/img/image_burger.png",
+                      "Makanan",
+                    ),
                   ),
-                  scrollCategories(
-                    // "assets/icon/icon_sandwich.png",
-                    "Minuman",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Minuman',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/icon/icon_sandwich.png",
+                      "Minuman",
+                    ),
                   ),
-                  scrollCategories(
-                    // "assets/img/image_burger.png",
-                    "Cemilan",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Cemilan',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/img/image_burger.png",
+                      "Cemilan",
+                    ),
                   ),
                 ],
               ),

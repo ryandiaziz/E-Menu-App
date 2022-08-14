@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/api/api_base_helper.dart';
+import 'package:e_menu_app/presentation/pages/home/pembayaran.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:e_menu_app/api/api_base_helper.dart';
+import 'package:e_menu_app/api/api_response.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 class BagPage extends StatefulWidget {
   dynamic dataMeja;
@@ -19,6 +25,7 @@ class _BagPageState extends State<BagPage> {
     this.dataUser,
   );
   var firestoreInstance = FirebaseFirestore.instance;
+  ApiBaseHelper api = ApiBaseHelper();
   int? newPrice;
   dynamic dataMeja;
   dynamic dataUser;
@@ -30,10 +37,12 @@ class _BagPageState extends State<BagPage> {
   String? idOrder;
   int? item;
   int totalItems = 0;
-  bool? pembayaran;
+  String? pembayaran;
+  bool? isPay;
 
   //Fungsi Menambahkah Data Pesanan
-  Future addOrder(dynamic dataCart, int countCart, bool bayar) async {
+  Future addOrder(
+      dynamic dataCart, int countCart, bool isPay, String payMethod) async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     String date = dateFormat.format(DateTime.now());
     var docOrder = FirebaseFirestore.instance.collection('order').doc();
@@ -41,6 +50,8 @@ class _BagPageState extends State<BagPage> {
 
     await docOrder.set({
       "id": docOrder.id,
+      "idTransaksi": null,
+      'payMethod': payMethod,
       "namaPemesan": dataUser[0]['name'],
       "imgPemesan": dataUser[0]['imageUrl'],
       "emailPemesan": dataUser[0]['email'],
@@ -52,7 +63,7 @@ class _BagPageState extends State<BagPage> {
       "namaResto": dataCart[0]['namaResto'],
       "imgResto": dataCart[0]['imgResto'],
       "status": false,
-      "bayar": bayar,
+      "isPay": isPay,
     });
 
     setState(() {
@@ -148,20 +159,28 @@ class _BagPageState extends State<BagPage> {
               //   height: 20,
               // ),
               RadioListTile<int>(
-                  title: const Text('E-Payments'),
+                  title: const Text('Go-Pay'),
                   value: 0,
                   groupValue: selectedValue,
                   onChanged: (value) => setState(() {
                         selectedValue = value!;
-                        pembayaran = true;
+                        pembayaran = 'gopay';
                       })),
               RadioListTile<int>(
-                  title: const Text('COD'),
+                  title: const Text('Bank Permata'),
                   value: 1,
                   groupValue: selectedValue,
                   onChanged: (value) => setState(() {
                         selectedValue = value!;
-                        pembayaran = false;
+                        pembayaran = 'permata';
+                      })),
+              RadioListTile<int>(
+                  title: const Text('COD'),
+                  value: 2,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = 'cod';
                       })),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,11 +259,104 @@ class _BagPageState extends State<BagPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await addOrder(dataCart, countCart, pembayaran!);
-                    await addItemsToOrder(dataCart, countCart);
-                    await deleteCart(dataCart, countCart);
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    if (pembayaran == 'gopay') {
+                      const uuid = Uuid();
+                      String _idTransaksi = uuid.v1();
+                      Map data = {
+                        "payment_type": "gopay",
+                        "transaction_details": {
+                          "order_id": _idTransaksi,
+                          "gross_amount": totalHarga
+                        },
+                        // "item_details": [
+                        //   {
+                        //     "id": dataMeja['idResto'],
+                        //     "price": totalHarga - 1,
+                        //     "quantity": totalItems,
+                        //     "name": dataMeja['noMeja']
+                        //   }
+                        // ],
+                        "customer_details": {
+                          "first_name": dataUser[0]['name'],
+                          "last_name": "",
+                          "email": dataUser[0]['email'],
+                          "phone": dataUser[0]['phone']
+                        },
+                        "gopay": {
+                          "enable_callback": true,
+                          "callback_url": "someapps://callback"
+                        },
+                        "tiket_id": _idTransaksi,
+                        'nama': dataUser[0]['name']
+                      };
+
+                      var body = json.encode(data);
+                      final response = await api.post(
+                          "http://10.140.238.34:3000/order/charge", body);
+                      // final dataResponse = json.decode(response);
+                      // print('==========\n');
+                      // print(dataResponse['status']);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PembayaranPage(
+                            dataResponse: response,
+                            totalHarga: totalHarga,
+                            idTransaksi: _idTransaksi,
+                            payMethod: 'gopay',
+                            dataUser: dataUser,
+                            totalItems: totalItems,
+                            dataCart: dataCart,
+                            countCart: countCart,
+                          ),
+                        ),
+                      );
+                    } else if (pembayaran == 'permata') {
+                      const uuid = Uuid();
+                      String _idTransaksi = uuid.v1();
+                      Map data = {
+                        "payment_type": "bank_transfer",
+                        "bank_transfer": {"bank": "permata"},
+                        "transaction_details": {
+                          "order_id": _idTransaksi,
+                          "gross_amount": totalHarga
+                        },
+                        "tiket_id": _idTransaksi,
+                        "nama": dataUser[0]['name']
+                      };
+
+                      var body = json.encode(data);
+                      final response = await api.post(
+                          "http://10.140.238.34:3000/order/charge", body);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PembayaranPage(
+                            dataResponse: response,
+                            totalHarga: totalHarga,
+                            idTransaksi: _idTransaksi,
+                            payMethod: 'permata',
+                            dataUser: dataUser,
+                            totalItems: totalItems,
+                            countCart: countCart,
+                            dataCart: dataCart,
+                          ),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        isPay = false;
+                      });
+                      await addOrder(dataCart, countCart, isPay!, 'cod');
+                      await addItemsToOrder(dataCart, countCart);
+                      await deleteCart(dataCart, countCart);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    }
+                    //
+
+                    //
                   },
                   child: const Text(
                     'Confirm',
@@ -435,7 +547,7 @@ class _BagPageState extends State<BagPage> {
                               const SizedBox(
                                 height: 3,
                               ),
-                              dataCart[index]['quantityPrice'] == null
+                              dataCart[index]['cQP'] == null
                                   ? Text(
                                       NumberFormat.currency(
                                         locale: 'id',
@@ -551,7 +663,8 @@ class _BagPageState extends State<BagPage> {
 
                                     upadate.update({
                                       'quantity': quantity,
-                                      'quantityPrice': newPrice
+                                      'quantityPrice': newPrice,
+                                      'cQP': 0
                                     });
                                   });
                                 },
@@ -623,5 +736,24 @@ class _BagPageState extends State<BagPage> {
       // bottomNavigationBar: costumBottomNav(),
       body: getDataCart(),
     );
+  }
+}
+
+class orderDetail extends StatelessWidget {
+  orderDetail({key, required this.hasil}) : super(key: key);
+
+  final String hasil;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        appBar: new AppBar(
+          title: Text("Hasil Order"),
+        ),
+        body: SingleChildScrollView(
+          child: SizedBox(
+            child: Text(hasil),
+          ),
+        ));
   }
 }

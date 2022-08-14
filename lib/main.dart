@@ -22,7 +22,7 @@ import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 
-import 'presentation/pages/home/autentikasi.dart';
+import 'presentation/pages/home/autentifikasi.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/home/navigation.dart';
 import 'presentation/pages/home/onboarding_page.dart';

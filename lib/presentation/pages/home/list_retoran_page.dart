@@ -101,18 +101,18 @@ class ListRestoran extends StatelessWidget {
               color: secondsubtitleColor,
             ),
           ),
-          actions: [
-            GestureDetector(
-              child: Icon(
-                Icons.search_sharp,
-                color: secondsubtitleColor,
-                size: 25,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            )
-          ],
+          // actions: [
+          //   GestureDetector(
+          //     child: Icon(
+          //       Icons.search_sharp,
+          //       color: secondsubtitleColor,
+          //       size: 25,
+          //     ),
+          //   ),
+          //   SizedBox(
+          //     width: 10,
+          //   )
+          // ],
           automaticallyImplyLeading: true,
 
           titleSpacing: -5,

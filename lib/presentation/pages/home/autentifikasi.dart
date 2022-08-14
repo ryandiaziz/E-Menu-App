@@ -93,6 +93,80 @@ class _AutentikasiState extends State<Autentikasi> {
     }
   }
 
+  void vaildationSignIn() async {
+    if (sI_emaiC.text.isEmpty && sI_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text("Both Flied Are Empty"),
+        ),
+      );
+    } else if (sI_emaiC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(sI_emaiC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (sI_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (sI_PasswordC.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else {
+      signIn();
+    }
+  }
+
+  void vaildationSignUp() async {
+    if (sU_emaiC.text.isEmpty && sU_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text("Both Flied Are Empty"),
+        ),
+      );
+    } else if (sU_emaiC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(sU_emaiC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (sU_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (sU_PasswordC.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else {
+      signUp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -227,7 +301,7 @@ class _AutentikasiState extends State<Autentikasi> {
                       ),
                       passwordInput(sI_PasswordC),
                       _button('Sign In', () {
-                        signIn();
+                        vaildationSignIn();
                       })
                     ],
                   ),
@@ -245,7 +319,7 @@ class _AutentikasiState extends State<Autentikasi> {
                       ),
                       passwordInput(sU_PasswordC),
                       _button('Continue', () {
-                        signUp();
+                        vaildationSignUp();
                       })
                     ],
                   ),

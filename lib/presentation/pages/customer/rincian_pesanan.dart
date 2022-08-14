@@ -50,6 +50,20 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                 Text(dataOrder['id'])
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Waktu Pemesanan",
+                  style: subtitleTextStyle.copyWith(
+                      fontSize: 14, fontWeight: semiBold),
+                ),
+                Text(dataOrder['date'])
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
             idResto != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,11 +94,11 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "No Meja",
+                  "Metode Pembayaran",
                   style: subtitleTextStyle.copyWith(
                       fontSize: 14, fontWeight: semiBold),
                 ),
-                Text(dataOrder['noMeja'])
+                Text(dataOrder['payMethod'])
               ],
             ),
             const SizedBox(
@@ -94,11 +108,11 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Waktu Pemesanan",
+                  "No Meja",
                   style: subtitleTextStyle.copyWith(
                       fontSize: 14, fontWeight: semiBold),
                 ),
-                Text(dataOrder['date'])
+                Text(dataOrder['noMeja'])
               ],
             ),
             const SizedBox(
@@ -134,7 +148,7 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                     ).format(
                       (dataOrder['totalHarga']),
                     ),
-                    style: dataOrder['bayar'] == false
+                    style: dataOrder['isPay'] == false
                         ? alertTextStyle.copyWith(
                             fontWeight: semiBold, fontSize: 14)
                         : priceTextStyle.copyWith(
