@@ -223,7 +223,12 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text('Sudah dinilai'),
+                      Text(
+                        'Sudah dinilai',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        // softWrap: false,
+                      ),
                     ],
                   );
                   // return ElevatedButton(

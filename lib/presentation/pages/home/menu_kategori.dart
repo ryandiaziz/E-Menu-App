@@ -62,6 +62,7 @@ class _MenuKategoriPageState extends State<MenuKategoriPage> {
         'idMenu': menu['id'],
         "quantity": 1,
         "quantityPrice": null,
+        "cQP": null
       });
     } else {
       final docCart = FirebaseFirestore.instance

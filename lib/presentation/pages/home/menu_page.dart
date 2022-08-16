@@ -87,12 +87,12 @@ class _MenuPageState extends State<MenuPage> {
         .where('idMenu', isEqualTo: menu['id'])
         .get();
 
-    QuerySnapshot checkTotal = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection('total')
-        .where('idResto', isEqualTo: dataMeja['idResto'])
-        .get();
+    // QuerySnapshot checkTotal = await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(FirebaseAuth.instance.currentUser!.email)
+    //     .collection('total')
+    //     .where('idResto', isEqualTo: dataMeja['idResto'])
+    //     .get();
 
     if (checkMenuRating.docs.isEmpty) {
       final docCart = FirebaseFirestore.instance
@@ -100,11 +100,11 @@ class _MenuPageState extends State<MenuPage> {
           .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('cart')
           .doc();
-      final docTotal = FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .collection('total')
-          .doc();
+      // final docTotal = FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(FirebaseAuth.instance.currentUser!.email)
+      //     .collection('total')
+      //     .doc();
 
       await docCart.set({
         'id': docCart.id,
@@ -120,7 +120,7 @@ class _MenuPageState extends State<MenuPage> {
         'idMenu': menu['id'],
         "quantity": 1,
         "cQP": null,
-        "quantityPrice": 0,
+        "quantityPrice": null,
       });
     } else {
       final docCart = FirebaseFirestore.instance
@@ -129,10 +129,10 @@ class _MenuPageState extends State<MenuPage> {
           .collection('cart')
           .doc(checkMenuRating.docs[0]['id']);
       await docCart.update({
-        'cQP': 0,
+        // 'cQP': 0,
         'quantity': checkMenuRating.docs[0]['quantity'] + 1,
-        'quantityPrice':
-            checkMenuRating.docs[0]['quantityPrice'] + int.parse(menu['harga'])
+        // 'quantityPrice':
+        //     checkMenuRating.docs[0]['quantityPrice'] + int.parse(menu['harga'])
       });
     }
   }

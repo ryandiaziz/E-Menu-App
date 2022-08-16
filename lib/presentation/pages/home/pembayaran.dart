@@ -37,7 +37,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
   String? idOrder;
   Future getStatus() async {
     final url = Uri.parse(
-        "http://10.140.238.34:3000/order/status/${widget.idTransaksi}");
+        "http://10.140.175.73:3000/order/status/${widget.idTransaksi}");
     final response = await http.get(url);
     return dataResponse = json.decode(response.body);
   }

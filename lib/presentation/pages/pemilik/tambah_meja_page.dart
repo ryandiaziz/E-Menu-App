@@ -1,8 +1,15 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 
 class TambahMejaPage extends StatefulWidget {
   const TambahMejaPage({Key? key}) : super(key: key);
@@ -13,6 +20,7 @@ class TambahMejaPage extends StatefulWidget {
 
 class _TambahMejaPageState extends State<TambahMejaPage> {
   TextEditingController qrC = TextEditingController();
+  Uint8List? bytes;
   String? noMeja;
   String? idMeja;
   String? restoId;
@@ -49,6 +57,23 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,
     ));
+  }
+
+  Future<String> saveQRImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+
+    final name = '($idMeja)Meja Nomor $noMeja';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: priceColor,
+        content: const Text("QR Code Berhasil disimpan"),
+      ),
+    );
+
+    return result['filePath'];
   }
 
   @override
@@ -133,45 +158,79 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
       );
     }
 
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          // centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
+    Widget saveQR() {
+      return Container(
+        width: double.infinity,
+        height: 50,
+        margin: const EdgeInsets.only(top: 20, bottom: 20),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: priceColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )),
+            onPressed: () async {
+              final controller = ScreenshotController();
+              final bytes = await controller
+                  .captureFromWidget(Material(child: qrGenerate()));
+              setState(() {
+                this.bytes = bytes;
+              });
+              await saveQRImage(bytes);
+
+              setState(() {
+                idMeja = null;
+              });
             },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: secondsubtitleColor,
-            ),
-          ),
-          automaticallyImplyLeading: true,
-          titleSpacing: -5,
-          elevation: 1,
-          title: Text(
-            "Tambah Meja",
-            style: primaryTextStyle.copyWith(fontWeight: semiBold),
-            // fontWeight: semiBold,
+            child: Text(
+              "Save QR Code",
+              style: secondaryTextStyle.copyWith(
+                  fontSize: 18, fontWeight: semiBold),
+            )),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        // centerTitle: true,
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: secondsubtitleColor,
           ),
         ),
-        body: SafeArea(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 30),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // header(),
+        automaticallyImplyLeading: true,
+        titleSpacing: -5,
+        elevation: 1,
+        title: Text(
+          "Tambah Meja",
+          style: primaryTextStyle.copyWith(fontWeight: semiBold),
+          // fontWeight: semiBold,
+        ),
+      ),
+      body: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // header(),
 
-                  nomejaInput(),
-                  submitMeja(),
-                  idMeja == null ? const SizedBox() : qrGenerate(),
-                ],
-              ),
+                nomejaInput(),
+                idMeja == null ? submitMeja() : saveQR(),
+                idMeja == null ? const SizedBox() : qrGenerate(),
+                // bytes != null ? Image.memory(bytes!) : SizedBox(),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future sendData() async {
-    final url = Uri.parse("http://10.140.165.223:8000/api");
+    final url = Uri.parse("http://192.168.43.219:8000/api");
     await http.post(url, body: jsonEncode({'idUser': idUser}));
   }
 
@@ -167,37 +167,37 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: priceColor,
         automaticallyImplyLeading: true,
         elevation: 0,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                // dina PYbUTbBHl6BQenCNzZff
-                // ryan PnfLHMrrK5AX3zRMz6KB
-                // tin  E5Kqdoq5Lj0a0Ki2OiQ7
-                MaterialPageRoute(
-                  builder: (_) => NavigationPage(
-                    idMeja: 'z4eD5OKDPZnzvttrnmh6',
-                  ),
-                ),
-              );
-            },
-            child: const Icon(Icons.menu_book),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, "/onboarding-page");
-            },
-            child: const Icon(Icons.logout),
-          ),
-          const SizedBox(
-            width: 10,
-          )
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {
+        //       Navigator.push(
+        //         context,
+        //         // dina PYbUTbBHl6BQenCNzZff
+        //         // ryan PnfLHMrrK5AX3zRMz6KB
+        //         // tin  E5Kqdoq5Lj0a0Ki2OiQ7
+        //         MaterialPageRoute(
+        //           builder: (_) => NavigationPage(
+        //             idMeja: '4xuQnI8lftXmp1JPUstr',
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //     child: const Icon(Icons.menu_book),
+        //   ),
+        //   const SizedBox(
+        //     width: 10,
+        //   ),
+        //   GestureDetector(
+        //     onTap: () {
+        //       FirebaseAuth.instance.signOut();
+        //       Navigator.pushReplacementNamed(context, "/onboarding-page");
+        //     },
+        //     child: const Icon(Icons.logout),
+        //   ),
+        //   const SizedBox(
+        //     width: 10,
+        //   )
+        // ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.qr_code),
@@ -212,16 +212,17 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ElevatedButton(
-            //     onPressed: () {
-            //       // getRecommendations();
-            //       sendData();
-            //     },
-            //     child: Text('Cek Rekomendasi')),
+            ElevatedButton(
+                onPressed: () {
+                  getRecommendations();
+                  sendData();
+                },
+                child: const Text('Test')),
             carouselRekom!.isNotEmpty
                 ? Column(
                     children: [
                       Container(
+                        // color: Colors.amber,
                         margin: const EdgeInsets.only(top: 10),
                         child: AspectRatio(
                           aspectRatio: 2.6 / 1.6,
@@ -231,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                                   (item) => Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: Colors.white,
+                                      // color: Colors.amber,
                                     ),
                                     margin: const EdgeInsets.all(3.0),
                                     child: ClipRRect(
