@@ -292,11 +292,11 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                 read: false,
               ),
               buildCategory(),
-              ElevatedButton(
-                  onPressed: () {
-                    print(image);
-                  },
-                  child: Text('cek path')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       print(image);
+              //     },
+              //     child: Text('cek path')),
               submitMenu()
             ],
           ),

@@ -274,7 +274,15 @@ class _MenuKategoriPageState extends State<MenuKategoriPage> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "4.8",
+                                    '${dataMenu[index]['rating']}',
+                                    style:
+                                        titleTextStyle.copyWith(fontSize: 12),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '(by ${dataMenu[index]["countRating"]} users)',
                                     style:
                                         titleTextStyle.copyWith(fontSize: 12),
                                   ),

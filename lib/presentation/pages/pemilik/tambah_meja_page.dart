@@ -40,19 +40,17 @@ class _TambahMejaPageState extends State<TambahMejaPage> {
   }
 
   Future createTable(String idResto) async {
-    final docMenu = FirebaseFirestore.instance.collection('tables').doc();
+    final docTable = FirebaseFirestore.instance.collection('tables').doc();
     setState(() {
-      idMeja = docMenu.id;
+      idMeja = docTable.id;
     });
 
-    await docMenu.set({
+    await docTable.set({
       'id': idMeja,
       'noMeja': noMeja,
       'idResto': idResto,
     });
 
-    // Navigator.pushReplacementNamed(context, '/profile-ad');
-    // Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Daftar Berhasil'),
       backgroundColor: priceColor,

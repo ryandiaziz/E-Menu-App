@@ -96,7 +96,14 @@ Widget productHome(
                             width: 5,
                           ),
                           Text(
-                            "4.8",
+                            '${menu[index]["rating"]}',
+                            style: titleTextStyle.copyWith(fontSize: 12),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '(by ${menu[index]["countRating"]} users)',
                             style: titleTextStyle.copyWith(fontSize: 12),
                           ),
                         ],

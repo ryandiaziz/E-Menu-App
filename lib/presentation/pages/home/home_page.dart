@@ -167,37 +167,37 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: priceColor,
         automaticallyImplyLeading: true,
         elevation: 0,
-        // actions: [
-        //   GestureDetector(
-        //     onTap: () {
-        //       Navigator.push(
-        //         context,
-        //         // dina PYbUTbBHl6BQenCNzZff
-        //         // ryan PnfLHMrrK5AX3zRMz6KB
-        //         // tin  E5Kqdoq5Lj0a0Ki2OiQ7
-        //         MaterialPageRoute(
-        //           builder: (_) => NavigationPage(
-        //             idMeja: '4xuQnI8lftXmp1JPUstr',
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     child: const Icon(Icons.menu_book),
-        //   ),
-        //   const SizedBox(
-        //     width: 10,
-        //   ),
-        //   GestureDetector(
-        //     onTap: () {
-        //       FirebaseAuth.instance.signOut();
-        //       Navigator.pushReplacementNamed(context, "/onboarding-page");
-        //     },
-        //     child: const Icon(Icons.logout),
-        //   ),
-        //   const SizedBox(
-        //     width: 10,
-        //   )
-        // ],
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                // dina PYbUTbBHl6BQenCNzZff
+                // ryan PnfLHMrrK5AX3zRMz6KB
+                // tin  E5Kqdoq5Lj0a0Ki2OiQ7
+                MaterialPageRoute(
+                  builder: (_) => NavigationPage(
+                    idMeja: '0DxYm9tzEq1qGsDF1le9',
+                  ),
+                ),
+              );
+            },
+            child: const Icon(Icons.menu_book),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, "/onboarding-page");
+            },
+            child: const Icon(Icons.logout),
+          ),
+          const SizedBox(
+            width: 10,
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.qr_code),
@@ -212,12 +212,12 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  getRecommendations();
-                  sendData();
-                },
-                child: const Text('Test')),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       getRecommendations();
+            //       sendData();
+            //     },
+            //     child: const Text('Test')),
             carouselRekom!.isNotEmpty
                 ? Column(
                     children: [

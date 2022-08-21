@@ -19,6 +19,9 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
   _ItemsCardCusState(this.idResto);
   String? idResto;
   double? rating;
+  int sumRating = 0;
+  int? countRating;
+  double? hasilRating;
 
   Future addRatingData() async {
     int date = (DateTime.now().millisecondsSinceEpoch);
@@ -48,6 +51,31 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
         "kategori": widget.dataItems['kategori'],
       });
     }
+  }
+
+  Future addRatingToMenu() async {
+    final menuRating = await FirebaseFirestore.instance
+        .collection('menu')
+        .doc(widget.dataItems['idMenu'])
+        .get();
+
+    setState(() {
+      sumRating = (rating! + menuRating['sumRating']).toInt();
+      countRating = (menuRating['countRating'] + 1).toInt();
+      double hasil = (sumRating / countRating!).toDouble();
+      String toString = hasil.toStringAsFixed(1);
+      hasilRating = double.parse(toString);
+    });
+    var upadateCart = FirebaseFirestore.instance
+        .collection('menu')
+        .doc(widget.dataItems['idMenu']);
+
+    upadateCart.update({
+      'sumRating': sumRating,
+      'countRating': countRating,
+      'rating': hasilRating,
+      // 'quantityPrice': newPrice
+    });
   }
 
   @override
@@ -90,6 +118,7 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                       Navigator.pop(context);
                       await addRatingData();
                       await addMenuRating();
+                      await addRatingToMenu();
                     },
                     child: const Text('OK'))
               ],
@@ -184,7 +213,7 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                       ),
                     );
                   }
-                  int count = snapshot.data!.docs.length;
+                  //  var data = snapshot.data;
                   if (snapshot.data!.docs.isEmpty) {
                     return InkWell(
                       onTap: () {
@@ -215,15 +244,15 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                     );
                   }
                   return Row(
-                    children: const [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
+                    children: [
+                      Image.asset(
+                        "assets/icon/icon_star.png",
+                        width: 16,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text(
+                      const Text(
                         'Sudah dinilai',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

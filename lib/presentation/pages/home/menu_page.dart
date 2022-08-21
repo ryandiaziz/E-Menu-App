@@ -45,6 +45,8 @@ class _MenuPageState extends State<MenuPage> {
           "kategori": qn.docs[i]["kategori"],
           "harga": qn.docs[i]["harga"].toString(),
           "imageUrl": qn.docs[i]["imageUrl"],
+          "rating": qn.docs[i]["rating"],
+          "countRating": qn.docs[i]["countRating"],
         });
       }
     });
@@ -391,7 +393,14 @@ class _MenuPageState extends State<MenuPage> {
                                 width: 5,
                               ),
                               Text(
-                                "4.8",
+                                '${menu[index]["rating"]}',
+                                style: titleTextStyle.copyWith(fontSize: 12),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                '(by ${menu[index]["countRating"]} users)',
                                 style: titleTextStyle.copyWith(fontSize: 12),
                               ),
                             ],
