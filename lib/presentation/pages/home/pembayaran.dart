@@ -48,6 +48,27 @@ class _PembayaranPageState extends State<PembayaranPage> {
     super.initState();
   }
 
+  Future addTransaction() async {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    String date = dateFormat.format(DateTime.now());
+    var docTransaction = FirebaseFirestore.instance
+        .collection('transaction')
+        .doc(widget.idTransaksi);
+
+    await docTransaction.set({
+      "id": widget.idTransaksi,
+      "idOrder": idOrder,
+      'payMethod': widget.payMethod,
+      "namaPemesan": widget.dataUser[0]['name'],
+      "emailPemesan": widget.dataUser[0]['email'],
+      "totalHarga": widget.totalHarga,
+      "date": date,
+      "noMeja": widget.dataCart[0]['noMeja'],
+      "idResto": widget.dataCart[0]['idResto'],
+      "namaResto": widget.dataCart[0]['namaResto'],
+    });
+  }
+
   Future addOrder() async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     String date = dateFormat.format(DateTime.now());
@@ -209,6 +230,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
               if (dataResponse['data']['transaction_status'] == 'settlement') {
                 await addOrder();
                 await addItemsToOrder();
+                await addTransaction();
                 await deleteCart();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   duration: const Duration(seconds: 1),

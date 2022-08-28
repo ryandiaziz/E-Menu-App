@@ -5,6 +5,7 @@ import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/owner_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/saldo_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
           '/detail-product': (context) => const DetailProductPage(),
           // '/edit-profile-user': (context) => const EditProfileUserPage(),
           '/edit-profile-resto': (context) => const EditProfileRestoPage(),
+          // '/saldo-page': (context) => const SaldoPage(),
           // '/pesanan-page-admin': (context) => const PesananPage(),
           '/menu-admin': (context) => const MenuPage(),
           '/tambah-menu-admin': (context) => const TambahMenuPage(),

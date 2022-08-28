@@ -65,6 +65,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             letsStart(),
+            toAutentifikasi(),
           ],
         ),
       );
@@ -85,11 +86,11 @@ class _OnboardingState extends State<Onboarding> {
     return Container(
       width: double.infinity,
       height: 50,
-      margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
-          bottom: 40 + MediaQuery.of(context).padding.bottom),
+      margin: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 20,
+      ),
       child: TextButton(
           style: TextButton.styleFrom(
               backgroundColor: priceColor,
@@ -97,11 +98,38 @@ class _OnboardingState extends State<Onboarding> {
                 borderRadius: BorderRadius.circular(5),
               )),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/auntentikasi');
+            Navigator.pushReplacementNamed(context, '/home-page');
           },
           child: Text(
             "Let's Start",
             style: secondaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+          )),
+    );
+  }
+
+  Widget toAutentifikasi() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border.all(width: 3.0, color: priceColor)),
+      width: double.infinity,
+      height: 50,
+      margin: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 40 + MediaQuery.of(context).padding.bottom),
+      child: TextButton(
+          style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          )),
+          onPressed: () {
+            Navigator.pushNamed(context, '/auntentikasi');
+          },
+          child: Text(
+            "Login",
+            style: secondaryTextStyle.copyWith(
+                fontSize: 18, fontWeight: bold, color: priceColor),
           )),
     );
   }

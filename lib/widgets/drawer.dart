@@ -49,31 +49,50 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   }
 
   @override
-  Widget build(BuildContext context) => Drawer(
-        backgroundColor: Colors.white,
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("users")
-              .doc(FirebaseAuth.instance.currentUser!.email)
-              .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            var dataUser = snapshot.data;
-            if (dataUser == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return SingleChildScrollView(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                buildHeader(context, dataUser),
-                buildMenuItems(context, dataUser),
-              ],
-            ));
-          },
-        ),
-      );
+  Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user != null
+        ? Drawer(
+            backgroundColor: Colors.white,
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.email)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                var dataUser = snapshot.data;
+                if (dataUser == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return SingleChildScrollView(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    buildHeader(context, dataUser),
+                    buildMenuItems(context, dataUser),
+                  ],
+                ));
+              },
+            ),
+          )
+        : Drawer(
+            backgroundColor: Colors.white,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 370),
+              width: 50,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/auntentikasi');
+                },
+                child: Text('Login'),
+              ),
+            ),
+          );
+  }
 
   Widget buildHeader(BuildContext context, dataUser) {
     return Material(

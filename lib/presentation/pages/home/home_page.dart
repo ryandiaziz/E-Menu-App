@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/resto_cart%20.dart';
 import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
+import 'package:e_menu_app/presentation/pages/home/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   List<String> carouselImages = [];
   List<String>? carouselRekom = [];
   List restaurants = [];
-  String? idUser = FirebaseAuth.instance.currentUser!.email;
+  String? idUser;
   var firestoreInstance = FirebaseFirestore.instance;
   var dotPosition = 0;
 
@@ -72,9 +73,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    sendData();
-    getRecommendations();
-    fetchCarouselImages();
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      sendData();
+      getRecommendations();
+      fetchCarouselImages();
+      idUser = FirebaseAuth.instance.currentUser!.email;
+    }
+
     super.initState();
   }
 
@@ -121,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DetailRestoran(dataResto[index]),
+                  builder: (_) => DetailRestoran(dataResto[index]['id']),
                 ),
               );
             },
@@ -159,6 +165,36 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    void showLogin() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Center(child: Text('Login?')),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text('login untuk dapat melakukan proses pemesanan'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // buildRating()
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/auntentikasi');
+                    },
+                    child: const Text('OK')),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel'),
+                )
+              ],
+            ));
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -172,12 +208,26 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
+                MaterialPageRoute(
+                  builder: (_) => const SearchPage(),
+                ),
+              );
+            },
+            child: const Icon(Icons.search),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
                 // dina PYbUTbBHl6BQenCNzZff
                 // ryan PnfLHMrrK5AX3zRMz6KB
                 // tin  E5Kqdoq5Lj0a0Ki2OiQ7
                 MaterialPageRoute(
                   builder: (_) => NavigationPage(
-                    idMeja: '0DxYm9tzEq1qGsDF1le9',
+                    idMeja: 't92lMpBlgtzxYlulFISH',
                   ),
                 ),
               );
@@ -203,7 +253,12 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.qr_code),
         backgroundColor: priceColor,
         onPressed: () {
-          Navigator.pushNamed(context, '/qrscan');
+          User? user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            Navigator.pushNamed(context, '/qrscan');
+          } else {
+            showLogin();
+          }
         },
       ),
       drawer: const NavigationDrawer(),
@@ -218,69 +273,69 @@ class _HomePageState extends State<HomePage> {
             //       sendData();
             //     },
             //     child: const Text('Test')),
-            carouselRekom!.isNotEmpty
-                ? Column(
-                    children: [
-                      Container(
-                        // color: Colors.amber,
-                        margin: const EdgeInsets.only(top: 10),
-                        child: AspectRatio(
-                          aspectRatio: 2.6 / 1.6,
-                          child: CarouselSlider(
-                            items: carouselRekom!
-                                .map(
-                                  (item) => Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      // color: Colors.amber,
-                                    ),
-                                    margin: const EdgeInsets.all(3.0),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      child: Image.network(
-                                        item,
-                                        fit: BoxFit.cover,
-                                        width: 300,
-                                        height: 300,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            options: CarouselOptions(
-                              autoPlay: false,
-                              enlargeCenterPage: true,
-                              viewportFraction: 0.8,
-                              enlargeStrategy: CenterPageEnlargeStrategy.height,
-                              onPageChanged: (val, carouselPageChangedReason) {
-                                setState(
-                                  () {
-                                    dotPosition = val;
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      DotsIndicator(
-                        dotsCount:
-                            carouselImages.isEmpty ? 1 : carouselImages.length,
-                        position: dotPosition.toDouble(),
-                        decorator: DotsDecorator(
-                          activeColor: priceColor,
-                          color: priceColor.withOpacity(0.5),
-                          spacing: const EdgeInsets.all(2),
-                          activeSize: const Size(8, 8),
-                          size: const Size(6, 6),
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox(
-                    height: 10,
-                  ),
+            // carouselRekom!.isNotEmpty
+            //     ? Column(
+            //         children: [
+            //           Container(
+            //             // color: Colors.amber,
+            //             margin: const EdgeInsets.only(top: 10),
+            //             child: AspectRatio(
+            //               aspectRatio: 2.6 / 1.6,
+            //               child: CarouselSlider(
+            //                 items: carouselRekom!
+            //                     .map(
+            //                       (item) => Container(
+            //                         decoration: BoxDecoration(
+            //                           borderRadius: BorderRadius.circular(5),
+            //                           // color: Colors.amber,
+            //                         ),
+            //                         margin: const EdgeInsets.all(3.0),
+            //                         child: ClipRRect(
+            //                           borderRadius: const BorderRadius.all(
+            //                               Radius.circular(5.0)),
+            //                           child: Image.network(
+            //                             item,
+            //                             fit: BoxFit.cover,
+            //                             width: 300,
+            //                             height: 300,
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     )
+            //                     .toList(),
+            //                 options: CarouselOptions(
+            //                   autoPlay: false,
+            //                   enlargeCenterPage: true,
+            //                   viewportFraction: 0.8,
+            //                   enlargeStrategy: CenterPageEnlargeStrategy.height,
+            //                   onPageChanged: (val, carouselPageChangedReason) {
+            //                     setState(
+            //                       () {
+            //                         dotPosition = val;
+            //                       },
+            //                     );
+            //                   },
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           DotsIndicator(
+            //             dotsCount:
+            //                 carouselImages.isEmpty ? 1 : carouselImages.length,
+            //             position: dotPosition.toDouble(),
+            //             decorator: DotsDecorator(
+            //               activeColor: priceColor,
+            //               color: priceColor.withOpacity(0.5),
+            //               spacing: const EdgeInsets.all(2),
+            //               activeSize: const Size(8, 8),
+            //               size: const Size(6, 6),
+            //             ),
+            //           ),
+            //         ],
+            //       )
+            //     : const SizedBox(
+            //         height: 10,
+            //       ),
             buildTitle(),
             getResto()
           ],

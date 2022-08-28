@@ -49,8 +49,9 @@ class ListRestoran extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DetailRestoran(dataResto[index]),
-                ),
+                    builder: (_) => DetailRestoran(
+                          dataResto[index]['id'],
+                        )),
               );
             },
             child: RestoCard(dataResto: dataResto[index]),

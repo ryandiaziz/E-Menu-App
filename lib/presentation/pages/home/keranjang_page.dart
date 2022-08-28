@@ -738,22 +738,3 @@ class _BagPageState extends State<BagPage> {
     );
   }
 }
-
-class orderDetail extends StatelessWidget {
-  orderDetail({key, required this.hasil}) : super(key: key);
-
-  final String hasil;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: Text("Hasil Order"),
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            child: Text(hasil),
-          ),
-        ));
-  }
-}

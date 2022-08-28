@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:e_menu_app/presentation/pages/home/menu_page.dart';
@@ -78,7 +79,12 @@ Widget productHome(
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(menu[index]["harga"],
+                      Text(
+                          NumberFormat.currency(
+                            locale: 'id',
+                            symbol: 'Rp ',
+                            decimalDigits: 0,
+                          ).format(int.parse(menu[index]["harga"])),
                           style: priceTextStyle.copyWith(
                               fontSize: 14, fontWeight: bold)),
                       const SizedBox(

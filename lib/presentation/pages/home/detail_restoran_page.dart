@@ -1,15 +1,12 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_menu_app/presentation/card/product_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
-
 import '../../card/product_card_home.dart';
 
-// ignore: must_be_immutable
 class DetailRestoran extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  var restaurants;
-  DetailRestoran(this.restaurants, {Key? key}) : super(key: key);
+  final String idResto;
+  const DetailRestoran(this.idResto, {Key? key}) : super(key: key);
 
   @override
   State<DetailRestoran> createState() => _DetailRestoranState();
@@ -18,12 +15,13 @@ class DetailRestoran extends StatefulWidget {
 class _DetailRestoranState extends State<DetailRestoran> {
   ScrollController controller = ScrollController();
   var firestoreInstance = FirebaseFirestore.instance;
+  List dataResto = [];
   List menu = [];
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
         .collection("menu")
-        .where('idResto', isEqualTo: widget.restaurants['id'])
+        .where('idResto', isEqualTo: widget.idResto)
         .get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {
@@ -42,12 +40,33 @@ class _DetailRestoranState extends State<DetailRestoran> {
     return qn.docs;
   }
 
+  fetchRestaurant() async {
+    QuerySnapshot qn = await firestoreInstance
+        .collection("restaurants")
+        .where('id', isEqualTo: widget.idResto)
+        .get();
+    setState(() {
+      dataResto.add({
+        "id": qn.docs[0]["id"],
+        "idUser": qn.docs[0]["idUser"],
+        "name": qn.docs[0]["name"],
+        "alamat": qn.docs[0]["alamat"],
+        "imageUrl": qn.docs[0]["imageUrl"],
+      });
+    });
+
+    return qn.docs;
+  }
+
   String? idResto;
 
   @override
   void initState() {
-    idResto = widget.restaurants['id'];
-    fetchMenu();
+    Timer(const Duration(milliseconds: 100), () {
+      fetchMenu();
+      fetchRestaurant();
+    });
+
     super.initState();
   }
 
@@ -87,7 +106,7 @@ class _DetailRestoranState extends State<DetailRestoran> {
                     width: 100,
                     child: ClipOval(
                       child: Image.network(
-                        widget.restaurants["imageUrl"],
+                        dataResto[0]['imageUrl'],
                         width: 64,
                         fit: BoxFit.cover,
                       ),
@@ -97,11 +116,11 @@ class _DetailRestoranState extends State<DetailRestoran> {
                     height: 10,
                   ),
                   Text(
-                    widget.restaurants["name"],
+                    dataResto[0]['name'],
                     style: titleTextStyle.copyWith(
                         fontSize: 24, fontWeight: semiBold),
                   ),
-                  Text(widget.restaurants["alamat"],
+                  Text(dataResto[0]['alamat'],
                       style: secondSubtitleTextStyle.copyWith(
                           fontSize: 14, fontWeight: bold)),
                 ],
@@ -116,19 +135,24 @@ class _DetailRestoranState extends State<DetailRestoran> {
     }
 
     return Scaffold(
-        backgroundColor: secondaryColor,
-        body: ListView(
-          children: [
-            header(),
-            const SizedBox(
-              height: 10,
+      backgroundColor: secondaryColor,
+      body: dataResto.isNotEmpty
+          ? ListView(
+              children: [
+                header(),
+                const SizedBox(
+                  height: 10,
+                ),
+                productHome(
+                  context,
+                  controller,
+                  menu,
+                ),
+              ],
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-            productHome(
-              context,
-              controller,
-              menu,
-            ),
-          ],
-        ));
+    );
   }
 }

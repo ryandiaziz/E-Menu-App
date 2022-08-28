@@ -25,9 +25,7 @@ Widget restaurant(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailRestoran(
-              restaurants[index],
-            ),
+            builder: (_) => DetailRestoran(restaurants[index]['id']),
           ),
         ),
         child: Container(

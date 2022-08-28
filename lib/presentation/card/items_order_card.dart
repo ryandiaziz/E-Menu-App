@@ -215,51 +215,55 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                   }
                   //  var data = snapshot.data;
                   if (snapshot.data!.docs.isEmpty) {
-                    return InkWell(
-                      onTap: () {
-                        showRating();
-                      },
-                      child: Container(
-                        width: 47,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          color: secondsubtitleColor,
-                        ),
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          top: 5,
-                          bottom: 5,
-                          right: 10,
-                        ),
-                        child: Column(
-                          children: [
-                            Text('rate',
-                                style: secondaryTextStyle.copyWith(
-                                    fontSize: 12, fontWeight: bold)),
-                          ],
-                        ),
-                      ),
-                    );
+                    return idResto == null
+                        ? InkWell(
+                            onTap: () {
+                              showRating();
+                            },
+                            child: Container(
+                              width: 47,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                color: secondsubtitleColor,
+                              ),
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                top: 5,
+                                bottom: 5,
+                                right: 10,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text('rate',
+                                      style: secondaryTextStyle.copyWith(
+                                          fontSize: 12, fontWeight: bold)),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox();
                   }
-                  return Row(
-                    children: [
-                      Image.asset(
-                        "assets/icon/icon_star.png",
-                        width: 16,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Sudah dinilai',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        // softWrap: false,
-                      ),
-                    ],
-                  );
+                  return idResto == null
+                      ? Row(
+                          children: [
+                            Image.asset(
+                              "assets/icon/icon_star.png",
+                              width: 16,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            const Text(
+                              'Sudah dinilai',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              // softWrap: false,
+                            ),
+                          ],
+                        )
+                      : SizedBox();
                   // return ElevatedButton(
                   //     onPressed: () {
                   //       print(dataRating[0]['rating']);

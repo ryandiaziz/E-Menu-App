@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:uuid/uuid.dart';
+
 import '../../card/items_order_card.dart';
 
 class RincianPesananPage extends StatefulWidget {
@@ -24,10 +26,95 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
 
   String? idResto;
   dynamic dataOrder;
+  dynamic dataItem;
+  int? countItem;
+
+  Future addTransaction() async {
+    const uuid = Uuid();
+    String _idTransaksi = uuid.v1();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    String date = dateFormat.format(DateTime.now());
+    var docTransaction =
+        FirebaseFirestore.instance.collection('transaction').doc(_idTransaksi);
+
+    await docTransaction.set({
+      "id": _idTransaksi,
+      "idOrder": dataOrder['id'],
+      'payMethod': dataOrder['payMethod'],
+      "namaPemesan": dataOrder['namaPemesan'],
+      "emailPemesan": dataOrder['emailPemesan'],
+      "totalHarga": dataOrder['totalHarga'],
+      "date": date,
+      "noMeja": dataOrder['noMeja'],
+      "idResto": dataOrder['idResto'],
+      "namaResto": dataOrder['namaResto'],
+    });
+  }
+
+  Future addChart() async {
+    QuerySnapshot checkCharts = await FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(idResto)
+        .collection('chart')
+        .get();
+
+    if (checkCharts.docs.isEmpty) {
+      print(countItem);
+      for (var i = 0; i < countItem!; i++) {
+        var docChart = FirebaseFirestore.instance
+            .collection('restaurants')
+            .doc(idResto)
+            .collection('chart')
+            .doc(dataItem[i]['nama']);
+
+        docChart.set({
+          'nama': dataItem[i]['nama'],
+          'orders': 1,
+        });
+      }
+    }
+    for (var i = 0; i < countItem!; i++) {
+      int cek = 0;
+      for (var j = 0; j < checkCharts.docs.length; j++) {
+        int add = checkCharts.docs.length;
+        // print(checkCharts.docs.length);
+        if (dataItem[i]['nama'] == checkCharts.docs[j]['nama']) {
+          print('samaaaa');
+          var docChart = FirebaseFirestore.instance
+              .collection('restaurants')
+              .doc(idResto)
+              .collection('chart')
+              .doc(dataItem[i]['nama']);
+
+          docChart.update({
+            'orders': checkCharts.docs[j]['orders'] + 1,
+          });
+        } else if (dataItem[i]['nama'] != checkCharts.docs[j]['nama']) {
+          cek = cek + 1;
+          print(cek);
+          if (cek == checkCharts.docs.length) {
+            print('tambah data');
+            var docChart = FirebaseFirestore.instance
+                .collection('restaurants')
+                .doc(idResto)
+                .collection('chart')
+                .doc(dataItem[i]['nama']);
+
+            docChart.set({
+              'nama': dataItem[i]['nama'],
+              'orders': 1,
+            });
+          }
+          // print(checkCharts.docs.length);
+
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget costumBottomNav() {
+    Widget costumBottomNav(dynamic dataItems, int countItems, String? idResto) {
       return Container(
         color: secondaryColor,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -164,22 +251,20 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            var upadateOrder = FirebaseFirestore.instance
-                                .collection('order')
-                                .doc(dataOrder['id']);
+                            // var upadateOrder = FirebaseFirestore.instance
+                            //     .collection('order')
+                            //     .doc(dataOrder['id']);
 
-                            upadateOrder.update({
-                              'status': true,
+                            // upadateOrder.update({
+                            //   'status': true,
+                            // });
+                            setState(() {
+                              dataItem = dataItems;
+                              countItem = countItems;
                             });
-                            Navigator.pop(context);
-
-                            // int newPrice = quantity * price;
-
-                            // await addOrder(dataCart, countCart);
-                            // await addItemsToOrder(dataCart, countCart);
-                            // await deleteCart(dataCart, countCart);
-                            // Navigator.of(context).pop();
-                            // Navigator.of(context).pop();
+                            // print(dataItem[0]['nama']);
+                            addChart();
+                            // Navigator.pop(context);
                           },
                           child: const Text(
                             'Pesanan Selesai',
@@ -191,7 +276,43 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                           ),
                         ),
                       )
-                    : const SizedBox(),
+                    : dataOrder['isPay'] == false
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                var upadateOrder = FirebaseFirestore.instance
+                                    .collection('order')
+                                    .doc(dataOrder['id']);
+
+                                upadateOrder.update({
+                                  'isPay': true,
+                                });
+                                addTransaction();
+                                Navigator.pop(context);
+
+                                // int newPrice = quantity * price;
+
+                                // await addOrder(dataCart, countCart);
+                                // await addItemsToOrder(dataCart, countCart);
+                                // await deleteCart(dataCart, countCart);
+                                // Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Konfirmasi Pembayaran',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: priceColor,
+                                elevation: 3,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
           ],
         ),
       );
@@ -232,7 +353,7 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               buildItems(dataItems, countItems!, idResto),
-              costumBottomNav(),
+              costumBottomNav(dataItems, countItems, idResto),
             ],
           );
         },

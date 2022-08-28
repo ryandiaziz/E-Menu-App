@@ -17,17 +17,9 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
-
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        Navigator.pushReplacementNamed(context, '/home-page');
-      } else {
-        Navigator.pushReplacementNamed(context, '/onboarding-page');
-      }
+      Navigator.pushReplacementNamed(context, '/home-page');
     });
   }
 
