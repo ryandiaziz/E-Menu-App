@@ -76,10 +76,9 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
     for (var i = 0; i < countItem!; i++) {
       int cek = 0;
       for (var j = 0; j < checkCharts.docs.length; j++) {
-        int add = checkCharts.docs.length;
-        // print(checkCharts.docs.length);
+        //Cek, Apakah ada data yang sama?
         if (dataItem[i]['nama'] == checkCharts.docs[j]['nama']) {
-          print('samaaaa');
+          //Meng-update data
           var docChart = FirebaseFirestore.instance
               .collection('restaurants')
               .doc(idResto)
@@ -90,10 +89,10 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
             'orders': checkCharts.docs[j]['orders'] + 1,
           });
         } else if (dataItem[i]['nama'] != checkCharts.docs[j]['nama']) {
+          //Cek semua data kesamaan produk
           cek = cek + 1;
-          print(cek);
+          //Tambah data baru, setelah mengecek semua data tidak ada yang sama
           if (cek == checkCharts.docs.length) {
-            print('tambah data');
             var docChart = FirebaseFirestore.instance
                 .collection('restaurants')
                 .doc(idResto)
@@ -105,8 +104,6 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
               'orders': 1,
             });
           }
-          // print(checkCharts.docs.length);
-
         }
       }
     }
@@ -251,20 +248,20 @@ class _RincianPesananPageState extends State<RincianPesananPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            // var upadateOrder = FirebaseFirestore.instance
-                            //     .collection('order')
-                            //     .doc(dataOrder['id']);
+                            var upadateOrder = FirebaseFirestore.instance
+                                .collection('order')
+                                .doc(dataOrder['id']);
 
-                            // upadateOrder.update({
-                            //   'status': true,
-                            // });
+                            upadateOrder.update({
+                              'status': true,
+                            });
                             setState(() {
                               dataItem = dataItems;
                               countItem = countItems;
                             });
                             // print(dataItem[0]['nama']);
                             addChart();
-                            // Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                           child: const Text(
                             'Pesanan Selesai',

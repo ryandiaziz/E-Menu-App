@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/graphic_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
@@ -265,6 +267,25 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
         backgroundColor: secondaryColor,
         appBar: AppBar(
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChartPage(idResto),
+                  ),
+                );
+              },
+              child: Icon(
+                CupertinoIcons.graph_circle_fill,
+                color: secondsubtitleColor,
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+          ],
           // centerTitle: true,
           backgroundColor: Colors.white,
           leading: GestureDetector(

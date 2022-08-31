@@ -1,11 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dartz/dartz_unsafe.dart';
-import 'package:e_menu_app/presentation/card/order_cus_cart.dart';
-import 'package:e_menu_app/presentation/pages/customer/rincian_pesanan.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -120,36 +116,38 @@ class _SaldoPageState extends State<SaldoPage> {
     // }
 
     Widget buildData() {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemCount: saldo.length,
-          itemBuilder: (_, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: SizedBox(
-                  width: 100,
-                  child: Text(
-                    saldo[index]['namaPemesan'],
+      return Expanded(
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: saldo.length,
+            itemBuilder: (_, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: SizedBox(
+                    width: 100,
+                    child: Text(
+                      saldo[index]['namaPemesan'],
+                    ),
+                  ),
+                  title: Row(
+                    children: [
+                      Text(saldo[index]['payMethod']),
+                    ],
+                  ),
+                  subtitle: Text(saldo[index]['date']),
+                  dense: true,
+                  trailing: Text(
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp ',
+                      decimalDigits: 0,
+                    ).format((saldo[index]['totalHarga'])),
                   ),
                 ),
-                title: Row(
-                  children: [
-                    Text(saldo[index]['payMethod']),
-                  ],
-                ),
-                subtitle: Text(saldo[index]['date']),
-                dense: true,
-                trailing: Text(
-                  NumberFormat.currency(
-                    locale: 'id',
-                    symbol: 'Rp ',
-                    decimalDigits: 0,
-                  ).format((saldo[index]['totalHarga'])),
-                ),
-              ),
-            );
-          });
+              );
+            }),
+      );
     }
 
     // Widget getData() {

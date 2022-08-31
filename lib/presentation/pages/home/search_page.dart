@@ -73,20 +73,21 @@ class _SearchPageState extends State<SearchPage> {
                     var data = snapshot.data!.docs[index].data()
                         as Map<String, dynamic>;
                     if (name.isEmpty) {
-                      return ListTile(
-                        title: Text(
-                          data['nama'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          '${data['harga']}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        leading: CircleAvatar(
-                            backgroundImage: NetworkImage(data['imageUrl'])),
-                      );
+                      return SizedBox();
+                      // return ListTile(
+                      //   title: Text(
+                      //     data['nama'],
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      //   subtitle: Text(
+                      //     '${data['harga']}',
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      //   leading: CircleAvatar(
+                      //       backgroundImage: NetworkImage(data['imageUrl'])),
+                      // );
                     }
                     if (data['nama']
                         .toString()

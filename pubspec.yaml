@@ -65,6 +65,7 @@ dependencies:
   random_color: any
   screenshot: ^1.2.3
   staggered_grid_view_flutter: null
+  syncfusion_flutter_charts: 19.3.45
   uuid: 3.0.6
 
 dev_dependencies:
