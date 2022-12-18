@@ -1,15 +1,9 @@
 import 'package:e_menu_app/presentation/pages/customer/buka_menu.dart';
-import 'package:e_menu_app/presentation/pages/customer/profile_cus_page.dart';
 import 'package:e_menu_app/presentation/pages/customer/riwayat_pesanan_page.dart';
-import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/owner_menu_page.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/saldo_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_menu_page.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
-import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
 import 'package:e_menu_app/widgets/qr_scanner.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +13,9 @@ import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
 import 'package:e_menu_app/presentation/pages/home/list_retoran_page.dart';
 import 'package:e_menu_app/presentation/pages/product/detail_product_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile_resto.dart';
-import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
-import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
-
 import 'presentation/pages/home/autentifikasi.dart';
 import 'presentation/pages/home/home_page.dart';
-import 'presentation/pages/home/navigation.dart';
 import 'presentation/pages/home/onboarding_page.dart';
 
 void main() async {
