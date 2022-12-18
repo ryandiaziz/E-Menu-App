@@ -56,6 +56,7 @@ class _UserFormState extends State<UserForm> {
           "dob": dobController.text,
           "gender": gendervalue,
           "isOwner": false,
+          "isAdmin": false,
           "imageUrl": null,
         })
         .then((value) => Navigator.pushReplacementNamed(context, '/home-page'))
@@ -101,22 +102,6 @@ class _UserFormState extends State<UserForm> {
             });
           },
         ),
-
-        // child: DropdownButtonFormField<String>(
-        //   value: selectedItem,
-        //   items: items
-        //       .map((item) => DropdownMenuItem(
-        //             child: Text(
-        //               item,
-        //               style: primaryTextStyle,
-        //             ),
-        //             value: item,
-        //           ))
-        //       .toList(),
-        //   onChanged: (item) => setState(() {
-        //     selectedItem = item!;
-        //   }),
-        // ),
       );
     }
 
@@ -129,7 +114,7 @@ class _UserFormState extends State<UserForm> {
           onPressed: onPressed,
           child: Text(
             buttonText,
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
           style: ElevatedButton.styleFrom(
             primary: priceColor,
@@ -142,13 +127,13 @@ class _UserFormState extends State<UserForm> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Text(
@@ -170,13 +155,16 @@ class _UserFormState extends State<UserForm> {
                   controller: nameController,
                   hintText: "Full Name",
                   keyBoardType: TextInputType.text,
+                  read: false,
                 ),
 
                 CustomTextField(
-                    image: 'assets/icon/phone.png',
-                    controller: phoneController,
-                    hintText: "Phone Number",
-                    keyBoardType: TextInputType.number),
+                  image: 'assets/icon/phone.png',
+                  controller: phoneController,
+                  hintText: "Phone Number",
+                  keyBoardType: TextInputType.number,
+                  read: false,
+                ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   child: Column(

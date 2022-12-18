@@ -148,9 +148,15 @@ class _OrderCardOwnerState extends State<OrderCardOwner> {
                 ).format(
                   (widget.dataOrder['totalHarga']),
                 ),
-                style:
-                    priceTextStyle.copyWith(fontWeight: semiBold, fontSize: 14),
-              ),
+                style: widget.dataOrder['isPay'] == false
+                    ? alertTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 14)
+                    : priceTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 14),
+              )
+              // style:
+
+              //     priceTextStyle.copyWith(fontWeight: semiBold, fontSize: 14),
             ],
           ),
           Divider(

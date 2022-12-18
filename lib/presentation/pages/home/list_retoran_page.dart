@@ -4,6 +4,8 @@ import 'package:e_menu_app/presentation/card/list_restoran_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
 
 import '../../../models/restaurant_model.dart';
+import '../../card/resto_cart .dart';
+import 'detail_restoran_page.dart';
 
 class ListRestoran extends StatelessWidget {
   @override
@@ -36,8 +38,58 @@ class ListRestoran extends StatelessWidget {
       );
     }
 
+    Widget buildResto(dataResto, countResto) {
+      return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: countResto,
+        itemBuilder: (_, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => DetailRestoran(
+                          dataResto[index]['id'],
+                        )),
+              );
+            },
+            child: RestoCard(dataResto: dataResto[index]),
+          );
+        },
+      );
+    }
+
+    Widget getResto() {
+      return StreamBuilder<QuerySnapshot>(
+        stream:
+            FirebaseFirestore.instance.collection("restaurants").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: priceColor,
+              ),
+            );
+          }
+
+          var dataResto = snapshot.data?.docs;
+          var countResto = snapshot.data?.docs.length;
+
+          if (dataResto == null) {
+            return const Center(
+              child: Text(
+                'No data',
+              ),
+            );
+          }
+          return buildResto(dataResto, countResto);
+        },
+      );
+    }
+
     return Scaffold(
-        backgroundColor: backgroundColor3,
+        backgroundColor: secondaryColor,
         appBar: AppBar(
           // centerTitle: true,
           backgroundColor: Colors.white,
@@ -50,68 +102,30 @@ class ListRestoran extends StatelessWidget {
               color: secondsubtitleColor,
             ),
           ),
-          actions: [
-            GestureDetector(
-              child: Icon(
-                Icons.search_sharp,
-                color: secondsubtitleColor,
-                size: 25,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            )
-          ],
+          // actions: [
+          //   GestureDetector(
+          //     child: Icon(
+          //       Icons.search_sharp,
+          //       color: secondsubtitleColor,
+          //       size: 25,
+          //     ),
+          //   ),
+          //   SizedBox(
+          //     width: 10,
+          //   )
+          // ],
           automaticallyImplyLeading: true,
+
           titleSpacing: -5,
-          elevation: 0,
+          elevation: 1,
           title: Text(
             "Daftar Restoran",
             style: primaryTextStyle.copyWith(fontWeight: semiBold),
             // fontWeight: semiBold,
           ),
         ),
-        body: StreamBuilder<List<Restaurant>>(
-            stream: readRestaurant(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                // return Text('${snapshot.error}');
-                return Text("Something went wrong! ${snapshot.error}");
-              } else if (snapshot.hasData) {
-                final restaurants = snapshot.data!;
-                return ListView(
-                  children: restaurants.map(buildRestaurant).toList(),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              // return ListView(
-              //   children: [
-              //     search(),
-              //     const SizedBox(
-              //       height: 20,
-              //     ),
-              //     GestureDetector(
-              //       onTap: () {
-              //         Navigator.pushNamed(context, '/detail-restoran');
-              //       },
-              //       child: RestoranCard(),
-              //     ),
-              //     RestoranCard(),
-              //     RestoranCard(),
-              //     RestoranCard(),
-              //   ],
-              // );
-            })
+        body: getResto()
         // bottomNavigationBar: costumBottomNav(),
         );
   }
-
-  Stream<List<Restaurant>> readRestaurant() => FirebaseFirestore.instance
-      .collection('restaurant')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Restaurant.fromJson(doc.data())).toList());
 }

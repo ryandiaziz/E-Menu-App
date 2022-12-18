@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/presentation/pages/home/data.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
 import 'package:e_menu_app/shared/theme.dart';
@@ -48,31 +49,50 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   }
 
   @override
-  Widget build(BuildContext context) => Drawer(
-        backgroundColor: Colors.white,
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("users")
-              .doc(FirebaseAuth.instance.currentUser!.email)
-              .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            var dataUser = snapshot.data;
-            if (dataUser == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return SingleChildScrollView(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                buildHeader(context, dataUser),
-                buildMenuItems(context, dataUser),
-              ],
-            ));
-          },
-        ),
-      );
+  Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user != null
+        ? Drawer(
+            backgroundColor: Colors.white,
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.email)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                var dataUser = snapshot.data;
+                if (dataUser == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return SingleChildScrollView(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    buildHeader(context, dataUser),
+                    buildMenuItems(context, dataUser),
+                  ],
+                ));
+              },
+            ),
+          )
+        : Drawer(
+            backgroundColor: Colors.white,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 370),
+              width: 50,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/auntentikasi');
+                },
+                child: Text('Login'),
+              ),
+            ),
+          );
+  }
 
   Widget buildHeader(BuildContext context, dataUser) {
     return Material(
@@ -80,14 +100,19 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/edit-profile-user');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => EditProfileUserPage(dataUser: dataUser),
+            ),
+          );
         },
         child: Container(
           decoration: BoxDecoration(
             color: secondaryColor,
             border: Border(
               bottom: BorderSide(
-                width: 3,
+                width: 1,
                 color: AppColor.placeholder.withOpacity(0.25),
               ),
             ),
@@ -134,6 +159,29 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         child: Wrap(
           runSpacing: 5,
           children: [
+            dataUser["isAdmin"] == true
+                ? ListTile(
+                    leading: Image.asset(
+                      'assets/icon/history.png',
+                      width: 22,
+                      color: secondsubtitleColor,
+                    ),
+                    title: Text(
+                      "Users & Restaurants Data",
+                      style: secondPrimaryTextStyle.copyWith(
+                          fontSize: 14, fontWeight: medium),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DataPage(),
+                        ),
+                      );
+                    },
+                  )
+                : SizedBox(),
             ListTile(
               leading: Image.asset(
                 'assets/icon/history.png',

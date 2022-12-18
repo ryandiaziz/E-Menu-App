@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,6 +19,65 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
   _ItemsCardCusState(this.idResto);
   String? idResto;
   double? rating;
+  int sumRating = 0;
+  int? countRating;
+  double? hasilRating;
+
+  Future addRatingData() async {
+    int date = (DateTime.now().millisecondsSinceEpoch);
+    var docRating = FirebaseFirestore.instance.collection('ratings').doc();
+
+    await docRating.set({
+      "idUser": FirebaseAuth.instance.currentUser!.email,
+      "idMenu": widget.dataItems['idMenu'],
+      "rating": rating,
+      "timestamp": date,
+    });
+  }
+
+  Future addMenuRating() async {
+    QuerySnapshot checkMenuRating = await FirebaseFirestore.instance
+        .collection('menu-rating')
+        .where('idMenu', isEqualTo: widget.dataItems['idMenu'])
+        .get();
+
+    if (checkMenuRating.docs.isEmpty) {
+      var addMenuRating =
+          FirebaseFirestore.instance.collection('menu-rating').doc();
+
+      await addMenuRating.set({
+        "idMenu": widget.dataItems['idMenu'],
+        "namaMenu": widget.dataItems['nama'],
+        "kategori": widget.dataItems['kategori'],
+      });
+    }
+  }
+
+  Future addRatingToMenu() async {
+    final menuRating = await FirebaseFirestore.instance
+        .collection('menu')
+        .doc(widget.dataItems['idMenu'])
+        .get();
+
+    setState(() {
+      sumRating = (rating! + menuRating['sumRating']).toInt();
+      countRating = (menuRating['countRating'] + 1).toInt();
+      double hasil = (sumRating / countRating!).toDouble();
+      String toString = hasil.toStringAsFixed(1);
+      hasilRating = double.parse(toString);
+    });
+    var upadateCart = FirebaseFirestore.instance
+        .collection('menu')
+        .doc(widget.dataItems['idMenu']);
+
+    upadateCart.update({
+      'sumRating': sumRating,
+      'countRating': countRating,
+      'rating': hasilRating,
+      // 'quantityPrice': newPrice
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget buildRating() {
@@ -53,24 +114,29 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
               ),
               actions: [
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
+                      await addRatingData();
+                      await addMenuRating();
+                      await addRatingToMenu();
                     },
                     child: const Text('OK'))
               ],
             ));
 
     return Container(
-      margin: const EdgeInsets.only(
-        // top: 10,
-        bottom: 10,
-      ),
       padding: const EdgeInsets.symmetric(
-        horizontal: 16,
+        horizontal: 10,
         vertical: 10,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: AppColor.placeholder.withOpacity(0.25),
+          ),
+        ),
       ),
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,54 +197,84 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                 ],
               ),
               const Expanded(child: SizedBox()),
-              idResto == null
-                  ? rating != null
-                      ? Row(
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("ratings")
+                    .where('idUser',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.email)
+                    .where('idMenu', isEqualTo: widget.dataItems['idMenu'])
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: priceColor,
+                      ),
+                    );
+                  }
+                  //  var data = snapshot.data;
+                  if (snapshot.data!.docs.isEmpty) {
+                    return idResto == null
+                        ? InkWell(
+                            onTap: () {
+                              showRating();
+                            },
+                            child: Container(
+                              width: 47,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                color: secondsubtitleColor,
+                              ),
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                top: 5,
+                                bottom: 5,
+                                right: 10,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text('rate',
+                                      style: secondaryTextStyle.copyWith(
+                                          fontSize: 12, fontWeight: bold)),
+                                ],
+                              ),
                             ),
-                            SizedBox(
+                          )
+                        : const SizedBox();
+                  }
+                  return idResto == null
+                      ? Row(
+                          children: [
+                            Image.asset(
+                              "assets/icon/icon_star.png",
+                              width: 16,
+                            ),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text('Sudah dinilai'),
+                            const Text(
+                              'Sudah dinilai',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              // softWrap: false,
+                            ),
                           ],
                         )
-                      : InkWell(
-                          onTap: () {
-                            showRating();
-                          },
-                          child: Container(
-                            width: 47,
-                            decoration: BoxDecoration(
-                              // border: Border.all(color: priceColor, width: 0.5),
-                              borderRadius: const BorderRadius.only(
-                                  bottomRight: Radius.circular(15),
-                                  bottomLeft: Radius.circular(15)),
-                              color: secondsubtitleColor,
-                            ),
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              top: 5,
-                              bottom: 5,
-                              right: 10,
-                            ),
-                            child: Column(
-                              children: [
-                                Text('rate',
-                                    style: secondaryTextStyle.copyWith(
-                                        fontSize: 12, fontWeight: bold)),
-                              ],
-                            ),
-                          ),
-                        )
-                  : const SizedBox(),
+                      : SizedBox();
+                  // return ElevatedButton(
+                  //     onPressed: () {
+                  //       print(dataRating[0]['rating']);
+                  //     },
+                  //     child: Text('data'));
+                },
+              )
             ],
           ),
-          Divider(
-            thickness: 1,
-            color: AppColor.placeholder.withOpacity(0.25),
+          const SizedBox(
+            height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,10 +298,6 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                     priceTextStyle.copyWith(fontWeight: semiBold, fontSize: 14),
               ),
             ],
-          ),
-          Divider(
-            thickness: 1,
-            color: AppColor.placeholder.withOpacity(0.25),
           ),
         ],
       ),

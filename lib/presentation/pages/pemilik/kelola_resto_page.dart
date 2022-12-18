@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/saldo_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -249,14 +250,33 @@ class _KelolaRestoPageState extends State<KelolaRestoPage> {
                 child: menuItem("Data Restoran"),
               ),
               GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/menu-admin',
-                      arguments: _idResto,
-                    );
-                  },
-                  child: menuItem("Menu Saya")),
+                onTap: () {
+                  // Navigator.pushNamed(
+                  //   context,
+                  //   '/saldo-page',
+                  //   arguments: _idResto,
+                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SaldoPage(
+                        idResto: _idResto,
+                      ),
+                    ),
+                  );
+                },
+                child: menuItem("Saldo"),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/menu-admin',
+                    arguments: _idResto,
+                  );
+                },
+                child: menuItem("Menu Saya"),
+              ),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(

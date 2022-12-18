@@ -1,51 +1,172 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/graphic_page.dart';
+import 'package:e_menu_app/presentation/card/order_cus_cart.dart';
+import 'package:e_menu_app/presentation/pages/customer/rincian_pesanan.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
-import '../../../models/menu_model.dart';
-import 'edit_menu_page.dart';
+import '../pemilik/edit_menu_page.dart';
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+class MenuKategoriPage extends StatefulWidget {
+  final dynamic dataMeja;
+  final String? kategori;
+  final String? namaResto;
+  final String? imgResto;
+  const MenuKategoriPage({
+    this.dataMeja,
+    this.kategori,
+    this.namaResto,
+    this.imgResto,
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<MenuKategoriPage> createState() => _MenuKategoriPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuKategoriPageState extends State<MenuKategoriPage> {
+  var firestoreInstance = FirebaseFirestore.instance;
   ScrollController controller = ScrollController();
+  List menu = [];
 
-  Future addItemsToOrder(dynamic dataCart, int countCart) async {
-    for (var i = 0; i < countCart; i++) {
-      var docCheckout =
-          FirebaseFirestore.instance.collection('menu').doc(dataCart[i]['id']);
+  Future addToCart(menu) async {
+    QuerySnapshot checkCart = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection('cart')
+        .where('idMenu', isEqualTo: menu['id'])
+        .get();
 
-      docCheckout.set({
-        "id": dataCart[i]['id'],
-        "nama": dataCart[i]['nama'],
-        "harga": dataCart[i]['harga'],
-        "kategori": dataCart[i]["kategori"],
-        "imageUrl": dataCart[i]["imageUrl"],
-        "idResto": dataCart[i]['idResto'],
+    if (checkCart.docs.isEmpty) {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc();
+
+      await docCart.set({
+        'id': docCart.id,
+        "noMeja": widget.dataMeja['noMeja'],
+        "idResto": widget.dataMeja['idResto'],
+        "namaResto": widget.namaResto,
+        "imgResto": widget.imgResto,
+        "name": menu['nama'],
+        "hargaAsli": (menu['harga']),
+        "harga": (menu['harga']),
+        "kategori": menu["kategori"],
+        "imageUrl": menu["imageUrl"],
+        'idMenu': menu['id'],
+        "quantity": 1,
+        "quantityPrice": null,
+        "cQP": null
+      });
+    } else {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc(checkCart.docs[0]['id']);
+      await docCart.update({
+        'quantity': checkCart.docs[0]['quantity'] + 1,
       });
     }
-
-    // Navigator.pushReplacementNamed(context, '/profile-ad');
-    // Navigator.pop(context);
-    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //   content: const Text('Daftar Berhasil'),
-    //   backgroundColor: priceColor,
-    // ));
   }
 
   @override
   Widget build(BuildContext context) {
-    String idResto = ModalRoute.of(context)!.settings.arguments as String;
+    Widget bottomSheetDetail(dataMenu) {
+      return Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 20,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(25),
+          ),
+          color: secondaryColor,
+        ),
+        child: Container(
+          margin:
+              const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //Baris 1
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(
+                    dataMenu["imageUrl"],
+                    width: 100,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        dataMenu["nama"],
+                        style: titleTextStyle.copyWith(
+                            fontSize: 22, fontWeight: bold),
+                      ),
+                      Text(
+                        dataMenu["kategori"],
+                        style: subtitleTextStyle.copyWith(fontSize: 18),
+                      ),
+                      Text(
+                        NumberFormat.currency(
+                          locale: 'id',
+                          symbol: 'Rp ',
+                          decimalDigits: 0,
+                        ).format(
+                          (dataMenu["harga"]),
+                        ),
+                        style: priceTextStyle.copyWith(
+                            fontSize: 20, fontWeight: bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              Container(
+                width: double.infinity,
+                height: 50,
+                margin: const EdgeInsets.only(
+                  top: 40,
+                ),
+                child: TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: priceColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        )),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      addToCart(dataMenu);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(seconds: 1),
+                        content: const Text('Ditambahkan Ke Keranjang'),
+                        backgroundColor: priceColor,
+                      ));
+                    },
+                    child: Text(
+                      "Tambahkan ke Keranjang",
+                      style: secondaryTextStyle.copyWith(
+                          fontSize: 18, fontWeight: semiBold),
+                    )),
+              )
+            ],
+          ),
+        ),
+      );
+    }
 
     Widget buildMenu(dataMenu, countMenu) {
       return Container(
@@ -64,12 +185,11 @@ class _MenuPageState extends State<MenuPage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // mySheet(menu[index]);
-                  // showModalBottomSheet(
-                  //   isScrollControlled: true,
-                  //   context: context,
-                  //   builder: (builder) => bottomSheetDetail(menu[index]),
-                  // );
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (builder) => bottomSheetDetail(dataMenu[index]),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -110,59 +230,6 @@ class _MenuPageState extends State<MenuPage> {
                               alignment: Alignment.topCenter,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => EditMenu(
-                                    dataMenu: dataMenu[index],
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: priceColor,
-                              ),
-                              margin: const EdgeInsets.only(top: 10, left: 10),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                              bottom: 70,
-                              child: GestureDetector(
-                                onTap: () {
-                                  FirebaseFirestore.instance
-                                      .collection('menu')
-                                      .doc(dataMenu[index]['id'])
-                                      .delete();
-                                },
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: alertColor,
-                                  ),
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 10),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ))
                         ],
                       ),
                       Expanded(
@@ -237,7 +304,8 @@ class _MenuPageState extends State<MenuPage> {
       return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("menu")
-            .where('idResto', isEqualTo: idResto)
+            .where('idResto', isEqualTo: widget.dataMeja['idResto'])
+            .where('kategori', isEqualTo: widget.kategori)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -263,49 +331,30 @@ class _MenuPageState extends State<MenuPage> {
       );
     }
 
-    //
     return Scaffold(
-        backgroundColor: secondaryColor,
-        appBar: AppBar(
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ChartPage(idResto),
-                  ),
-                );
-              },
-              child: Icon(
-                CupertinoIcons.graph_circle_fill,
-                color: secondsubtitleColor,
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-          // centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: secondsubtitleColor,
-            ),
-          ),
-          automaticallyImplyLeading: true,
-          titleSpacing: -5,
-          elevation: 1,
-          title: Text(
-            'Menu Saya',
-            style: primaryTextStyle.copyWith(fontWeight: semiBold),
-            // fontWeight: semiBold,
+      backgroundColor: secondaryColor,
+      appBar: AppBar(
+        // centerTitle: true,
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: secondsubtitleColor,
           ),
         ),
-        body: getMenu());
+        automaticallyImplyLeading: true,
+        titleSpacing: -5,
+        elevation: 1,
+        title: Text(
+          widget.kategori!,
+          style: primaryTextStyle.copyWith(fontWeight: semiBold),
+          // fontWeight: semiBold,
+        ),
+      ),
+      body: getMenu(),
+    );
   }
 }

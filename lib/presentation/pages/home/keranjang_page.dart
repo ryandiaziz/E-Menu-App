@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/api/api_base_helper.dart';
+import 'package:e_menu_app/presentation/pages/home/pembayaran.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
+import 'package:e_menu_app/api/api_base_helper.dart';
+import 'package:e_menu_app/api/api_response.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 class BagPage extends StatefulWidget {
   dynamic dataMeja;
@@ -19,6 +25,7 @@ class _BagPageState extends State<BagPage> {
     this.dataUser,
   );
   var firestoreInstance = FirebaseFirestore.instance;
+  ApiBaseHelper api = ApiBaseHelper();
   int? newPrice;
   dynamic dataMeja;
   dynamic dataUser;
@@ -30,9 +37,12 @@ class _BagPageState extends State<BagPage> {
   String? idOrder;
   int? item;
   int totalItems = 0;
+  String? pembayaran;
+  bool? isPay;
 
   //Fungsi Menambahkah Data Pesanan
-  Future addOrder(dynamic dataCart, int countCart) async {
+  Future addOrder(
+      dynamic dataCart, int countCart, bool isPay, String payMethod) async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     String date = dateFormat.format(DateTime.now());
     var docOrder = FirebaseFirestore.instance.collection('order').doc();
@@ -40,6 +50,8 @@ class _BagPageState extends State<BagPage> {
 
     await docOrder.set({
       "id": docOrder.id,
+      "idTransaksi": null,
+      'payMethod': payMethod,
       "namaPemesan": dataUser[0]['name'],
       "imgPemesan": dataUser[0]['imageUrl'],
       "emailPemesan": dataUser[0]['email'],
@@ -51,7 +63,7 @@ class _BagPageState extends State<BagPage> {
       "namaResto": dataCart[0]['namaResto'],
       "imgResto": dataCart[0]['imgResto'],
       "status": false,
-      "bayar": false,
+      "isPay": isPay,
     });
 
     setState(() {
@@ -82,6 +94,7 @@ class _BagPageState extends State<BagPage> {
         "kuantitas": dataCart[i]['quantity'],
         "kategori": dataCart[i]["kategori"],
         "imageUrl": dataCart[i]["imageUrl"],
+        "idMenu": dataCart[i]['idMenu'],
       });
     }
 
@@ -104,137 +117,261 @@ class _BagPageState extends State<BagPage> {
     }
   }
 
+  int? selectedValue;
+
   @override
   Widget build(BuildContext context) {
     Widget bottomSheetCheckout(dynamic dataCart, int countCart) {
-      return Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(),
-                Text(
-                  "Checkout",
-                  style: primaryTextStyle.copyWith(
-                      fontWeight: semiBold, fontSize: 22),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    setState(() {
-                      harga = 0;
-                      totalHarga = 0;
-                      item = 0;
-                      totalItems = 0;
-                    });
-                  },
-                  child: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Nama Pemesan',
-                    style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataUser[0]['name'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Email', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataUser[0]['email'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  dataMeja['noMeja'],
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Items', style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  '$totalItems',
-                  style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Total Harga',
-                    style: subtitleTextStyle.copyWith(fontSize: 14)),
-                Text(
-                  NumberFormat.currency(
-                    locale: 'id',
-                    symbol: 'Rp ',
-                    decimalDigits: 0,
-                  ).format((totalHarga)),
-                  style: priceTextStyle.copyWith(
-                      fontWeight: semiBold, fontSize: 14),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              height: 50,
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  await addOrder(dataCart, countCart);
-                  await addItemsToOrder(dataCart, countCart);
-                  await deleteCart(dataCart, countCart);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: priceColor,
-                  elevation: 3,
-                ),
+      return StatefulBuilder(builder: (BuildContext context,
+          StateSetter setState /*You can rename this!*/) {
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(),
+                  Text(
+                    "Checkout",
+                    style: primaryTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 22),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        harga = 0;
+                        totalHarga = 0;
+                        item = 0;
+                        totalItems = 0;
+                      });
+                    },
+                    child: const Icon(Icons.close),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
-      );
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              RadioListTile<int>(
+                  title: const Text('Go-Pay'),
+                  value: 0,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = 'gopay';
+                      })),
+              RadioListTile<int>(
+                  title: const Text('Bank Permata'),
+                  value: 1,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = 'permata';
+                      })),
+              RadioListTile<int>(
+                  title: const Text('COD'),
+                  value: 2,
+                  groupValue: selectedValue,
+                  onChanged: (value) => setState(() {
+                        selectedValue = value!;
+                        pembayaran = 'cod';
+                      })),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Nama Pemesan',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataUser[0]['name'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Email',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataUser[0]['email'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    dataMeja['noMeja'],
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Items',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    '$totalItems',
+                    style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Harga',
+                      style: subtitleTextStyle.copyWith(fontSize: 14)),
+                  Text(
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp ',
+                      decimalDigits: 0,
+                    ).format((totalHarga)),
+                    style: priceTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 14),
+                  ),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (pembayaran == 'gopay') {
+                      const uuid = Uuid();
+                      String _idTransaksi = uuid.v1();
+                      Map data = {
+                        "payment_type": "gopay",
+                        "transaction_details": {
+                          "order_id": _idTransaksi,
+                          "gross_amount": totalHarga
+                        },
+                        // "item_details": [
+                        //   {
+                        //     "id": dataMeja['idResto'],
+                        //     "price": totalHarga - 1,
+                        //     "quantity": totalItems,
+                        //     "name": dataMeja['noMeja']
+                        //   }
+                        // ],
+                        "customer_details": {
+                          "first_name": dataUser[0]['name'],
+                          "last_name": "",
+                          "email": dataUser[0]['email'],
+                          "phone": dataUser[0]['phone']
+                        },
+                        "gopay": {
+                          "enable_callback": true,
+                          "callback_url": "someapps://callback"
+                        },
+                        "tiket_id": _idTransaksi,
+                        'nama': dataUser[0]['name']
+                      };
+
+                      var body = json.encode(data);
+                      final response = await api.post(
+                          "http://10.140.216.225:3000/order/charge", body);
+                      // final dataResponse = json.decode(response);
+                      // print('==========\n');
+                      // print(dataResponse['status']);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PembayaranPage(
+                            dataResponse: response,
+                            totalHarga: totalHarga,
+                            idTransaksi: _idTransaksi,
+                            payMethod: 'gopay',
+                            dataUser: dataUser,
+                            totalItems: totalItems,
+                            dataCart: dataCart,
+                            countCart: countCart,
+                          ),
+                        ),
+                      );
+                    } else if (pembayaran == 'permata') {
+                      const uuid = Uuid();
+                      String _idTransaksi = uuid.v1();
+                      Map data = {
+                        "payment_type": "bank_transfer",
+                        "bank_transfer": {"bank": "permata"},
+                        "transaction_details": {
+                          "order_id": _idTransaksi,
+                          "gross_amount": totalHarga
+                        },
+                        "tiket_id": _idTransaksi,
+                        "nama": dataUser[0]['name']
+                      };
+
+                      var body = json.encode(data);
+                      final response = await api.post(
+                          "http://10.140.216.225:3000/order/charge", body);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PembayaranPage(
+                            dataResponse: response,
+                            totalHarga: totalHarga,
+                            idTransaksi: _idTransaksi,
+                            payMethod: 'permata',
+                            dataUser: dataUser,
+                            totalItems: totalItems,
+                            countCart: countCart,
+                            dataCart: dataCart,
+                          ),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        isPay = false;
+                      });
+                      await addOrder(dataCart, countCart, isPay!, 'cod');
+                      await addItemsToOrder(dataCart, countCart);
+                      await deleteCart(dataCart, countCart);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    }
+                    //
+
+                    //
+                  },
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: priceColor,
+                    elevation: 3,
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      });
     }
 
     Widget costumBottomNav(dynamic dataCart, int countCart) {
@@ -410,7 +547,7 @@ class _BagPageState extends State<BagPage> {
                               const SizedBox(
                                 height: 3,
                               ),
-                              dataCart[index]['quantityPrice'] == null
+                              dataCart[index]['cQP'] == null
                                   ? Text(
                                       NumberFormat.currency(
                                         locale: 'id',
@@ -526,7 +663,8 @@ class _BagPageState extends State<BagPage> {
 
                                     upadate.update({
                                       'quantity': quantity,
-                                      'quantityPrice': newPrice
+                                      'quantityPrice': newPrice,
+                                      'cQP': 0
                                     });
                                   });
                                 },
@@ -557,16 +695,21 @@ class _BagPageState extends State<BagPage> {
             .where('idResto', isEqualTo: dataMeja['idResto'])
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          dynamic dataCart = snapshot.data?.docs;
-          int? countCart = snapshot.data?.docs.length;
-
-          if (dataCart == null) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
                 color: priceColor,
               ),
             );
           }
+
+          if (snapshot.data!.docs.isEmpty) {
+            return emptyCart();
+          }
+
+          dynamic dataCart = snapshot.data?.docs;
+          int? countCart = snapshot.data?.docs.length;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -584,7 +727,7 @@ class _BagPageState extends State<BagPage> {
         centerTitle: true,
         backgroundColor: secondaryColor,
         automaticallyImplyLeading: false,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           "Cart",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),

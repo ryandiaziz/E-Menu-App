@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uuid/uuid.dart';
 
 class BukaMenuPage extends StatefulWidget {
   const BukaMenuPage({Key? key}) : super(key: key);
@@ -272,9 +271,7 @@ class _BukaMenuPageState extends State<BukaMenuPage> {
                 borderRadius: BorderRadius.circular(10),
               )),
           onPressed: () async {
-            setState(() {
-              var isResto = const Uuid();
-            });
+            setState(() {});
             await _upload('${image?.path}');
             final dataresto = Restaurant(
               name: namarestoranC.text,

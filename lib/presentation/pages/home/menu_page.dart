@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
+import 'menu_kategori.dart';
+
 class MenuPage extends StatefulWidget {
   dynamic dataMeja;
   MenuPage({this.dataMeja, Key? key}) : super(key: key);
@@ -26,15 +28,14 @@ class _MenuPageState extends State<MenuPage> {
   // List meja = [];
   String? namaResto;
   String? imgResto;
-  String? idCart;
+
   String? idPesanan;
   int kuantitas = 1;
 
   fetchMenu() async {
     QuerySnapshot qn = await firestoreInstance
-        .collection("restaurants")
-        .doc(dataMeja['idResto'])
-        .collection('menu')
+        .collection("menu")
+        .where('idResto', isEqualTo: dataMeja['idResto'])
         .get();
     setState(() {
       for (int i = 0; i < qn.docs.length; i++) {
@@ -44,6 +45,8 @@ class _MenuPageState extends State<MenuPage> {
           "kategori": qn.docs[i]["kategori"],
           "harga": qn.docs[i]["harga"].toString(),
           "imageUrl": qn.docs[i]["imageUrl"],
+          "rating": qn.docs[i]["rating"],
+          "countRating": qn.docs[i]["countRating"],
         });
       }
     });
@@ -78,70 +81,64 @@ class _MenuPageState extends State<MenuPage> {
     super.initState();
   }
 
-  // Future addToCart(menu) async {
-  //   final FirebaseAuth _auth = FirebaseAuth.instance;
-  //   var currentUser = _auth.currentUser;
-  //   CollectionReference _collectionRef =
-  //       FirebaseFirestore.instance.collection("users");
-  //   return _collectionRef.doc(currentUser!.email).collection("cart").doc().set({
-  //     "id": _collectionRef.id,
-  //     "noMeja": dataMeja['noMeja'],
-  //     "idResto": dataMeja['idResto'],
-  //     "name": menu['nama'],
-  //     "harga": menu['harga'],
-  //     "kategori": menu["kategori"],
-  //     "imageUrl": menu["imageUrl"],
-  //   }).then((value) => ("Added to cart"));
-  // }
   Future addToCart(menu) async {
-    final docCart = FirebaseFirestore.instance
+    QuerySnapshot checkMenuRating = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('cart')
-        .doc();
-    setState(() {
-      idCart = docCart.id;
-    });
-    await docCart.set({
-      'id': idCart,
-      "noMeja": dataMeja['noMeja'],
-      "idResto": dataMeja['idResto'],
-      "namaResto": namaResto,
-      "imgResto": imgResto,
-      "name": menu['nama'],
-      "hargaAsli": int.parse(menu['harga']),
-      "harga": int.parse(menu['harga']),
-      "kategori": menu["kategori"],
-      "imageUrl": menu["imageUrl"],
-      "quantity": 1,
-      "quantityPrice": null,
-    });
+        .where('idMenu', isEqualTo: menu['id'])
+        .get();
+
+    // QuerySnapshot checkTotal = await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(FirebaseAuth.instance.currentUser!.email)
+    //     .collection('total')
+    //     .where('idResto', isEqualTo: dataMeja['idResto'])
+    //     .get();
+
+    if (checkMenuRating.docs.isEmpty) {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc();
+      // final docTotal = FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(FirebaseAuth.instance.currentUser!.email)
+      //     .collection('total')
+      //     .doc();
+
+      await docCart.set({
+        'id': docCart.id,
+        "noMeja": dataMeja['noMeja'],
+        "idResto": dataMeja['idResto'],
+        "namaResto": namaResto,
+        "imgResto": imgResto,
+        "name": menu['nama'],
+        "hargaAsli": int.parse(menu['harga']),
+        "harga": int.parse(menu['harga']),
+        "kategori": menu["kategori"],
+        "imageUrl": menu["imageUrl"],
+        'idMenu': menu['id'],
+        "quantity": 1,
+        "cQP": null,
+        "quantityPrice": null,
+      });
+    } else {
+      final docCart = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('cart')
+          .doc(checkMenuRating.docs[0]['id']);
+      await docCart.update({
+        // 'cQP': 0,
+        'quantity': checkMenuRating.docs[0]['quantity'] + 1,
+        // 'quantityPrice':
+        //     checkMenuRating.docs[0]['quantityPrice'] + int.parse(menu['harga'])
+      });
+    }
   }
 
-//   Future addToCart(menu) async {
-//     final docCart = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.email).collection('cart').doc();
-//     setState(() {
-//       idCart = docCart.id;
-//     });
-
-//     await docCart.set({
-//       'id': idCart,
-//       "noMeja": dataMeja['noMeja'],
-//       "idResto": dataMeja['idResto'],
-//       "name": menu['nama'],
-//       "harga": menu['harga'],
-//       "kategori": menu["kategori"],
-//       "imageUrl": menu["imageUrl"],
-//     });
-
-//     // Navigator.pushReplacementNamed(context, '/profile-ad');
-//     // Navigator.pop(context);
-//     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//       content: const Text('Daftar Berhasil'),
-//       backgroundColor: priceColor,
-//     ));
-//   }
-// }
   void tambahKuantitas() {
     setState(() {
       kuantitas++;
@@ -180,7 +177,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     }
 
-    Widget scrollCategories(gambar, text) {
+    Widget scrollCategories(text) {
       return Container(
         margin: const EdgeInsets.only(top: 10),
         child: Row(
@@ -197,21 +194,10 @@ class _MenuPageState extends State<MenuPage> {
                   10,
                 ),
               ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    gambar,
-                    width: 24,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    text,
-                    style: secondaryTextStyle.copyWith(
-                        fontSize: 18, fontWeight: bold),
-                  )
-                ],
+              child: Text(
+                text,
+                style:
+                    secondaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
               ),
             ),
             const SizedBox(
@@ -407,7 +393,14 @@ class _MenuPageState extends State<MenuPage> {
                                 width: 5,
                               ),
                               Text(
-                                "4.8",
+                                '${menu[index]["rating"]}',
+                                style: titleTextStyle.copyWith(fontSize: 12),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                '(by ${menu[index]["countRating"]} users)',
                                 style: titleTextStyle.copyWith(fontSize: 12),
                               ),
                             ],
@@ -430,7 +423,7 @@ class _MenuPageState extends State<MenuPage> {
         centerTitle: true,
         backgroundColor: secondaryColor,
         automaticallyImplyLeading: false,
-        elevation: 0,
+        elevation: 1,
         leading: Stack(
           alignment: AlignmentDirectional.centerStart,
           children: [
@@ -463,23 +456,23 @@ class _MenuPageState extends State<MenuPage> {
           "Menu",
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search_rounded,
-                color: secondsubtitleColor,
-                size: 35,
-              )),
-          const SizedBox(
-            width: 5,
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {},
+        //       icon: Icon(
+        //         Icons.search_rounded,
+        //         color: secondsubtitleColor,
+        //         size: 35,
+        //       )),
+        //   const SizedBox(
+        //     width: 5,
+        //   )
+        // ],
       ),
       body: ListView(
         shrinkWrap: true,
         children: [
-          Text(namaResto ?? ''),
+          // Text(namaResto ?? ''),
           titleCatagories(),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -487,21 +480,63 @@ class _MenuPageState extends State<MenuPage> {
               margin: const EdgeInsets.only(left: 10),
               child: Row(
                 children: [
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
+                  //KATEGORI
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Makanan',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/img/image_burger.png",
+                      "Makanan",
+                    ),
                   ),
-                  scrollCategories(
-                    "assets/icon/icon_sandwich.png",
-                    "Sandwich",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Minuman',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/icon/icon_sandwich.png",
+                      "Minuman",
+                    ),
                   ),
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
-                  ),
-                  scrollCategories(
-                    "assets/img/image_burger.png",
-                    "Burger",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuKategoriPage(
+                            dataMeja: dataMeja,
+                            kategori: 'Cemilan',
+                            imgResto: imgResto,
+                            namaResto: namaResto,
+                          ),
+                        ),
+                      );
+                    },
+                    child: scrollCategories(
+                      // "assets/img/image_burger.png",
+                      "Cemilan",
+                    ),
                   ),
                 ],
               ),

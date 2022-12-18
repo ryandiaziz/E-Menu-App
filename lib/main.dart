@@ -5,6 +5,7 @@ import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/owner_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/pesanan_page.dart';
+import 'package:e_menu_app/presentation/pages/pemilik/saldo_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_meja_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/tambah_menu_page.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
@@ -22,7 +23,7 @@ import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
 import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 
-import 'presentation/pages/home/autentikasi.dart';
+import 'presentation/pages/home/autentifikasi.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/home/navigation.dart';
 import 'presentation/pages/home/onboarding_page.dart';
@@ -62,8 +63,9 @@ class MyApp extends StatelessWidget {
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),
           '/detail-product': (context) => const DetailProductPage(),
-          '/edit-profile-user': (context) => const EditProfileUserPage(),
+          // '/edit-profile-user': (context) => const EditProfileUserPage(),
           '/edit-profile-resto': (context) => const EditProfileRestoPage(),
+          // '/saldo-page': (context) => const SaldoPage(),
           // '/pesanan-page-admin': (context) => const PesananPage(),
           '/menu-admin': (context) => const MenuPage(),
           '/tambah-menu-admin': (context) => const TambahMenuPage(),

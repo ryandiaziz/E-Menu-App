@@ -33,6 +33,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
   File? image;
   String? imageUrl;
   String? iduser;
+  String? restoId;
 
   Future getImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
@@ -225,15 +226,11 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                   borderRadius: BorderRadius.circular(5),
                 )),
             onPressed: () async {
-              await _upload('${image?.path}');
-              final datamenu = Menu(
-                nama: _namaProdukC.text,
-                harga: int.parse(_hargaProdukC.text),
-                kategori: dropdownvalue,
-                imageUrl: '$imageUrl',
-                idResto: idResto,
-              );
-              createMenu(datamenu, idResto);
+              setState(() {
+                restoId = idResto;
+              });
+              vaildation();
+
               // Navigator.pushNamed(context, '/scanning-page');
             },
             child: Text(
@@ -262,7 +259,7 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
         titleSpacing: -5,
         elevation: 0,
         title: Text(
-          idResto,
+          'Tambah Menu',
           style: primaryTextStyle.copyWith(fontWeight: semiBold),
           // fontWeight: semiBold,
         ),
@@ -285,14 +282,21 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
                 controller: _namaProdukC,
                 hintText: 'Nama Menu',
                 keyBoardType: TextInputType.text,
+                read: false,
               ),
               CustomTextField(
                 image: "assets/icon/icon_price.png",
                 controller: _hargaProdukC,
                 hintText: "Harga",
                 keyBoardType: TextInputType.number,
+                read: false,
               ),
               buildCategory(),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       print(image);
+              //     },
+              //     child: Text('cek path')),
               submitMenu()
             ],
           ),
@@ -301,12 +305,56 @@ class _TambahMenuPageState extends State<TambahMenuPage> {
     );
   }
 
+  void vaildation() async {
+    if (image == null &&
+        _namaProdukC.text.isEmpty &&
+        _hargaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Lengkapi form untuk menambah menu!"),
+        ),
+      );
+    } else if (image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Tambahkan gambar menu!"),
+        ),
+      );
+    } else if (_namaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Masukkan nama menu!"),
+        ),
+      );
+    } else if (_hargaProdukC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 1),
+          backgroundColor: priceColor,
+          content: const Text("Masukkan harga menu!"),
+        ),
+      );
+    } else {
+      await _upload('${image?.path}');
+      final datamenu = Menu(
+        nama: _namaProdukC.text,
+        harga: int.parse(_hargaProdukC.text),
+        kategori: dropdownvalue,
+        imageUrl: '$imageUrl',
+        idResto: restoId!,
+      );
+      createMenu(datamenu, restoId!);
+    }
+  }
+
   Future createMenu(Menu datamenu, String idResto) async {
-    final docMenu = FirebaseFirestore.instance
-        .collection('restaurants')
-        .doc(idResto)
-        .collection('menu')
-        .doc();
+    final docMenu = FirebaseFirestore.instance.collection('menu').doc();
     datamenu.id = docMenu.id;
 
     final json = datamenu.toJson();

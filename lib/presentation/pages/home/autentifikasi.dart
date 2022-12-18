@@ -93,6 +93,80 @@ class _AutentikasiState extends State<Autentikasi> {
     }
   }
 
+  void vaildationSignIn() async {
+    if (sI_emaiC.text.isEmpty && sI_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text("Both Flied Are Empty"),
+        ),
+      );
+    } else if (sI_emaiC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(sI_emaiC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (sI_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (sI_PasswordC.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else {
+      signIn();
+    }
+  }
+
+  void vaildationSignUp() async {
+    if (sU_emaiC.text.isEmpty && sU_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text("Both Flied Are Empty"),
+        ),
+      );
+    } else if (sU_emaiC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email Is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(sU_emaiC.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Try Vaild Email"),
+        ),
+      );
+    } else if (sU_PasswordC.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password Is Empty"),
+        ),
+      );
+    } else if (sU_PasswordC.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password  Is Too Short"),
+        ),
+      );
+    } else {
+      signUp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget header() {
@@ -211,41 +285,46 @@ class _AutentikasiState extends State<Autentikasi> {
                   primaryTextStyle.copyWith(fontWeight: semiBold, fontSize: 16),
               tabs: myTab,
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height - 300,
-                child: TabBarView(children: [
-                  Column(
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 300,
+              child: TabBarView(children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
                         controller: sI_emaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
+                        read: false,
                       ),
                       passwordInput(sI_PasswordC),
                       _button('Sign In', () {
-                        signIn();
+                        vaildationSignIn();
                       })
                     ],
                   ),
-                  Column(
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
                         controller: sU_emaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
+                        read: false,
                       ),
                       passwordInput(sU_PasswordC),
                       _button('Continue', () {
-                        signUp();
+                        vaildationSignUp();
                       })
                     ],
-                  )
-                ]),
-              ),
+                  ),
+                )
+              ]),
             )
           ],
         ),
