@@ -60,7 +60,7 @@ dependencies:
   path_provider: null
   permission_handler: ^10.0.0
   provider: null
-  qr_code_scanner: null
+  qr_code_scanner: 1.0.0
   qr_flutter: null
   random_color: any
   screenshot: ^1.2.3

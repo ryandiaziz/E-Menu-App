@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/resto_cart%20.dart';
 import 'package:e_menu_app/presentation/pages/home/detail_restoran_page.dart';
@@ -9,8 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import '../../../widgets/drawer.dart';
-import 'package:dots_indicator/dots_indicator.dart';
-import 'navigation.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -26,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   List<String> carouselImages = [];
   List<String>? carouselRekom = [];
   List restaurants = [];
+  List rekomendasi = [];
   String? idUser;
   var firestoreInstance = FirebaseFirestore.instance;
   var dotPosition = 0;
@@ -45,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future sendData() async {
-    final url = Uri.parse("http://192.168.43.219:8000/api");
+    final url = Uri.parse("http://10.140.139.112:8000/api");
     await http.post(url, body: jsonEncode({'idUser': idUser}));
   }
 
@@ -60,12 +58,20 @@ class _HomePageState extends State<HomePage> {
             .collection('menu')
             .doc(recommendations['rekomendasi'][i])
             .get();
+        final resto = await FirebaseFirestore.instance
+            .collection('restaurants')
+            .doc(menu['idResto'])
+            .get();
 
         setState(() {
-          carouselRekom!.add(
-            menu['imageUrl'],
-          );
-          (menu['imageUrl']);
+          rekomendasi.add({
+            'nama': menu['nama'],
+            'idResto': menu['idResto'],
+            'imgUrl': menu['imageUrl'],
+            'rating': menu['rating'],
+            'countRating': menu['countRating'],
+            'namaResto': resto['name']
+          });
         });
       }
     }
@@ -75,12 +81,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      idUser = FirebaseAuth.instance.currentUser!.email;
       sendData();
       getRecommendations();
       fetchCarouselImages();
-      idUser = FirebaseAuth.instance.currentUser!.email;
     }
-
     super.initState();
   }
 
@@ -88,7 +93,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Widget buildTitle() {
       return Container(
-        margin: const EdgeInsets.all(20),
+        margin: const EdgeInsets.only(
+          left: 10,
+          bottom: 10,
+          right: 10,
+          top: 20,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -113,6 +123,136 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      );
+    }
+
+    Widget buildRekom() {
+      return Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(
+              bottom: 10,
+              left: 10,
+              top: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Rekomendasi",
+                  style: titleTextStyle.copyWith(
+                    fontSize: 20,
+                    fontWeight: bold,
+                  ),
+                ),
+                const SizedBox()
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 210,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              // physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: rekomendasi.length,
+              itemBuilder: (_, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            DetailRestoran(rekomendasi[index]['idResto']),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade500,
+                          blurRadius: 5.0,
+                          offset: const Offset(4, 4),
+                          spreadRadius: 1,
+                        ),
+                        const BoxShadow(
+                          color: Colors.white,
+                          offset: Offset(-4, -4),
+                          blurRadius: 15,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      bottom: 10,
+                    ),
+                    // padding: EdgeInsets.only(bo),
+                    width: 150,
+                    // height: 50,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                          child: Image.network(
+                            rekomendasi[index]["imgUrl"],
+                            width: double.infinity,
+                            height: 130,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                        Text(
+                          rekomendasi[index]['nama'],
+                          style: titleTextStyle.copyWith(
+                              fontSize: 18, fontWeight: bold),
+                        ),
+                        Text(
+                          rekomendasi[index]['namaResto'],
+                          style: subtitleTextStyle.copyWith(
+                              fontSize: 12, fontWeight: regular),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              "assets/icon/icon_star.png",
+                              width: 16,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '${rekomendasi[index]['rating']}',
+                              style: titleTextStyle.copyWith(fontSize: 12),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '(by ${rekomendasi[index]["countRating"]} users)',
+                              style: titleTextStyle.copyWith(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       );
     }
 
@@ -218,35 +358,35 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             width: 10,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                // dina PYbUTbBHl6BQenCNzZff
-                // ryan PnfLHMrrK5AX3zRMz6KB
-                // tin  E5Kqdoq5Lj0a0Ki2OiQ7
-                MaterialPageRoute(
-                  builder: (_) => NavigationPage(
-                    idMeja: 't92lMpBlgtzxYlulFISH',
-                  ),
-                ),
-              );
-            },
-            child: const Icon(Icons.menu_book),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, "/onboarding-page");
-            },
-            child: const Icon(Icons.logout),
-          ),
-          const SizedBox(
-            width: 10,
-          )
+          // GestureDetector(
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       // sabri GXlT5F05zPBT9a8hDJxB
+          //       // aby hZNZbzGDkuLZ3dD95L4X
+          //       // rhumbia  8V3z0yVONyrhd2hRT1xY
+          //       MaterialPageRoute(
+          //         builder: (_) => NavigationPage(
+          //           idMeja: 'hZNZbzGDkuLZ3dD95L4X',
+          //         ),
+          //       ),
+          //     );
+          //   },
+          //   child: const Icon(Icons.menu_book),
+          // ),
+          // const SizedBox(
+          //   width: 10,
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //     FirebaseAuth.instance.signOut();
+          //     Navigator.pushReplacementNamed(context, "/onboarding-page");
+          //   },
+          //   child: const Icon(Icons.logout),
+          // ),
+          // const SizedBox(
+          //   width: 10,
+          // )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -269,75 +409,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             // ElevatedButton(
             //     onPressed: () {
-            //       getRecommendations();
             //       sendData();
+            //       getRecommendations();
             //     },
-            //     child: const Text('Test')),
-            // carouselRekom!.isNotEmpty
-            //     ? Column(
-            //         children: [
-            //           Container(
-            //             // color: Colors.amber,
-            //             margin: const EdgeInsets.only(top: 10),
-            //             child: AspectRatio(
-            //               aspectRatio: 2.6 / 1.6,
-            //               child: CarouselSlider(
-            //                 items: carouselRekom!
-            //                     .map(
-            //                       (item) => Container(
-            //                         decoration: BoxDecoration(
-            //                           borderRadius: BorderRadius.circular(5),
-            //                           // color: Colors.amber,
-            //                         ),
-            //                         margin: const EdgeInsets.all(3.0),
-            //                         child: ClipRRect(
-            //                           borderRadius: const BorderRadius.all(
-            //                               Radius.circular(5.0)),
-            //                           child: Image.network(
-            //                             item,
-            //                             fit: BoxFit.cover,
-            //                             width: 300,
-            //                             height: 300,
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     )
-            //                     .toList(),
-            //                 options: CarouselOptions(
-            //                   autoPlay: false,
-            //                   enlargeCenterPage: true,
-            //                   viewportFraction: 0.8,
-            //                   enlargeStrategy: CenterPageEnlargeStrategy.height,
-            //                   onPageChanged: (val, carouselPageChangedReason) {
-            //                     setState(
-            //                       () {
-            //                         dotPosition = val;
-            //                       },
-            //                     );
-            //                   },
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //           DotsIndicator(
-            //             dotsCount:
-            //                 carouselImages.isEmpty ? 1 : carouselImages.length,
-            //             position: dotPosition.toDouble(),
-            //             decorator: DotsDecorator(
-            //               activeColor: priceColor,
-            //               color: priceColor.withOpacity(0.5),
-            //               spacing: const EdgeInsets.all(2),
-            //               activeSize: const Size(8, 8),
-            //               size: const Size(6, 6),
-            //             ),
-            //           ),
-            //         ],
-            //       )
-            //     : const SizedBox(
-            //         height: 10,
-            //       ),
+            //     child: Text('Cek')),
+            rekomendasi.isNotEmpty ? buildRekom() : const SizedBox(),
             buildTitle(),
-            getResto()
+            getResto(),
           ],
         ),
       ),

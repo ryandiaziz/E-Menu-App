@@ -37,7 +37,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
   String? idOrder;
   Future getStatus() async {
     final url = Uri.parse(
-        "http://192.168.43.219:3000/order/status/${widget.idTransaksi}");
+        "http://10.140.216.225:3000/order/status/${widget.idTransaksi}");
     final response = await http.get(url);
     return dataResponse = json.decode(response.body);
   }
@@ -186,7 +186,11 @@ class _PembayaranPageState extends State<PembayaranPage> {
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('GoPay'),
+                          Text(
+                            'GoPay',
+                            style: titleTextStyle.copyWith(
+                                fontSize: 18, fontWeight: bold),
+                          ),
                           Image.network(
                             'https://gopay.co.id/icon.png',
                             width: 30,
@@ -196,7 +200,11 @@ class _PembayaranPageState extends State<PembayaranPage> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Virtual Account'),
+                          Text(
+                            'Virtual Account',
+                            style: titleTextStyle.copyWith(
+                                fontSize: 18, fontWeight: bold),
+                          ),
                           Image.network(
                             'https://1.bp.blogspot.com/-L2iVgrayyhA/YGzwy2z5DfI/AAAAAAAAEmY/fxZIWA7r7X8g5qgYNXfVeWieoe0UKT3ygCLcBGAsYHQ/w1200-h630-p-k-no-nu/Logo%2BBank%2BPermata.png',
                             width: 100,
@@ -213,6 +221,8 @@ class _PembayaranPageState extends State<PembayaranPage> {
                     symbol: 'Rp ',
                     decimalDigits: 0,
                   ).format((widget.totalHarga)),
+                  style: priceTextStyle.copyWith(
+                      fontWeight: semiBold, fontSize: 14),
                 )
               ]));
     }

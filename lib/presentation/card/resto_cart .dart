@@ -16,9 +16,11 @@ class _RestoCardState extends State<RestoCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 10,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        bottom: 10,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,

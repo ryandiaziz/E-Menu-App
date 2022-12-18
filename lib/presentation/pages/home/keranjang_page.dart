@@ -292,7 +292,7 @@ class _BagPageState extends State<BagPage> {
 
                       var body = json.encode(data);
                       final response = await api.post(
-                          "http://192.168.43.219:3000/order/charge", body);
+                          "http://10.140.216.225:3000/order/charge", body);
                       // final dataResponse = json.decode(response);
                       // print('==========\n');
                       // print(dataResponse['status']);
@@ -328,7 +328,7 @@ class _BagPageState extends State<BagPage> {
 
                       var body = json.encode(data);
                       final response = await api.post(
-                          "http://192.168.43.219:3000/order/charge", body);
+                          "http://10.140.216.225:3000/order/charge", body);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
