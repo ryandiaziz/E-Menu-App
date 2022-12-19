@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 
 class RestoCard extends StatefulWidget {
   final dynamic dataResto;
