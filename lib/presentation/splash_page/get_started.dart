@@ -14,9 +14,10 @@ class GetStarted extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/img/image_splash.png"),
-                    fit: BoxFit.cover)),
+              image: DecorationImage(
+                  image: AssetImage("assets/img/image_splash.png"),
+                  fit: BoxFit.cover),
+            ),
           ),
           Container(
             margin: const EdgeInsets.only(left: 24, right: 24, bottom: 30),
