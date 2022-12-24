@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../pages/home/detail_restoran_page.dart';
@@ -45,7 +44,7 @@ class _SearchCardState extends State<SearchCard> {
     return GestureDetector(
       onTap: () async {
         await fetchResto(widget.data['idResto']);
-        print(resto);
+        // print(resto);
         Navigator.push(
           context,
           MaterialPageRoute(

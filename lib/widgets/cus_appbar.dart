@@ -28,7 +28,7 @@ class _CusAPpState extends State<CusAPp> {
       ),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.percent),
+          icon: const Icon(Icons.percent),
           onPressed: () {},
         ),
       ],

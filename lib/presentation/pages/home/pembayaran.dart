@@ -342,7 +342,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
       body: Column(
         children: [
           buildTotalHarga(),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
           // Text('${dataResponse['data']['transaction_status']}'),
           costumBottomNav(),
           // Text('${widget.hasil['data']['id']}'),

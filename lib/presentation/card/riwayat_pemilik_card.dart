@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 
 class RiwayatCardPe extends StatelessWidget {
+  const RiwayatCardPe({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

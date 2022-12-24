@@ -26,13 +26,11 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
         await FirebaseFirestore.instance.collection("HerbsProduct").get();
 
-    value.docs.forEach(
-      (element) {
-        productModels(element);
+    for (var element in value.docs) {
+      productModels(element);
 
-        newList.add(productModel!);
-      },
-    );
+      newList.add(productModel!);
+    }
     herbsProductList = newList;
     notifyListeners();
   }
@@ -51,12 +49,10 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
         await FirebaseFirestore.instance.collection("FreshProduct").get();
 
-    value.docs.forEach(
-      (element) {
-        productModels(element);
-        newList.add(productModel!);
-      },
-    );
+    for (var element in value.docs) {
+      productModels(element);
+      newList.add(productModel!);
+    }
     freshProductList = newList;
     notifyListeners();
   }
@@ -75,12 +71,10 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
         await FirebaseFirestore.instance.collection("RootProduct").get();
 
-    value.docs.forEach(
-      (element) {
-        productModels(element);
-        newList.add(productModel!);
-      },
-    );
+    for (var element in value.docs) {
+      productModels(element);
+      newList.add(productModel!);
+    }
     rootProductList = newList;
     notifyListeners();
   }

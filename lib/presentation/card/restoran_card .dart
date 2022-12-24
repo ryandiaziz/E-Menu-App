@@ -37,7 +37,7 @@ Widget restaurant(
             horizontal: 16,
             vertical: 10,
           ),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.amber,
           ),
           child: Column(

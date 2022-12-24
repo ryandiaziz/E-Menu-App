@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           '/qrscan': (context) => const QRScanPage(),
           '/home-page': (context) => const HomePage(),
           '/auntentikasi': (context) => const Autentikasi(),
-          '/restaurant-page': (context) => ListRestoran(),
+          '/restaurant-page': (context) => const ListRestoran(),
           // '/navigation-page': (context) => const NavigationPage(),
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),

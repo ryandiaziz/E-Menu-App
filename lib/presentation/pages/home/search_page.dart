@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/card/search_card.dart';
 import 'package:flutter/material.dart';
-
 import '../../../shared/theme.dart';
-import 'detail_restoran_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -73,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
                     var data = snapshot.data!.docs[index].data()
                         as Map<String, dynamic>;
                     if (name.isEmpty) {
-                      return SizedBox();
+                      return const SizedBox();
                       // return ListTile(
                       //   title: Text(
                       //     data['nama'],

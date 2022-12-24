@@ -1,8 +1,5 @@
 import 'package:e_menu_app/providers/google_sign_in.dart';
 import 'package:e_menu_app/widgets/change_screen.dart';
-import 'package:e_menu_app/widgets/custom_textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_menu_app/aplication/auth/cubit/auth_cubit.dart';
@@ -20,7 +17,7 @@ class SignIn extends StatefulWidget {
 String p =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-RegExp regExp = new RegExp(p);
+RegExp regExp = RegExp(p);
 
 class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
@@ -77,11 +74,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     Widget header() {
-      return Container(
-          // margin: const EdgeInsets.only(
-          //   top: 30,
-          // ),
-          child: Column(
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.asset(
@@ -92,7 +85,7 @@ class _SignInState extends State<SignIn> {
             height: 2,
           ),
         ],
-      ));
+      );
     }
 
     Widget googleSignIn() {
@@ -100,17 +93,17 @@ class _SignInState extends State<SignIn> {
         style: ElevatedButton.styleFrom(
             primary: Colors.white,
             onPrimary: Colors.black,
-            minimumSize: Size(double.infinity, 50)),
+            minimumSize: const Size(double.infinity, 50)),
         onPressed: () {
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
           provider.googleLogin();
         },
-        icon: FaIcon(
+        icon: const FaIcon(
           FontAwesomeIcons.google,
           color: Colors.amber,
         ),
-        label: Text("Login With Google"),
+        label: const Text("Login With Google"),
       );
     }
 

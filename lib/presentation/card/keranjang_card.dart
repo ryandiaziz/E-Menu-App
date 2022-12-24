@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 
 class BagCard extends StatefulWidget {
+  const BagCard({Key? key}) : super(key: key);
+
   @override
   State<BagCard> createState() => _BagCardState();
 }

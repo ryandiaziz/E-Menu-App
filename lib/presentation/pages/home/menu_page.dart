@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/pages/home/navigation.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:intl/intl.dart';
 // import 'package:e_menu_app/presentation/card/product_card.dart';
@@ -11,8 +10,8 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'menu_kategori.dart';
 
 class MenuPage extends StatefulWidget {
-  dynamic dataMeja;
-  MenuPage({this.dataMeja, Key? key}) : super(key: key);
+  final dynamic dataMeja;
+  const MenuPage({this.dataMeja, Key? key}) : super(key: key);
 
   @override
   State<MenuPage> createState() => _MenuPageState(dataMeja);

@@ -20,7 +20,7 @@ class MyButton extends StatelessWidget {
       child: ElevatedButton(
         child: Text(
           name,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         onPressed: onPressed,
       ),

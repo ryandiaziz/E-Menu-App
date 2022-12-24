@@ -1,9 +1,6 @@
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-
 import '../../../../aplication/auth/cubit/auth_cubit.dart';
 
 class ProfileCusPage extends StatefulWidget {
@@ -21,7 +18,6 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
     Widget header() {
       return BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          // TODO: implement listener
           if (state is AuthFailed) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(state.errorMessage),
@@ -42,7 +38,6 @@ class _ProfileCusPageState extends State<ProfileCusPage> {
           if (state is AuthLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is AuthSuccess) {
-            String iduser = state.user.id;
             return AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,

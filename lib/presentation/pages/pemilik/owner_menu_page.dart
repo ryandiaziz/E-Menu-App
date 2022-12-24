@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
-
-import '../../../models/menu_model.dart';
 import 'edit_menu_page.dart';
 
 class MenuPage extends StatefulWidget {
