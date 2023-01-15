@@ -8,7 +8,7 @@ import 'package:e_menu_app/presentation/pages/home/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import '../../../widgets/drawer.dart';
+import '../../widgets/drawer.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
