@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget fetchData(String collectionName) {
@@ -12,7 +11,7 @@ Widget fetchData(String collectionName) {
         .snapshots(),
     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
       if (snapshot.hasError) {
-        return Center(
+        return const Center(
           child: Text("Something is wrong"),
         );
       }
@@ -28,11 +27,11 @@ Widget fetchData(String collectionName) {
                 leading: Text(_documentSnapshot['name']),
                 title: Text(
                   "\$ ${_documentSnapshot['price']}",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.red),
                 ),
                 trailing: GestureDetector(
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     child: Icon(Icons.remove_circle),
                   ),
                   onTap: () {

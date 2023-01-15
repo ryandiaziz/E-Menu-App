@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-import '../presentation/pages/home/menu_page.dart';
 import '../presentation/pages/home/navigation.dart';
 
 class QRScanPage extends StatefulWidget {

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:e_menu_app/widgets/custom_textfield.dart';
-import 'package:e_menu_app/widgets/mytextformfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -199,7 +197,7 @@ class _UserFormState extends State<UserForm> {
                                     suffixIcon: IconButton(
                                       onPressed: () =>
                                           _selectDateFromPicker(context),
-                                      icon: Icon(Icons.arrow_drop_down),
+                                      icon: const Icon(Icons.arrow_drop_down),
                                     ),
                                   ),
                                 ),

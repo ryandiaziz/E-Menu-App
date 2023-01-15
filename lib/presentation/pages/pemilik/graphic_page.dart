@@ -14,7 +14,6 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
-  late List<GDPData> _chartData;
   late TooltipBehavior _tooltipBehavior;
   List<GDPData> chartData = <GDPData>[];
 
@@ -39,7 +38,6 @@ class _ChartPageState extends State<ChartPage> {
         setState(() {});
       });
     });
-    _chartData = getChartData();
     _tooltipBehavior = TooltipBehavior(enable: true);
     super.initState();
   }
@@ -99,7 +97,7 @@ class _ChartPageState extends State<ChartPage> {
             dataSource: chartData,
             xValueMapper: (GDPData data, _) => data.nama,
             yValueMapper: (GDPData data, _) => data.orders,
-            dataLabelSettings: DataLabelSettings(isVisible: true),
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
             enableTooltip: true,
           )
         ],

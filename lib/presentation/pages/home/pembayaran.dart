@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'home_page.dart';
+import '../../../feature/home/home_page.dart';
 
 class PembayaranPage extends StatefulWidget {
   final dynamic dataResponse;
@@ -342,7 +342,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
       body: Column(
         children: [
           buildTotalHarga(),
-          Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
           // Text('${dataResponse['data']['transaction_status']}'),
           costumBottomNav(),
           // Text('${widget.hasil['data']['id']}'),

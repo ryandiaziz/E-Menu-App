@@ -1,17 +1,10 @@
-import 'package:e_menu_app/presentation/card/belum_dibuat_card.dart';
-import 'package:e_menu_app/presentation/card/riwayat_pemilik_card.dart';
-import 'package:e_menu_app/presentation/pages/home/home_page.dart';
 import 'package:e_menu_app/presentation/pages/home/user_form.dart';
-import 'package:e_menu_app/presentation/sign_in/sign_in_page.dart';
-import 'package:e_menu_app/presentation/sign_up/sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../../widgets/change_screen.dart';
-import '../../../widgets/custom_textfield.dart';
+import '../../widgets/custom_textfield.dart';
 
 class Autentikasi extends StatefulWidget {
   const Autentikasi({Key? key}) : super(key: key);
@@ -31,10 +24,10 @@ class _AutentikasiState extends State<Autentikasi> {
     const Tab(text: 'Sign Up'),
   ];
 
-  TextEditingController sI_emaiC = TextEditingController();
-  TextEditingController sI_PasswordC = TextEditingController();
-  TextEditingController sU_emaiC = TextEditingController();
-  TextEditingController sU_PasswordC = TextEditingController();
+  TextEditingController sIemaiC = TextEditingController();
+  TextEditingController sIPasswordC = TextEditingController();
+  TextEditingController sUemaiC = TextEditingController();
+  TextEditingController sUPasswordC = TextEditingController();
   // bool isLoading = false;
 
   bool _isHiddenPassword = true;
@@ -49,7 +42,7 @@ class _AutentikasiState extends State<Autentikasi> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: sU_emaiC.text, password: sU_PasswordC.text);
+              email: sUemaiC.text, password: sUPasswordC.text);
       var authCredential = userCredential.user;
       (authCredential!.uid);
       if (authCredential.uid.isNotEmpty) {
@@ -74,7 +67,7 @@ class _AutentikasiState extends State<Autentikasi> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-              email: sI_emaiC.text, password: sI_PasswordC.text);
+              email: sIemaiC.text, password: sIPasswordC.text);
       var authCredential = userCredential.user;
       (authCredential!.uid);
       if (authCredential.uid.isNotEmpty) {
@@ -94,32 +87,32 @@ class _AutentikasiState extends State<Autentikasi> {
   }
 
   void vaildationSignIn() async {
-    if (sI_emaiC.text.isEmpty && sI_PasswordC.text.isEmpty) {
+    if (sIemaiC.text.isEmpty && sIPasswordC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(seconds: 1),
           content: Text("Both Flied Are Empty"),
         ),
       );
-    } else if (sI_emaiC.text.isEmpty) {
+    } else if (sIemaiC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Email Is Empty"),
         ),
       );
-    } else if (!regExp.hasMatch(sI_emaiC.text)) {
+    } else if (!regExp.hasMatch(sIemaiC.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please Try Vaild Email"),
         ),
       );
-    } else if (sI_PasswordC.text.isEmpty) {
+    } else if (sIPasswordC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Password Is Empty"),
         ),
       );
-    } else if (sI_PasswordC.text.length < 6) {
+    } else if (sIPasswordC.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Password  Is Too Short"),
@@ -131,32 +124,32 @@ class _AutentikasiState extends State<Autentikasi> {
   }
 
   void vaildationSignUp() async {
-    if (sU_emaiC.text.isEmpty && sU_PasswordC.text.isEmpty) {
+    if (sUemaiC.text.isEmpty && sUPasswordC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(seconds: 1),
           content: Text("Both Flied Are Empty"),
         ),
       );
-    } else if (sU_emaiC.text.isEmpty) {
+    } else if (sUemaiC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Email Is Empty"),
         ),
       );
-    } else if (!regExp.hasMatch(sU_emaiC.text)) {
+    } else if (!regExp.hasMatch(sUemaiC.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please Try Vaild Email"),
         ),
       );
-    } else if (sU_PasswordC.text.isEmpty) {
+    } else if (sUPasswordC.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Password Is Empty"),
         ),
       );
-    } else if (sU_PasswordC.text.length < 6) {
+    } else if (sUPasswordC.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Password  Is Too Short"),
@@ -294,12 +287,12 @@ class _AutentikasiState extends State<Autentikasi> {
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
-                        controller: sI_emaiC,
+                        controller: sIemaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
                         read: false,
                       ),
-                      passwordInput(sI_PasswordC),
+                      passwordInput(sIPasswordC),
                       _button('Sign In', () {
                         vaildationSignIn();
                       })
@@ -312,12 +305,12 @@ class _AutentikasiState extends State<Autentikasi> {
                     children: [
                       CustomTextField(
                         image: 'assets/icon/icon_email.png',
-                        controller: sU_emaiC,
+                        controller: sUemaiC,
                         hintText: 'Email',
                         keyBoardType: TextInputType.emailAddress,
                         read: false,
                       ),
-                      passwordInput(sU_PasswordC),
+                      passwordInput(sUPasswordC),
                       _button('Continue', () {
                         vaildationSignUp();
                       })

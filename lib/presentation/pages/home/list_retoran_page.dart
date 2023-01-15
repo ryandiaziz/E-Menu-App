@@ -1,43 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/card/list_restoran_card.dart';
 import 'package:e_menu_app/shared/theme.dart';
-
-import '../../../models/restaurant_model.dart';
 import '../../card/resto_cart .dart';
 import 'detail_restoran_page.dart';
 
 class ListRestoran extends StatelessWidget {
+  const ListRestoran({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    Widget search() {
-      return Container(
-        color: secondaryColor,
-        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(12.5),
-                  height: 48,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: subtitleColor),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Image.asset("assets/icon/icon_search.png"),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                    ],
-                  )),
-            ),
-          ],
-        ),
-      );
-    }
-
     Widget buildResto(dataResto, countResto) {
       return ListView.builder(
         physics: const NeverScrollableScrollPhysics(),

@@ -88,7 +88,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/auntentikasi');
                 },
-                child: Text('Login'),
+                child: const Text('Login'),
               ),
             ),
           );
@@ -181,7 +181,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       );
                     },
                   )
-                : SizedBox(),
+                : const SizedBox(),
             ListTile(
               leading: Image.asset(
                 'assets/icon/history.png',

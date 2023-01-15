@@ -263,7 +263,7 @@ class _ItemsCardCusState extends State<ItemsCardCus> {
                             ),
                           ],
                         )
-                      : SizedBox();
+                      : const SizedBox();
                   // return ElevatedButton(
                   //     onPressed: () {
                   //       print(dataRating[0]['rating']);

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 class OrderCardOwner extends StatefulWidget {
-  dynamic dataOrder;
-  OrderCardOwner({this.dataOrder, Key? key}) : super(key: key);
+  final dynamic dataOrder;
+  const OrderCardOwner({this.dataOrder, Key? key}) : super(key: key);
 
   @override
   State<OrderCardOwner> createState() => _OrderCardOwnerState();
