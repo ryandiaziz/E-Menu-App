@@ -1,3 +1,4 @@
+import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -64,6 +65,7 @@ class _OnboardingState extends State<Onboarding> {
                     contents.length, (index) => buildDot(index, context)),
               ),
             ),
+            CustomElevatedButton(onPressed: () {}, text: "text"),
             letsStart(),
             toAutentifikasi(),
           ],
