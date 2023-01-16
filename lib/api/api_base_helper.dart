@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:e_menu_app/common/helper/show_alert_dialog.dart';
 import 'package:http/http.dart' as http;
 
 import 'app_exception.dart';
@@ -18,7 +19,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> post(String url, dynamic body) async {
-    print('Api Post, url $url');
+    // print('Api Post, url $url');
     var responseJson;
     try {
       final response = await http.post(Uri.parse(url),
