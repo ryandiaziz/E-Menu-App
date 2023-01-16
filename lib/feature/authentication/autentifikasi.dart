@@ -1,10 +1,10 @@
+import 'package:e_menu_app/common/widgets/custom_textfield.dart';
 import 'package:e_menu_app/presentation/pages/home/user_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../widgets/custom_textfield.dart';
 
 class Autentikasi extends StatefulWidget {
   const Autentikasi({Key? key}) : super(key: key);
