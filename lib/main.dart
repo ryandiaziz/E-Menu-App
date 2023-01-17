@@ -14,7 +14,7 @@ import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 import 'common/widgets/qr_scanner.dart';
 import 'feature/authentication/autentifikasi.dart';
 import 'feature/home/home_page.dart';
-import 'presentation/pages/home/onboarding_page.dart';
+import 'feature/welcome/onboarding_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

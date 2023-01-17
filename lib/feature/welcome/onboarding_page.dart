@@ -2,8 +2,8 @@ import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../models/content_model.dart';
-import '../../../shared/theme.dart';
+import '../../models/content_model.dart';
+import '../../shared/theme.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({Key? key}) : super(key: key);
@@ -65,9 +65,26 @@ class _OnboardingState extends State<Onboarding> {
                     contents.length, (index) => buildDot(index, context)),
               ),
             ),
-            CustomElevatedButton(onPressed: () {}, text: "text"),
-            letsStart(),
-            toAutentifikasi(),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 20),
+              child: Column(
+                children: [
+                  CustomElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/home-page'),
+                    text: "Let's Start",
+                  ),
+                  const SizedBox(height: 10),
+                  CustomElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/auntentikasi'),
+                    text: "Login",
+                    backgroundColor: Colors.transparent,
+                    borderColor: true,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -81,58 +98,6 @@ class _OnboardingState extends State<Onboarding> {
         borderRadius: BorderRadius.circular(20),
         color: priceColor,
       ),
-    );
-  }
-
-  Widget letsStart() {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      margin: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-      ),
-      child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: priceColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              )),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/home-page');
-          },
-          child: Text(
-            "Let's Start",
-            style: secondaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
-          )),
-    );
-  }
-
-  Widget toAutentifikasi() {
-    return Container(
-      decoration:
-          BoxDecoration(border: Border.all(width: 3.0, color: priceColor)),
-      width: double.infinity,
-      height: 50,
-      margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
-          bottom: 40 + MediaQuery.of(context).padding.bottom),
-      child: TextButton(
-          style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          )),
-          onPressed: () {
-            Navigator.pushNamed(context, '/auntentikasi');
-          },
-          child: Text(
-            "Login",
-            style: secondaryTextStyle.copyWith(
-                fontSize: 18, fontWeight: bold, color: priceColor),
-          )),
     );
   }
 }

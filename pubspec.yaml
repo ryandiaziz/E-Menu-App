@@ -45,6 +45,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: null
   flutter_lints: null
+  flutter_native_splash: ^2.2.9
   flutter_rating_bar: null
   flutter_screenutil: any
   flutter_svg: null
@@ -72,12 +73,6 @@ dev_dependencies:
   flutter_launcher_icons: null
   flutter_test:
     sdk: flutter
-
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icon/icon_emenu.png"
-  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
