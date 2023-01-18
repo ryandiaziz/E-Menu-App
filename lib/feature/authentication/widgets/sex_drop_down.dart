@@ -15,6 +15,7 @@ class SexDropDown extends StatefulWidget {
 }
 
 class _SexDropDownState extends State<SexDropDown> {
+  String? gender;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,7 +45,7 @@ class _SexDropDownState extends State<SexDropDown> {
         // change button value to selected value
         onChanged: (String? newValue) {
           setState(() {
-            // gender = newValue!;
+            gender = newValue!;
           });
         },
       ),
