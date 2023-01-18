@@ -1,3 +1,4 @@
+import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:e_menu_app/common/widgets/custom_textfield.dart';
 import 'package:e_menu_app/presentation/pages/home/user_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -189,9 +190,9 @@ class _AutentikasiState extends State<Autentikasi> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const SizedBox(height: 12),
             Container(
-              height: 50,
+              height: 42,
+              width: MediaQuery.of(context).size.width - 70,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
               decoration: BoxDecoration(
                 color: const Color(0xffEFF0F6),
@@ -280,44 +281,48 @@ class _AutentikasiState extends State<Autentikasi> {
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 300,
-              child: TabBarView(children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        image: 'assets/icon/icon_email.png',
-                        controller: sIemaiC,
-                        hintText: 'Email',
-                        keyBoardType: TextInputType.emailAddress,
-                        read: false,
-                      ),
-                      passwordInput(sIPasswordC),
-                      _button('Sign In', () {
-                        vaildationSignIn();
-                      })
-                    ],
+              child: TabBarView(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          image: 'assets/icon/icon_email.png',
+                          controller: sIemaiC,
+                          hintText: 'Email',
+                          keyBoardType: TextInputType.emailAddress,
+                          read: false,
+                        ),
+                        passwordInput(sIPasswordC),
+                        const SizedBox(height: 30),
+                        CustomElevatedButton(
+                            onPressed: () => vaildationSignIn(),
+                            text: "Sign In"),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        image: 'assets/icon/icon_email.png',
-                        controller: sUemaiC,
-                        hintText: 'Email',
-                        keyBoardType: TextInputType.emailAddress,
-                        read: false,
-                      ),
-                      passwordInput(sUPasswordC),
-                      _button('Continue', () {
-                        vaildationSignUp();
-                      })
-                    ],
-                  ),
-                )
-              ]),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          image: 'assets/icon/icon_email.png',
+                          controller: sUemaiC,
+                          hintText: 'Email',
+                          keyBoardType: TextInputType.emailAddress,
+                          read: false,
+                        ),
+                        passwordInput(sUPasswordC),
+                        const SizedBox(height: 30),
+                        CustomElevatedButton(
+                            onPressed: () => vaildationSignUp(),
+                            text: "Sign Up"),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),

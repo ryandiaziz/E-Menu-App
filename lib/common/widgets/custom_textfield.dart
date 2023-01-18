@@ -25,7 +25,8 @@ class CustomTextField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 50,
+            height: 42,
+            width: MediaQuery.of(context).size.width - 70,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               color: const Color(0xffEFF0F6),
