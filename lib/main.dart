@@ -12,7 +12,8 @@ import 'package:e_menu_app/presentation/pages/product/detail_product_page.dart';
 import 'package:e_menu_app/presentation/profile/edit_profile_resto.dart';
 import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 import 'common/widgets/qr_scanner.dart';
-import 'feature/authentication/autentifikasi.dart';
+
+import 'feature/authentication/pages/autentifikasi.dart';
 import 'feature/home/home_page.dart';
 import 'feature/welcome/onboarding_page.dart';
 

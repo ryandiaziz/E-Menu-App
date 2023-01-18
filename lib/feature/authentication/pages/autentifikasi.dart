@@ -1,11 +1,12 @@
 import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:e_menu_app/common/widgets/custom_textfield.dart';
-import 'package:e_menu_app/presentation/pages/home/user_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'user_form.dart';
 
 class Autentikasi extends StatefulWidget {
   const Autentikasi({Key? key}) : super(key: key);
@@ -240,25 +241,6 @@ class _AutentikasiState extends State<Autentikasi> {
           ],
         ),
       );
-    }
-
-    Widget _button(String buttonText, onPressed) {
-      return Container(
-          margin: const EdgeInsets.only(top: 40),
-          height: 50,
-          width: double.infinity,
-          child: TextButton(
-              // onPressed: hendleSignIn,
-              onPressed: onPressed,
-              style: TextButton.styleFrom(
-                  backgroundColor: priceColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5))),
-              child: Text(
-                buttonText,
-                style: secondaryTextStyle.copyWith(
-                    fontSize: 18, fontWeight: semiBold),
-              )));
     }
 
     return DefaultTabController(

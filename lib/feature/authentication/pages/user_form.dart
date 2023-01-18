@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:e_menu_app/common/widgets/custom_textfield.dart';
+import 'package:e_menu_app/feature/authentication/widgets/sex_drop_down.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,60 +70,6 @@ class _UserFormState extends State<UserForm> {
 
   @override
   Widget build(BuildContext context) {
-    Widget buildCategory() {
-      return Container(
-        color: const Color(0xffEFF0F6),
-        margin: const EdgeInsets.only(top: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        width: double.infinity,
-        height: 50,
-        child: DropdownButton(
-          // Initial Value
-          value: gender,
-          hint: const Text('Kategori'),
-
-          // Down Arrow Icon
-          icon: const Icon(Icons.keyboard_arrow_down),
-          isExpanded: true,
-          itemHeight: 50,
-
-          // Array list of items
-          items: items.map((String items) {
-            return DropdownMenuItem(
-              value: items,
-              child: Text(items),
-            );
-          }).toList(),
-          // After selecting the desired option,it will
-          // change button value to selected value
-          onChanged: (String? newValue) {
-            setState(() {
-              gender = newValue!;
-            });
-          },
-        ),
-      );
-    }
-
-    Widget customButton(String buttonText, onPressed) {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        height: 50,
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(
-            buttonText,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: priceColor,
-            elevation: 3,
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -155,7 +103,6 @@ class _UserFormState extends State<UserForm> {
                   keyBoardType: TextInputType.text,
                   read: false,
                 ),
-
                 CustomTextField(
                   image: 'assets/icon/phone.png',
                   controller: phoneController,
@@ -209,49 +156,10 @@ class _UserFormState extends State<UserForm> {
                     ],
                   ),
                 ),
-                buildCategory(),
-
-                // TextField(
-                //   controller: dobController,
-                //   readOnly: true,
-                //   decoration: InputDecoration(
-                //     hintText: "date of birth",
-                //     suffixIcon: IconButton(
-                //       onPressed: () => _selectDateFromPicker(context),
-                //       icon: Icon(Icons.calendar_today_outlined),
-                //     ),
-                //   ),
-                // ),
-                // TextField(
-                //   controller: genderController,
-                //   readOnly: true,
-                //   decoration: InputDecoration(
-                //     hintText: "choose your gender",
-                //     prefixIcon: DropdownButton<String>(
-                //       items: gender.map((String value) {
-                //         return DropdownMenuItem<String>(
-                //           value: value,
-                //           child: new Text(value),
-                //           onTap: () {
-                //             setState(() {
-                //               genderController.text = value;
-                //             });
-                //           },
-                //         );
-                //       }).toList(),
-                //       onChanged: (_) {},
-                //     ),
-                //   ),
-                // ),
-                // myTextField(
-                //     "enter your age", TextInputType.number, ageController),
-
-                // SizedBox(
-                //   height: 50,
-                // ),
-
-                // elevated button
-                customButton("Continue", () => sendUserDataToDB()),
+                SexDropDown(gender: gender, items: items),
+                const SizedBox(height: 20),
+                CustomElevatedButton(
+                    onPressed: () => sendUserDataToDB(), text: "Continue"),
               ],
             ),
           ),
