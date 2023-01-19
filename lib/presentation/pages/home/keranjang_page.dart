@@ -9,8 +9,8 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 class BagPage extends StatefulWidget {
-  dynamic dataMeja;
-  dynamic dataUser;
+  final dynamic dataMeja;
+  final dynamic dataUser;
 
   BagPage({this.dataMeja, this.dataUser, Key? key}) : super(key: key);
   @override
