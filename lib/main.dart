@@ -14,7 +14,7 @@ import 'package:e_menu_app/presentation/splash_page/splash_page.dart';
 import 'common/widgets/qr_scanner.dart';
 
 import 'feature/authentication/pages/autentifikasi.dart';
-import 'feature/home/home_page.dart';
+import 'feature/home/pages/home_page.dart';
 import 'feature/welcome/onboarding_page.dart';
 
 void main() async {
