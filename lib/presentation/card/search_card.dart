@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:intl/intl.dart';
 
-import '../pages/home/detail_restoran_page.dart';
+import '../../feature/home/pages/detail_restoran_page.dart';
 
 class SearchCard extends StatefulWidget {
   final dynamic data;

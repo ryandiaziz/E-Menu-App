@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/feature/home/widgets/drawer.dart';
-import 'package:e_menu_app/presentation/card/resto_cart%20.dart';
+import 'package:e_menu_app/feature/home/widgets/resto_cart%20.dart';
 import 'package:e_menu_app/feature/home/pages/detail_restoran_page.dart';
 import 'package:e_menu_app/presentation/pages/home/navigation.dart';
 import 'package:e_menu_app/presentation/pages/home/search_page.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:http/http.dart' as http;
 
+import '../widgets/maintenance.dart';
 import '../widgets/recommendation_menu.dart';
 
 class HomePage extends StatefulWidget {
@@ -226,38 +227,7 @@ class _HomePageState extends State<HomePage> {
             ),
             icon: const Icon(Icons.search),
           ),
-          // const SizedBox(
-          //   width: 10,
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       // sabri GXlT5F05zPBT9a8hDJxB
-          //       // aby hZNZbzGDkuLZ3dD95L4X
-          //       // rhumbia  8V3z0yVONyrhd2hRT1xY
-          //       MaterialPageRoute(
-          //         builder: (_) => NavigationPage(
-          //           idMeja: 'hZNZbzGDkuLZ3dD95L4X',
-          //         ),
-          //       ),
-          //     );
-          //   },
-          //   child: const Icon(Icons.menu_book),
-          // ),
-          // const SizedBox(
-          //   width: 10,
-          // ),
-          // GestureDetector(
-          //   onTap: () {
-          //     FirebaseAuth.instance.signOut();
-          //     Navigator.pushReplacementNamed(context, "/onboarding-page");
-          //   },
-          //   child: const Icon(Icons.logout),
-          // ),
-          // const SizedBox(
-          //   width: 10,
-          // )
+          const Maintenance(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
