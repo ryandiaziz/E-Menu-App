@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
-import '../../card/product_card_home.dart';
+import '../../../presentation/card/product_card_home.dart';
 
 class DetailRestoran extends StatefulWidget {
   final String idResto;

@@ -3,7 +3,7 @@ import 'package:e_menu_app/shared/theme.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
-import '../pages/home/detail_restoran_page.dart';
+import '../../feature/home/pages/detail_restoran_page.dart';
 
 Widget restaurant(
   BuildContext context,
