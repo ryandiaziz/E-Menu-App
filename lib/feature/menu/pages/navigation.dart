@@ -12,13 +12,11 @@ class NavigationPage extends StatefulWidget {
   const NavigationPage({required this.idMeja, Key? key}) : super(key: key);
 
   @override
-  State<NavigationPage> createState() => _NavigationPageState(idMeja);
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
 class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
-  String idMeja;
-  _NavigationPageState(this.idMeja);
 
   // final screens = [
   //   MenuPage(idMeja: idMeja),
@@ -138,7 +136,7 @@ class _NavigationPageState extends State<NavigationPage> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('tables')
-            .doc(idMeja)
+            .doc(widget.idMeja)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           var dataMeja = snapshot.data;
