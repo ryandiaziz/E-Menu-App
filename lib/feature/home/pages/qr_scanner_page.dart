@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:e_menu_app/presentation/pages/home/navigation.dart';
+import 'package:e_menu_app/feature/menu/pages/navigation.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
