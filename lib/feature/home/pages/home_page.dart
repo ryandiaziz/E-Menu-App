@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/feature/home/widgets/drawer.dart';
 import 'package:e_menu_app/feature/home/widgets/resto_cart%20.dart';
 import 'package:e_menu_app/feature/home/pages/detail_restoran_page.dart';
-import 'package:e_menu_app/presentation/pages/home/navigation.dart';
-import 'package:e_menu_app/presentation/pages/home/search_page.dart';
+import 'package:e_menu_app/feature/menu/pages/navigation.dart';
+import 'package:e_menu_app/feature/home/pages/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_menu_app/shared/theme.dart';
@@ -180,34 +180,35 @@ class _HomePageState extends State<HomePage> {
     }
 
     void showLogin() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Center(child: Text('Login?')),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text('login untuk dapat melakukan proses pemesanan'),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  // buildRating()
-                ],
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/auntentikasi');
-                    },
-                    child: const Text('OK')),
-                TextButton(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Center(child: Text('Login?')),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('login untuk dapat melakukan proses pemesanan'),
+                SizedBox(
+                  height: 20,
+                ),
+                // buildRating()
+              ],
+            ),
+            actions: [
+              TextButton(
                   onPressed: () async {
                     Navigator.pop(context);
+                    Navigator.pushNamed(context, '/auntentikasi');
                   },
-                  child: const Text('Cancel'),
-                )
-              ],
-            ));
+                  child: const Text('OK')),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              )
+            ],
+          ),
+        );
 
     return Scaffold(
       backgroundColor: Colors.white,

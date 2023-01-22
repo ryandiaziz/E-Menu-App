@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../presentation/pages/home/navigation.dart';
+import '../../menu/pages/navigation.dart';
 
 class Maintenance extends StatelessWidget {
   const Maintenance({

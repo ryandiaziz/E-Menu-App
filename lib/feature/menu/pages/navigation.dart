@@ -1,24 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/presentation/pages/home/keranjang_page.dart';
-import 'package:e_menu_app/presentation/pages/home/menu_page.dart';
+import 'package:e_menu_app/feature/menu/pages/keranjang_page.dart';
+import 'package:e_menu_app/feature/menu/pages/menu_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NavigationPage extends StatefulWidget {
-  String idMeja;
-  NavigationPage({required this.idMeja, Key? key}) : super(key: key);
+  final String idMeja;
+  const NavigationPage({required this.idMeja, Key? key}) : super(key: key);
 
   @override
-  State<NavigationPage> createState() => _NavigationPageState(idMeja);
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
 class _NavigationPageState extends State<NavigationPage> {
   int index = 0;
-  String idMeja;
-  _NavigationPageState(this.idMeja);
 
   // final screens = [
   //   MenuPage(idMeja: idMeja),
@@ -138,7 +136,7 @@ class _NavigationPageState extends State<NavigationPage> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('tables')
-            .doc(idMeja)
+            .doc(widget.idMeja)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           var dataMeja = snapshot.data;
