@@ -1,5 +1,5 @@
+import 'package:e_menu_app/common/models/restaurant_model.dart';
 import 'package:flutter/material.dart';
-import '../../models/restaurant_model.dart';
 import '../../shared/theme.dart';
 
 Widget buildRestaurant(Restaurant restaurant) => Container(

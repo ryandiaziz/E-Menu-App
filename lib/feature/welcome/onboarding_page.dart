@@ -1,8 +1,8 @@
+import 'package:e_menu_app/common/models/content_model.dart';
 import 'package:e_menu_app/common/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../models/content_model.dart';
 import '../../shared/theme.dart';
 
 class Onboarding extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_menu_app/models/product_model.dart';
+import 'package:e_menu_app/common/models/product_model.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProductProvider with ChangeNotifier {

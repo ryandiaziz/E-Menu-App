@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_menu_app/models/restaurant_model.dart';
+import 'package:e_menu_app/common/models/restaurant_model.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';

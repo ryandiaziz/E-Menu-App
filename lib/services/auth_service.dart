@@ -1,4 +1,4 @@
-import 'package:e_menu_app/models/user_model.dart';
+import 'package:e_menu_app/common/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class AuthService {
