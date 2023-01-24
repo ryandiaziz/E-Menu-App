@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../menu/pages/navigation.dart';
+import '../../order/pages/order_page.dart';
 
 class Maintenance extends StatelessWidget {
   const Maintenance({
@@ -20,7 +20,7 @@ class Maintenance extends StatelessWidget {
               // aby hZNZbzGDkuLZ3dD95L4X
               // rhumbia  8V3z0yVONyrhd2hRT1xY
               MaterialPageRoute(
-                builder: (_) => NavigationPage(
+                builder: (_) => const NavigationPage(
                   idMeja: 'hZNZbzGDkuLZ3dD95L4X',
                 ),
               ),

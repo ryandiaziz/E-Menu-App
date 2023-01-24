@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
-import 'menu_kategori.dart';
+import 'category_order_page.dart';
 
 class MenuPage extends StatefulWidget {
   final dynamic dataMeja;

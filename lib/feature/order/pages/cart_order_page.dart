@@ -8,33 +8,28 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
-class BagPage extends StatefulWidget {
+class CartPage extends StatefulWidget {
   final dynamic dataMeja;
   final dynamic dataUser;
 
-  BagPage({this.dataMeja, this.dataUser, Key? key}) : super(key: key);
+  const CartPage({this.dataMeja, this.dataUser, Key? key}) : super(key: key);
   @override
-  State<BagPage> createState() => _BagPageState(dataMeja, dataUser);
+  State<CartPage> createState() => _CartPageState();
 }
 
-class _BagPageState extends State<BagPage> {
-  _BagPageState(
-    this.dataMeja,
-    this.dataUser,
-  );
+class _CartPageState extends State<CartPage> {
   var firestoreInstance = FirebaseFirestore.instance;
   ApiBaseHelper api = ApiBaseHelper();
   int? newPrice;
-  dynamic dataMeja;
-  dynamic dataUser;
+
+  int totalHarga = 0;
+  int totalItems = 0;
   List dataCart = [];
 
   String? idCheckout;
   int? harga;
-  int totalHarga = 0;
   String? idOrder;
   int? item;
-  int totalItems = 0;
   String? pembayaran;
   bool? isPay;
 
@@ -50,9 +45,9 @@ class _BagPageState extends State<BagPage> {
       "id": docOrder.id,
       "idTransaksi": null,
       'payMethod': payMethod,
-      "namaPemesan": dataUser[0]['name'],
-      "imgPemesan": dataUser[0]['imageUrl'],
-      "emailPemesan": dataUser[0]['email'],
+      "namaPemesan": widget.dataUser[0]['name'],
+      "imgPemesan": widget.dataUser[0]['imageUrl'],
+      "emailPemesan": widget.dataUser[0]['email'],
       "totalHarga": totalHarga,
       "totalItems": totalItems,
       "date": date,
@@ -186,7 +181,7 @@ class _BagPageState extends State<BagPage> {
                   Text('Nama Pemesan',
                       style: subtitleTextStyle.copyWith(fontSize: 14)),
                   Text(
-                    dataUser[0]['name'],
+                    widget.dataUser[0]['name'],
                     style: primaryTextStyle.copyWith(fontWeight: semiBold),
                   ),
                 ],
@@ -200,7 +195,7 @@ class _BagPageState extends State<BagPage> {
                   Text('Email',
                       style: subtitleTextStyle.copyWith(fontSize: 14)),
                   Text(
-                    dataUser[0]['email'],
+                    widget.dataUser[0]['email'],
                     style: primaryTextStyle.copyWith(fontWeight: semiBold),
                   ),
                 ],
@@ -213,7 +208,7 @@ class _BagPageState extends State<BagPage> {
                 children: [
                   Text('Meja', style: subtitleTextStyle.copyWith(fontSize: 14)),
                   Text(
-                    dataMeja['noMeja'],
+                    widget.dataMeja['noMeja'],
                     style: primaryTextStyle.copyWith(fontWeight: semiBold),
                   ),
                 ],
@@ -275,17 +270,17 @@ class _BagPageState extends State<BagPage> {
                         //   }
                         // ],
                         "customer_details": {
-                          "first_name": dataUser[0]['name'],
+                          "first_name": widget.dataUser[0]['name'],
                           "last_name": "",
-                          "email": dataUser[0]['email'],
-                          "phone": dataUser[0]['phone']
+                          "email": widget.dataUser[0]['email'],
+                          "phone": widget.dataUser[0]['phone']
                         },
                         "gopay": {
                           "enable_callback": true,
                           "callback_url": "someapps://callback"
                         },
                         "tiket_id": _idTransaksi,
-                        'nama': dataUser[0]['name']
+                        'nama': widget.dataUser[0]['name']
                       };
 
                       var body = json.encode(data);
@@ -303,7 +298,7 @@ class _BagPageState extends State<BagPage> {
                             totalHarga: totalHarga,
                             idTransaksi: _idTransaksi,
                             payMethod: 'gopay',
-                            dataUser: dataUser,
+                            dataUser: widget.dataUser,
                             totalItems: totalItems,
                             dataCart: dataCart,
                             countCart: countCart,
@@ -321,7 +316,7 @@ class _BagPageState extends State<BagPage> {
                           "gross_amount": totalHarga
                         },
                         "tiket_id": _idTransaksi,
-                        "nama": dataUser[0]['name']
+                        "nama": widget.dataUser[0]['name']
                       };
 
                       var body = json.encode(data);
@@ -335,7 +330,7 @@ class _BagPageState extends State<BagPage> {
                             totalHarga: totalHarga,
                             idTransaksi: _idTransaksi,
                             payMethod: 'permata',
-                            dataUser: dataUser,
+                            dataUser: widget.dataUser,
                             totalItems: totalItems,
                             countCart: countCart,
                             dataCart: dataCart,
@@ -690,7 +685,7 @@ class _BagPageState extends State<BagPage> {
             .collection("users")
             .doc(FirebaseAuth.instance.currentUser!.email)
             .collection('cart')
-            .where('idResto', isEqualTo: dataMeja['idResto'])
+            .where('idResto', isEqualTo: widget.dataMeja['idResto'])
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

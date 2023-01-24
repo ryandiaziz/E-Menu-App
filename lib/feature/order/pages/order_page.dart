@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_menu_app/feature/menu/pages/keranjang_page.dart';
-import 'package:e_menu_app/feature/menu/pages/menu_page.dart';
+import 'package:e_menu_app/feature/order/pages/cart_order_page.dart';
+import 'package:e_menu_app/feature/order/pages/menu_order_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +43,7 @@ class _NavigationPageState extends State<NavigationPage> {
           dataMeja: dataMeja,
         );
       case 1:
-        return BagPage(
+        return CartPage(
           dataMeja: dataMeja,
           dataUser: dataUser,
         );
