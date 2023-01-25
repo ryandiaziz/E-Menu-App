@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/feature/home/widgets/drawer.dart';
 import 'package:e_menu_app/feature/home/widgets/resto_cart%20.dart';
 import 'package:e_menu_app/feature/home/pages/detail_restoran_page.dart';
-import 'package:e_menu_app/feature/order/pages/order_page.dart';
 import 'package:e_menu_app/feature/home/pages/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
