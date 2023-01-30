@@ -231,7 +231,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.qr_code),
         backgroundColor: priceColor,
         onPressed: () {
           User? user = FirebaseAuth.instance.currentUser;
@@ -241,6 +240,7 @@ class _HomePageState extends State<HomePage> {
             showLogin();
           }
         },
+        child: const Icon(Icons.qr_code),
       ),
       drawer: const NavigationDrawer(),
       body: SingleChildScrollView(
