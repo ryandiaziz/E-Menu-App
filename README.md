@@ -2,6 +2,11 @@
 
 Build with flutter and firebase.
 
+## Project Overview
+* Using QR code scanning
+* Using gateway payments [Midtrans]
+* Using recommendations system
+
 ## Screenshots
 
 ![Screenshot_20230111_211414](https://user-images.githubusercontent.com/90899681/211830715-4136baf6-3fa0-4757-94ef-0c6ea78965ea.png)
