@@ -23,8 +23,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   String? idResto;
 
   fetchRestaurant() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    var currentUser = _auth.currentUser;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    var currentUser = auth.currentUser;
     QuerySnapshot qn = await firestoreInstance
         .collection("restaurants")
         .where('idUser', isEqualTo: currentUser!.uid)
