@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/home/data.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
@@ -256,7 +254,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               ),
               onTap: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, "/onboarding-page");
+                Navigator.pushReplacementNamed(
+                  context,
+                  "/onboarding-page",
+                );
               },
             ),
           ],

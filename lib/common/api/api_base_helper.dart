@@ -7,7 +7,7 @@ import 'app_exception.dart';
 
 class ApiBaseHelper {
   Future<dynamic> get(String url) async {
-    var responseJson;
+    dynamic responseJson;
     try {
       final response = await http.get(Uri.parse(url));
       responseJson = _returnResponse(response);
@@ -19,7 +19,7 @@ class ApiBaseHelper {
 
   Future<dynamic> post(String url, dynamic body) async {
     // print('Api Post, url $url');
-    var responseJson;
+    dynamic responseJson;
     try {
       final response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"}, body: body);
