@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/home/data.dart';
 import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
-import 'package:e_menu_app/presentation/profile/edit_profile_user.dart';
+import 'package:e_menu_app/feature/profile/pages/edit_profile_user.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -126,11 +126,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               dataUser['imageUrl'] != null
                   ? CircleAvatar(
                       radius: 40,
-                      backgroundImage: NetworkImage(dataUser['imageUrl']))
+                      backgroundImage: NetworkImage(
+                        dataUser['imageUrl'],
+                      ),
+                    )
                   : const CircleAvatar(
                       radius: 40,
-                      backgroundImage:
-                          AssetImage("assets/img/image_profile_user.png"),
+                      backgroundImage: AssetImage(
+                        "assets/img/image_profile_user.png",
+                      ),
                     ),
               const SizedBox(height: 12),
               Text(
