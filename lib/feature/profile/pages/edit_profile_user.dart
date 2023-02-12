@@ -35,8 +35,8 @@ class _EditProfileUserPageState extends State<EditProfileUserPage> {
   var items = ['Laki-laki', 'Perempuan'];
 
   Future getImage(ImageSource source) async {
-    final ImagePicker _picker = ImagePicker();
-    final imagePicked = await _picker.pickImage(source: source);
+    final ImagePicker picker = ImagePicker();
+    final imagePicked = await picker.pickImage(source: source);
     final imageCrop = await ImageCropper().cropImage(
         sourcePath: '${imagePicked?.path}',
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));

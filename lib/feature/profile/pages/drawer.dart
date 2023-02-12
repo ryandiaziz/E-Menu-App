@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_menu_app/presentation/pages/home/data.dart';
-import 'package:e_menu_app/presentation/pages/pemilik/kelola_resto_page.dart';
+import 'package:e_menu_app/feature/emenu/pages/kelola_resto_page.dart';
 import 'package:e_menu_app/feature/profile/pages/edit_profile_user.dart';
 import 'package:e_menu_app/shared/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
