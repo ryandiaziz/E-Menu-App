@@ -285,7 +285,7 @@ class _CartPageState extends State<CartPage> {
 
                       var body = json.encode(data);
                       final response = await api.post(
-                          "http://10.140.216.225:3000/order/charge", body);
+                          "http://192.168.43.219:3000/order/charge", body);
                       // final dataResponse = json.decode(response);
                       // print('==========\n');
                       // print(dataResponse['status']);
@@ -307,28 +307,28 @@ class _CartPageState extends State<CartPage> {
                       );
                     } else if (pembayaran == 'permata') {
                       const uuid = Uuid();
-                      String _idTransaksi = uuid.v1();
+                      String idTransaksi = uuid.v1();
                       Map data = {
                         "payment_type": "bank_transfer",
                         "bank_transfer": {"bank": "permata"},
                         "transaction_details": {
-                          "order_id": _idTransaksi,
+                          "order_id": idTransaksi,
                           "gross_amount": totalHarga
                         },
-                        "tiket_id": _idTransaksi,
+                        "tiket_id": idTransaksi,
                         "nama": widget.dataUser[0]['name']
                       };
 
                       var body = json.encode(data);
                       final response = await api.post(
-                          "http://10.140.216.225:3000/order/charge", body);
+                          "http://192.168.43.219:3000/order/charge", body);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => PembayaranPage(
                             dataResponse: response,
                             totalHarga: totalHarga,
-                            idTransaksi: _idTransaksi,
+                            idTransaksi: idTransaksi,
                             payMethod: 'permata',
                             dataUser: widget.dataUser,
                             totalItems: totalItems,
@@ -351,13 +351,13 @@ class _CartPageState extends State<CartPage> {
 
                     //
                   },
-                  child: const Text(
-                    'Confirm',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
                   style: ElevatedButton.styleFrom(
                     primary: priceColor,
                     elevation: 3,
+                  ),
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               )

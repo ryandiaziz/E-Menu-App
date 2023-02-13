@@ -37,7 +37,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
   String? idOrder;
   Future getStatus() async {
     final url = Uri.parse(
-        "http://10.140.216.225:3000/order/status/${widget.idTransaksi}");
+        "http://192.168.43.219:3000/order/status/${widget.idTransaksi}");
     final response = await http.get(url);
     return dataResponse = json.decode(response.body);
   }
@@ -342,6 +342,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
       body: Column(
         children: [
           buildTotalHarga(),
+          Text(widget.idTransaksi),
           const Expanded(child: SizedBox()),
           // Text('${dataResponse['data']['transaction_status']}'),
           costumBottomNav(),

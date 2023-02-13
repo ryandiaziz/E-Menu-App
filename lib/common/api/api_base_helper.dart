@@ -18,7 +18,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> post(String url, dynamic body) async {
-    // print('Api Post, url $url');
+    print('Api Post, url $url');
     dynamic responseJson;
     try {
       final response = await http.post(Uri.parse(url),
