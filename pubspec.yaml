@@ -27,7 +27,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  bloc: null
   camera: any
   carousel_slider: null
   charts_flutter: ^0.12.0
@@ -43,7 +42,6 @@ dependencies:
   firebase_storage: null
   flutter:
     sdk: flutter
-  flutter_bloc: null
   flutter_lints: null
   flutter_native_splash: ^2.2.9
   flutter_rating_bar: null
@@ -66,7 +64,7 @@ dependencies:
   random_color: any
   screenshot: ^1.2.3
   staggered_grid_view_flutter: null
-  syncfusion_flutter_charts: 19.3.45
+  syncfusion_flutter_charts: 20.4.38
   uuid: 3.0.6
 
 dev_dependencies:
